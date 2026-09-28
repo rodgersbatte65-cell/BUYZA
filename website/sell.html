@@ -1,0 +1,441 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sell on BUYZA</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        header {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff6b00;
+        }
+
+        .back {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            height: 130px;
+            resize: vertical;
+        }
+
+        .post-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ff6b00;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .post-btn:hover {
+            background: #e85f00;
+        }
+
+        .photo-box {
+            border: 2px dashed #ddd;
+            padding: 25px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        #successMessage {
+            display: none;
+            background: #e8f8ed;
+            color: #187a35;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @media (max-width: 600px) {
+
+            .form-box {
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <div class="logo">
+        BUYZA
+    </div>
+
+    <a href="index.html" class="back">
+        ← Back to BUYZA
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <div class="form-box">
+
+        <h1>
+            Sell on BUYZA
+        </h1>
+
+        <p class="subtitle">
+            Create your listing and reach buyers across Uganda.
+        </p>
+
+
+        <label>
+            Product Name
+        </label>
+
+        <input
+            type="text"
+            id="productName"
+            placeholder="Example: Samsung Galaxy S24"
+        >
+
+
+        <label>
+            Category
+        </label>
+
+        <select id="category">
+
+            <option value="">
+                Select Category
+            </option>
+
+            <option>Phones & Tablets</option>
+            <option>Cars</option>
+            <option>Property</option>
+            <option>Fashion</option>
+            <option>Electronics</option>
+            <option>Furniture</option>
+            <option>Jobs</option>
+            <option>Services</option>
+
+        </select>
+
+
+        <label>
+            Price (UGX)
+        </label>
+
+        <input
+            type="number"
+            id="price"
+            placeholder="Example: 850000"
+        >
+
+
+        <label>
+            Location
+        </label>
+
+        <input
+            type="text"
+            id="location"
+            placeholder="Example: Kampala, Uganda"
+        >
+
+
+        <label>
+            Product Photo
+        </label>
+
+        <div class="photo-box">
+
+            <input
+                type="file"
+                id="productPhoto"
+                accept="image/*"
+            >
+
+            <p>
+                Upload a clear photo of your product
+            </p>
+
+        </div>
+
+
+        <label>
+            Description
+        </label>
+
+        <textarea
+            id="description"
+            placeholder="Describe your product..."
+        ></textarea>
+
+
+        <label>
+            Phone Number
+        </label>
+
+        <input
+            type="tel"
+            id="phone"
+            placeholder="Example: 0700000000"
+        >
+
+
+        <button
+            type="button"
+            class="post-btn"
+            onclick="postProduct()"
+        >
+            Post Product
+        </button>
+
+
+        <div id="successMessage">
+            ✅ Your product has been posted on BUYZA!
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SUPABASE -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+    /* =====================================
+       BUYZA SUPABASE SETTINGS
+       ===================================== */
+
+    const SUPABASE_URL =
+        "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+
+    const SUPABASE_KEY =
+        "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+
+    const supabaseClient =
+        supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_KEY
+        );
+
+
+    /* =====================================
+       POST PRODUCT
+       ===================================== */
+
+    async function postProduct() {
+
+        const productName =
+            document.getElementById("productName").value.trim();
+
+        const category =
+            document.getElementById("category").value;
+
+        const price =
+            document.getElementById("price").value;
+
+        const location =
+            document.getElementById("location").value.trim();
+
+        const description =
+            document.getElementById("description").value.trim();
+
+        const phone =
+            document.getElementById("phone").value.trim();
+
+
+        /* CHECK REQUIRED INFORMATION */
+
+        if (
+            productName === "" ||
+            category === "" ||
+            price === "" ||
+            location === "" ||
+            description === "" ||
+            phone === ""
+        ) {
+
+            alert(
+                "Please fill in all the required information."
+            );
+
+            return;
+
+        }
+
+
+        /* SEND PRODUCT TO SUPABASE */
+
+        const { data, error } =
+            await supabaseClient
+                .from("products")
+                .insert([
+                    {
+                        name: productName,
+                        category: category,
+                        price: Number(price),
+                        location: location,
+                        description: description,
+                        phone: phone
+                    }
+                ])
+                .select();
+
+
+        /* CHECK FOR ERROR */
+
+        if (error) {
+
+            console.error(
+                "BUYZA ERROR:",
+                error
+            );
+
+            alert(
+                "Product could not be posted.\n\n" +
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        /* SUCCESS */
+
+        document.getElementById(
+            "successMessage"
+        ).style.display = "block";
+
+
+        alert(
+            "✅ Your product has been successfully posted on BUYZA!"
+        );
+
+
+        /* CLEAR FORM */
+
+        document.getElementById(
+            "productName"
+        ).value = "";
+
+        document.getElementById(
+            "category"
+        ).value = "";
+
+        document.getElementById(
+            "price"
+        ).value = "";
+
+        document.getElementById(
+            "location"
+        ).value = "";
+
+        document.getElementById(
+            "description"
+        ).value = "";
+
+        document.getElementById(
+            "phone"
+        ).value = "";
+
+        document.getElementById(
+            "productPhoto"
+        ).value = "";
+
+    }
+
+</script>
+
+
+</body>
+
+</html>
+```
