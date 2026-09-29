@@ -1,241 +1,448 @@
-<script>
+<!DOCTYPE html>
+<html lang="en">
 
-    const SUPABASE_URL =
-        "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    const SUPABASE_KEY =
-        "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+    <title>Sell on BUYZA</title>
 
+    <style>
 
-    document
-        .getElementById("sellForm")
-        .addEventListener("submit", async function(event) {
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-            event.preventDefault();
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
 
+        header {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
 
-            const name =
-                document
-                .getElementById("productName")
-                .value
-                .trim();
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff6b00;
+        }
 
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin-left: 25px;
+            font-weight: bold;
+        }
 
-            const price =
-                document
-                .getElementById("productPrice")
-                .value;
+        .home-btn {
+            background: #ff6b00;
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
 
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
 
-            const category =
-                document
-                .getElementById("category")
-                .value;
+        .form-box {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+        }
 
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
 
-            const location =
-                document
-                .getElementById("location")
-                .value
-                .trim();
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
 
+        label {
+            display: block;
+            font-weight: bold;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
 
-            const phone =
-                document
-                .getElementById("phone")
-                .value
-                .trim();
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
 
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
 
-            const description =
-                document
-                .getElementById("description")
-                .value
-                .trim();
+        .sell-button {
+            width: 100%;
+            margin-top: 25px;
+            padding: 15px;
+            border: none;
+            background: #ff6b00;
+            color: white;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
 
+        .sell-button:hover {
+            background: #e85f00;
+        }
 
-            const imageFile =
-                document
-                .getElementById("image")
-                .files[0];
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
 
+        .success {
+            background: #e8f7e8;
+            color: #237a23;
+        }
 
-            if (
-                !name ||
-                !price ||
-                !category ||
-                !location ||
-                !phone ||
-                !description
-            ) {
+        .error {
+            background: #ffe8e8;
+            color: #b00000;
+        }
 
-                showMessage(
-                    "Please fill in all required fields.",
-                    "error"
-                );
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
 
-                return;
+        @media (max-width: 700px) {
 
+            header {
+                padding: 15px 5%;
             }
 
+            .logo {
+                font-size: 25px;
+            }
 
-            showMessage(
-                "Publishing your listing...",
-                "success"
-            );
+            nav a {
+                margin-left: 8px;
+                font-size: 13px;
+            }
 
+            .form-box {
+                padding: 25px 20px;
+            }
 
-            try {
+        }
 
-                let imageUrl = "";
+    </style>
 
+</head>
 
-                /* =========================
-                   UPLOAD PRODUCT IMAGE
-                   ========================= */
+<body>
 
-                if (imageFile) {
+    <!-- HEADER -->
 
-                    const fileExtension =
-                        imageFile.name
-                        .split(".")
-                        .pop()
-                        .toLowerCase();
+    <header>
 
+        <div class="logo">
+            BUYZA
+        </div>
 
-                    const fileName =
-                        Date.now() +
-                        "-" +
-                        Math.random()
-                        .toString(36)
-                        .substring(2) +
-                        "." +
-                        fileExtension;
+        <nav>
 
+            <a href="index.html">
+                Home
+            </a>
 
-                    const uploadResponse =
-                        await fetch(
-                            SUPABASE_URL +
-                            "/storage/v1/object/product-images/" +
-                            fileName,
-                            {
-                                method: "POST",
+            <a href="sell.html" class="home-btn">
+                Sell
+            </a>
 
-                                headers: {
+        </nav>
 
-                                    "apikey":
-                                        SUPABASE_KEY,
-
-                                    "Authorization":
-                                        "Bearer " +
-                                        SUPABASE_KEY,
-
-                                    "Content-Type":
-                                        imageFile.type
-
-                                },
-
-                                body:
-                                    imageFile
-
-                            }
-                        );
+    </header>
 
 
-                    if (!uploadResponse.ok) {
+    <!-- SELL FORM -->
 
-                        const uploadError =
-                            await uploadResponse.text();
+    <div class="container">
 
-                        console.error(
-                            "Image upload error:",
-                            uploadError
-                        );
+        <div class="form-box">
 
-                        showMessage(
-                            "The image could not be uploaded. Please try another image.",
-                            "error"
-                        );
+            <h1>
+                Sell on BUYZA
+            </h1>
 
-                        return;
-
-                    }
+            <p class="subtitle">
+                Create your listing and reach buyers in Uganda.
+            </p>
 
 
-                    imageUrl =
-                        SUPABASE_URL +
-                        "/storage/v1/object/public/product-images/" +
-                        fileName;
+            <form id="sellForm">
 
-                }
+                <label for="productName">
+                    Product Name
+                </label>
 
-
-                /* =========================
-                   SAVE PRODUCT
-                   ========================= */
-
-                const product = {
-
-                    name: name,
-
-                    price: Number(price),
-
-                    category: category,
-
-                    location: location,
-
-                    phone: phone,
-
-                    description: description,
-
-                    image_url: imageUrl
-
-                };
+                <input
+                    type="text"
+                    id="productName"
+                    placeholder="Example: Samsung Galaxy S24"
+                    required
+                >
 
 
-                const response =
-                    await fetch(
-                        SUPABASE_URL +
-                        "/rest/v1/products",
-                        {
-                            method: "POST",
+                <label for="productPrice">
+                    Price (UGX)
+                </label>
 
-                            headers: {
-
-                                "Content-Type":
-                                    "application/json",
-
-                                "apikey":
-                                    SUPABASE_KEY,
-
-                                "Authorization":
-                                    "Bearer " +
-                                    SUPABASE_KEY,
-
-                                "Prefer":
-                                    "return=representation"
-
-                            },
-
-                            body:
-                                JSON.stringify(product)
-
-                        }
-                    );
+                <input
+                    type="number"
+                    id="productPrice"
+                    placeholder="Example: 850000"
+                    min="0"
+                    required
+                >
 
 
-                if (!response.ok) {
+                <label for="category">
+                    Category
+                </label>
 
-                    const error =
-                        await response.text();
+                <select id="category" required>
 
-                    console.error(
-                        "Supabase error:",
-                        error
-                    );
+                    <option value="">
+                        Select a category
+                    </option>
+
+                    <option value="Phones & Tablets">
+                        📱 Phones & Tablets
+                    </option>
+
+                    <option value="Cars">
+                        🚗 Cars
+                    </option>
+
+                    <option value="Property">
+                        🏠 Property
+                    </option>
+
+                    <option value="Fashion">
+                        👕 Fashion
+                    </option>
+
+                    <option value="Electronics">
+                        💻 Electronics
+                    </option>
+
+                    <option value="Furniture">
+                        🪑 Furniture
+                    </option>
+
+                    <option value="Jobs">
+                        💼 Jobs
+                    </option>
+
+                    <option value="Services">
+                        🔧 Services
+                    </option>
+
+                    <option value="Other">
+                        📦 Other
+                    </option>
+
+                </select>
+
+
+                <label for="location">
+                    Location
+                </label>
+
+                <input
+                    type="text"
+                    id="location"
+                    placeholder="Example: Kampala, Uganda"
+                    required
+                >
+
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Example: 0700000000"
+                    required
+                >
+
+
+                <label for="description">
+                    Description
+                </label>
+
+                <textarea
+                    id="description"
+                    placeholder="Describe your product..."
+                    required
+                ></textarea>
+
+
+                <!-- PRODUCT IMAGE -->
+
+                <label for="image">
+                    Product Image
+                </label>
+
+                <input
+                    type="file"
+                    id="image"
+                    accept="image/*"
+                >
+
+
+                <button
+                    type="submit"
+                    class="sell-button"
+                >
+                    Publish Listing
+                </button>
+
+
+                <div
+                    id="message"
+                    class="message"
+                ></div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h2>
+            BUYZA
+        </h2>
+
+        <p>
+            Buy. Sell. Connect.
+        </p>
+
+        <p>
+            © 2026 BUYZA. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- SUPABASE JAVASCRIPT -->
+
+    <script>
+
+        const SUPABASE_URL =
+            "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+
+        document
+            .getElementById("sellForm")
+            .addEventListener("submit", async function(event) {
+
+                event.preventDefault();
+
+
+                const name =
+                    document
+                    .getElementById("productName")
+                    .value
+                    .trim();
+
+
+                const price =
+                    document
+                    .getElementById("productPrice")
+                    .value;
+
+
+                const category =
+                    document
+                    .getElementById("category")
+                    .value;
+
+
+                const location =
+                    document
+                    .getElementById("location")
+                    .value
+                    .trim();
+
+
+                const phone =
+                    document
+                    .getElementById("phone")
+                    .value
+                    .trim();
+
+
+                const description =
+                    document
+                    .getElementById("description")
+                    .value
+                    .trim();
+
+
+                const imageFile =
+                    document
+                    .getElementById("image")
+                    .files[0];
+
+
+                if (
+                    !name ||
+                    !price ||
+                    !category ||
+                    !location ||
+                    !phone ||
+                    !description
+                ) {
 
                     showMessage(
-                        "There was a problem publishing your listing. Please try again.",
+                        "Please fill in all required fields.",
                         "error"
                     );
 
@@ -245,55 +452,219 @@
 
 
                 showMessage(
-                    "Your product has been published successfully!",
+                    "Publishing your listing...",
                     "success"
                 );
 
 
-                document
-                    .getElementById("sellForm")
-                    .reset();
+                try {
+
+                    let imageUrl = "";
 
 
-                setTimeout(function() {
+                    /* UPLOAD IMAGE */
 
-                    window.location.href =
-                        "index.html";
+                    if (imageFile) {
 
-                }, 1800);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Connection error:",
-                    error
-                );
-
-                showMessage(
-                    "Could not connect to BUYZA database.",
-                    "error"
-                );
-
-            }
-
-        });
+                        const fileExtension =
+                            imageFile.name
+                            .split(".")
+                            .pop()
+                            .toLowerCase();
 
 
-    function showMessage(message, type) {
+                        const fileName =
+                            Date.now() +
+                            "-" +
+                            Math.random()
+                            .toString(36)
+                            .substring(2) +
+                            "." +
+                            fileExtension;
 
-        const messageBox =
-            document.getElementById("message");
 
-        messageBox.textContent =
-            message;
+                        const uploadResponse =
+                            await fetch(
+                                SUPABASE_URL +
+                                "/storage/v1/object/product-images/" +
+                                fileName,
+                                {
+                                    method: "POST",
 
-        messageBox.className =
-            "message " + type;
+                                    headers: {
 
-        messageBox.style.display =
-            "block";
+                                        "apikey":
+                                            SUPABASE_KEY,
 
-    }
+                                        "Authorization":
+                                            "Bearer " +
+                                            SUPABASE_KEY,
 
-</script>
+                                        "Content-Type":
+                                            imageFile.type
+
+                                    },
+
+                                    body:
+                                        imageFile
+
+                                }
+                            );
+
+
+                        if (!uploadResponse.ok) {
+
+                            const uploadError =
+                                await uploadResponse.text();
+
+                            console.error(
+                                uploadError
+                            );
+
+                            showMessage(
+                                "Image upload failed. Please check your image bucket settings.",
+                                "error"
+                            );
+
+                            return;
+
+                        }
+
+
+                        imageUrl =
+                            SUPABASE_URL +
+                            "/storage/v1/object/public/product-images/" +
+                            fileName;
+
+                    }
+
+
+                    /* SAVE PRODUCT */
+
+                    const product = {
+
+                        name: name,
+
+                        price: Number(price),
+
+                        category: category,
+
+                        location: location,
+
+                        phone: phone,
+
+                        description: description,
+
+                        image_url: imageUrl
+
+                    };
+
+
+                    const response =
+                        await fetch(
+                            SUPABASE_URL +
+                            "/rest/v1/products",
+                            {
+                                method: "POST",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "apikey":
+                                        SUPABASE_KEY,
+
+                                    "Authorization":
+                                        "Bearer " +
+                                        SUPABASE_KEY,
+
+                                    "Prefer":
+                                        "return=representation"
+
+                                },
+
+                                body:
+                                    JSON.stringify(product)
+
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        const error =
+                            await response.text();
+
+                        console.error(
+                            "Supabase error:",
+                            error
+                        );
+
+                        showMessage(
+                            "There was a problem publishing your listing.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    showMessage(
+                        "Your product has been published successfully!",
+                        "success"
+                    );
+
+
+                    document
+                        .getElementById("sellForm")
+                        .reset();
+
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1800);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Connection error:",
+                        error
+                    );
+
+                    showMessage(
+                        "Could not connect to BUYZA database.",
+                        "error"
+                    );
+
+                }
+
+            });
+
+
+        function showMessage(message, type) {
+
+            const messageBox =
+                document.getElementById("message");
+
+            messageBox.textContent =
+                message;
+
+            messageBox.className =
+                "message " + type;
+
+            messageBox.style.display =
+                "block";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
