@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -386,13 +385,20 @@
     </footer>
 
 
-    <!-- JAVASCRIPT -->
+    <!-- SUPABASE JAVASCRIPT -->
 
     <script>
 
+        const SUPABASE_URL =
+            "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+
         document
             .getElementById("sellForm")
-            .addEventListener("submit", function(event) {
+            .addEventListener("submit", async function(event) {
 
                 event.preventDefault();
 
@@ -437,11 +443,6 @@
                     .trim();
 
 
-                const imageInput =
-                    document
-                    .getElementById("image");
-
-
                 if (
                     !name ||
                     !price ||
@@ -461,13 +462,6 @@
                 }
 
 
-                /*
-                    Save the listing in the browser.
-
-                    This connects with the current
-                    index.html version we created.
-                */
-
                 const product = {
 
                     name: name,
@@ -482,70 +476,104 @@
 
                     description: description,
 
-                    image: ""
+                    image_url: ""
 
                 };
 
 
-                /*
-                    Save image as a local browser image
-                    when the seller selects one.
-                */
+                showMessage(
+                    "Publishing your listing...",
+                    "success"
+                );
 
-                if (imageInput.files.length > 0) {
 
-                    const reader =
-                        new FileReader();
+                try {
 
-                    reader.onload = function() {
+                    const response =
+                        await fetch(
+                            SUPABASE_URL +
+                            "/rest/v1/products",
+                            {
+                                method: "POST",
 
-                        product.image =
-                            reader.result;
+                                headers: {
 
-                        saveProduct(product);
+                                    "Content-Type":
+                                        "application/json",
 
-                    };
+                                    "apikey":
+                                        SUPABASE_KEY,
 
-                    reader.readAsDataURL(
-                        imageInput.files[0]
+                                    "Authorization":
+                                        "Bearer " +
+                                        SUPABASE_KEY,
+
+                                    "Prefer":
+                                        "return=representation"
+
+                                },
+
+                                body:
+                                    JSON.stringify(product)
+
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        const error =
+                            await response.text();
+
+                        console.error(
+                            "Supabase error:",
+                            error
+                        );
+
+                        showMessage(
+                            "There was a problem publishing your listing. Please try again.",
+                            "error"
+                        );
+
+                        return;
+
+                    }
+
+
+                    showMessage(
+                        "Your product has been published successfully!",
+                        "success"
                     );
 
-                } else {
 
-                    saveProduct(product);
+                    document
+                        .getElementById("sellForm")
+                        .reset();
+
+
+                    setTimeout(function() {
+
+                        window.location.href =
+                            "index.html";
+
+                    }, 1800);
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Connection error:",
+                        error
+                    );
+
+                    showMessage(
+                        "Could not connect to BUYZA database.",
+                        "error"
+                    );
 
                 }
 
             });
-
-
-        function saveProduct(product) {
-
-            localStorage.setItem(
-                "buyzaProduct",
-                JSON.stringify(product)
-            );
-
-
-            showMessage(
-                "Your product has been published successfully!",
-                "success"
-            );
-
-
-            document
-                .getElementById("sellForm")
-                .reset();
-
-
-            setTimeout(function() {
-
-                window.location.href =
-                    "index.html";
-
-            }, 1800);
-
-        }
 
 
         function showMessage(message, type) {
@@ -570,4 +598,3 @@
 </body>
 
 </html>
-```
