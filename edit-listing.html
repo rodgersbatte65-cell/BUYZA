@@ -1,295 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Listings - BUYZA</title>
+<meta charset="UTF-8">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
 
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f5f7;
-            color: #222;
-        }
+<title>Edit Listing - BUYZA</title>
 
-        /* HEADER */
+<style>
 
-        header {
-            background: #111;
-            color: white;
-            padding: 18px 25px;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .header-inner {
-            max-width: 1100px;
-            margin: auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
 
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
-        }
+header {
+    background: #111827;
+    color: white;
+    padding: 18px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .account-link {
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-        }
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
 
-        /* PAGE */
+.back {
+    color: white;
+    text-decoration: none;
+    background: #374151;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
 
-        .container {
-            max-width: 1100px;
-            margin: 35px auto;
-            padding: 0 20px;
-        }
+.container {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 20px;
+}
 
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
+.form-box {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
 
-        .page-header h2 {
-            margin: 0;
-            font-size: 28px;
-        }
+h1 {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
 
-        .back-link {
-            color: #111;
-            text-decoration: none;
-            font-weight: bold;
-        }
+label {
+    display: block;
+    margin-top: 18px;
+    margin-bottom: 7px;
+    font-weight: bold;
+}
 
-        /* LISTINGS */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+}
 
-        .listings {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-        }
+textarea {
+    min-height: 130px;
+    resize: vertical;
+}
 
-        .listing-card {
-            background: white;
-            border-radius: 14px;
-            overflow: hidden;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            transition: transform 0.2s ease;
-        }
+.current-image {
+    width: 180px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 10px;
+    display: block;
+}
 
-        .listing-card:hover {
-            transform: translateY(-3px);
-        }
+.save-btn {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background: #ff6b00;
+    color: white;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .product-image {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
-        }
+.save-btn:hover {
+    background: #e85f00;
+}
 
-        .no-image {
-            height: 220px;
-            background: #e9e9e9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 55px;
-        }
+.message {
+    text-align: center;
+    padding: 30px;
+}
 
-        .card-content {
-            padding: 18px;
-        }
+.error {
+    color: #dc2626;
+}
 
-        .product-name {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
+</style>
 
-        .price {
-            font-size: 19px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .category {
-            display: inline-block;
-            padding: 5px 10px;
-            background: #f0f0f0;
-            border-radius: 20px;
-            font-size: 12px;
-            margin-bottom: 12px;
-        }
-
-        .location {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .phone {
-            color: #555;
-            font-size: 14px;
-            margin-bottom: 12px;
-        }
-
-        .description {
-            color: #555;
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 18px;
-        }
-
-        /* ACTION BUTTONS */
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-
-        .edit-btn,
-        .delete-btn {
-            flex: 1;
-            height: 42px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-        }
-
-        .edit-btn {
-            background: #111;
-            color: white;
-            border: 1px solid #111;
-        }
-
-        .edit-btn:hover {
-            background: #333;
-        }
-
-        .delete-btn {
-            background: white;
-            color: #d32f2f;
-            border: 1px solid #d32f2f;
-        }
-
-        .delete-btn:hover {
-            background: #d32f2f;
-            color: white;
-        }
-
-        /* MESSAGE */
-
-        #message {
-            text-align: center;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-
-        .empty {
-            background: white;
-            padding: 50px 20px;
-            border-radius: 14px;
-            text-align: center;
-        }
-
-        .sell-btn {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 12px 20px;
-            background: #111;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 600px) {
-
-            .page-header {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 12px;
-            }
-
-            .page-header h2 {
-                font-size: 24px;
-            }
-
-            .actions {
-                gap: 8px;
-            }
-
-            .edit-btn,
-            .delete-btn {
-                height: 40px;
-                font-size: 13px;
-            }
-        }
-
-    </style>
 </head>
 
 <body>
 
 <header>
 
-    <div class="header-inner">
+<div class="logo">
+BUYZA
+</div>
 
-        <div class="logo">
-            BUYZA
-        </div>
-
-        <a href="account.html" class="account-link">
-            👤 My Account
-        </a>
-
-    </div>
+<a href="my-listings.html" class="back">
+← My Listings
+</a>
 
 </header>
 
 
 <div class="container">
 
-    <div class="page-header">
+<div class="form-box">
 
-        <h2>
-            📦 My Listings
-        </h2>
+<h1>
+✏️ Edit Listing
+</h1>
 
-        <a href="account.html" class="back-link">
-            ← Back to Account
-        </a>
+<div id="message" class="message">
+Loading listing...
+</div>
 
-    </div>
+<form id="editForm" style="display:none;">
+
+<label>
+Product Name
+</label>
+
+<input
+type="text"
+id="name"
+required
+>
 
 
-    <div id="message">
-        Loading your listings...
-    </div>
+<label>
+Price (UGX)
+</label>
+
+<input
+type="number"
+id="price"
+required
+>
 
 
-    <div id="listings" class="listings"></div>
+<label>
+Category
+</label>
+
+<select id="category" required>
+
+<option value="">Select Category</option>
+
+<option value="Phones">Phones</option>
+
+<option value="Cars">Cars</option>
+
+<option value="Fashion">Fashion</option>
+
+<option value="Electronics">Electronics</option>
+
+<option value="Home">Home</option>
+
+<option value="Other">Other</option>
+
+</select>
+
+
+<label>
+Location
+</label>
+
+<input
+type="text"
+id="location"
+required
+>
+
+
+<label>
+Phone Number
+</label>
+
+<input
+type="text"
+id="phone"
+required
+>
+
+
+<label>
+Description
+</label>
+
+<textarea
+id="description"
+required
+></textarea>
+
+
+<label>
+Current Product Image
+</label>
+
+<img
+id="currentImage"
+class="current-image"
+src=""
+alt="Current product image"
+>
+
+
+<label>
+Change Image (optional)
+</label>
+
+<input
+type="file"
+id="image"
+accept="image/*"
+>
+
+
+<button
+type="submit"
+class="save-btn"
+id="saveButton">
+
+💾 Save Changes
+
+</button>
+
+</form>
+
+</div>
 
 </div>
 
@@ -297,82 +272,92 @@
 <script>
 
 const SUPABASE_URL =
-    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+"https://xbjmdsdgisusnxdmlrxh.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+"sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+const params =
+new URLSearchParams(window.location.search);
+
+const productId =
+params.get("id");
+
+const userData =
+localStorage.getItem("buyza_user");
+
+const token =
+localStorage.getItem("buyza_access_token");
+
+const message =
+document.getElementById("message");
+
+const form =
+document.getElementById("editForm");
 
 
-const savedUser =
-    localStorage.getItem("buyza_user");
-
-const accessToken =
-    localStorage.getItem("buyza_access_token");
+let currentProduct = null;
 
 
-/* LOGIN CHECK */
-
-if (!savedUser || !accessToken) {
+if (!userData || !token) {
 
     window.location.href = "login.html";
 
 }
 
 
-const user = JSON.parse(savedUser);
+else if (!productId) {
 
-
-/* ESCAPE HTML */
-
-function escapeHtml(value) {
-
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    message.innerHTML =
+        "<div class='error'>❌ No product ID was provided.</div>";
 
 }
 
 
-/* LOAD LISTINGS */
+else {
 
-async function loadListings() {
+    loadProduct();
 
-    const message =
-        document.getElementById("message");
+}
 
-    const listings =
-        document.getElementById("listings");
 
+async function loadProduct() {
 
     try {
 
-        const response = await fetch(
+        const user =
+            JSON.parse(userData);
 
-            `${SUPABASE_URL}/rest/v1/products?select=*&user_id=eq.${encodeURIComponent(user.id)}&order=created_at.desc`,
 
-            {
-                headers: {
-
-                    "apikey": SUPABASE_KEY,
-
-                    "Authorization":
-                        "Bearer " + accessToken
-
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/products?id=eq." +
+                encodeURIComponent(productId) +
+                "&select=*",
+                {
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization":
+                            "Bearer " + token
+                    }
                 }
-            }
-
-        );
+            );
 
 
         if (!response.ok) {
 
-            throw new Error(
-                await response.text()
-            );
+            const error =
+                await response.text();
 
+            console.error(error);
+
+            message.innerHTML =
+                "<div class='error'>" +
+                "❌ Could not load this listing." +
+                "</div>";
+
+            return;
         }
 
 
@@ -380,227 +365,287 @@ async function loadListings() {
             await response.json();
 
 
-        listings.innerHTML = "";
-
-
         if (!products.length) {
 
-            message.innerHTML = `
-                <div class="empty">
-
-                    <h3>No listings yet</h3>
-
-                    <p>
-                        You haven't posted anything for sale.
-                    </p>
-
-                    <a
-                        href="sell.html"
-                        class="sell-btn"
-                    >
-                        + Sell a Product
-                    </a>
-
-                </div>
-            `;
+            message.innerHTML =
+                "<div class='error'>" +
+                "❌ Listing not found." +
+                "</div>";
 
             return;
-
         }
 
 
-        message.textContent =
-            `You have ${products.length} listing${products.length === 1 ? "" : "s"}.`;
+        currentProduct =
+            products[0];
 
 
-        products.forEach(function(product) {
+        if (
+            currentProduct.user_id &&
+            currentProduct.user_id !== user.id
+        ) {
+
+            message.innerHTML =
+                "<div class='error'>" +
+                "❌ You can only edit your own listings." +
+                "</div>";
+
+            return;
+        }
 
 
-            let imageHTML;
+        document.getElementById("name").value =
+            currentProduct.name || "";
 
 
-            if (product.image_url) {
-
-                imageHTML = `
-                    <img
-                        class="product-image"
-                        src="${escapeHtml(product.image_url)}"
-                        alt="${escapeHtml(product.name)}"
-                    >
-                `;
-
-            } else {
-
-                imageHTML = `
-                    <div class="no-image">
-                        📦
-                    </div>
-                `;
-
-            }
+        document.getElementById("price").value =
+            currentProduct.price || "";
 
 
-            const card =
-                document.createElement("div");
-
-            card.className =
-                "listing-card";
+        document.getElementById("category").value =
+            currentProduct.category || "";
 
 
-            card.innerHTML = `
-
-                ${imageHTML}
-
-                <div class="card-content">
-
-                    <div class="product-name">
-                        ${escapeHtml(product.name)}
-                    </div>
-
-                    <div class="price">
-                        UGX ${Number(product.price || 0).toLocaleString()}
-                    </div>
-
-                    <div class="category">
-                        ${escapeHtml(product.category || "Other")}
-                    </div>
-
-                    <div class="location">
-                        📍 ${escapeHtml(product.location || "Location not provided")}
-                    </div>
-
-                    <div class="phone">
-                        📞 ${escapeHtml(product.phone || "No phone number")}
-                    </div>
-
-                    <div class="description">
-                        ${escapeHtml(product.description || "No description")}
-                    </div>
+        document.getElementById("location").value =
+            currentProduct.location || "";
 
 
-                    <div class="actions">
-
-                        <a
-                            href="edit-listing.html?id=${encodeURIComponent(product.id)}"
-                            class="edit-btn"
-                        >
-                            ✏️ Edit
-                        </a>
-
-                        <button
-                            class="delete-btn"
-                            onclick="deleteListing('${product.id}')"
-                        >
-                            🗑️ Delete
-                        </button>
-
-                    </div>
-
-                </div>
-
-            `;
+        document.getElementById("phone").value =
+            currentProduct.phone || "";
 
 
-            listings.appendChild(card);
+        document.getElementById("description").value =
+            currentProduct.description || "";
 
-        });
+
+        const image =
+            document.getElementById("currentImage");
 
 
-    } catch (error) {
+        if (currentProduct.image_url) {
+
+            image.src =
+                currentProduct.image_url;
+
+        }
+
+        else {
+
+            image.style.display =
+                "none";
+        }
+
+
+        message.style.display =
+            "none";
+
+        form.style.display =
+            "block";
+
+    }
+
+    catch (error) {
 
         console.error(error);
 
-        message.innerHTML = `
-            <div class="empty">
-
-                ❌ Could not load your listings.
-
-            </div>
-        `;
+        message.innerHTML =
+            "<div class='error'>" +
+            "❌ Connection error." +
+            "</div>";
 
     }
 
 }
 
 
-/* DELETE */
+form.addEventListener(
+    "submit",
+    async function(event) {
 
-async function deleteListing(productId) {
-
-    const confirmed =
-        confirm(
-            "Are you sure you want to delete this listing?"
-        );
+        event.preventDefault();
 
 
-    if (!confirmed) {
-
-        return;
-
-    }
+        const saveButton =
+            document.getElementById("saveButton");
 
 
-    try {
+        saveButton.disabled =
+            true;
 
-        const response = await fetch(
+        saveButton.textContent =
+            "Saving...";
 
-            `${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(productId)}`,
 
-            {
-                method: "DELETE",
+        try {
 
-                headers: {
+            const updates = {
 
-                    "apikey": SUPABASE_KEY,
+                name:
+                    document.getElementById("name").value.trim(),
 
-                    "Authorization":
-                        "Bearer " + accessToken,
+                price:
+                    Number(
+                        document.getElementById("price").value
+                    ),
 
-                    "Prefer":
-                        "return=minimal"
+                category:
+                    document.getElementById("category").value,
+
+                location:
+                    document.getElementById("location").value.trim(),
+
+                phone:
+                    document.getElementById("phone").value.trim(),
+
+                description:
+                    document.getElementById("description").value.trim()
+
+            };
+
+
+            const imageFile =
+                document.getElementById("image").files[0];
+
+
+            /*
+             * Upload new image if selected
+             */
+
+            if (imageFile) {
+
+                const fileName =
+                    Date.now() +
+                    "-" +
+                    Math.random()
+                        .toString(36)
+                        .substring(2) +
+                    "-" +
+                    imageFile.name
+                        .replace(/\s+/g, "-");
+
+
+                const uploadResponse =
+                    await fetch(
+                        SUPABASE_URL +
+                        "/storage/v1/object/product-images/" +
+                        fileName,
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "apikey":
+                                    SUPABASE_KEY,
+
+                                "Authorization":
+                                    "Bearer " + token,
+
+                                "Content-Type":
+                                    imageFile.type
+                            },
+
+                            body:
+                                imageFile
+                        }
+                    );
+
+
+                if (!uploadResponse.ok) {
+
+                    const uploadError =
+                        await uploadResponse.text();
+
+                    throw new Error(
+                        "Image upload failed: " +
+                        uploadError
+                    );
 
                 }
 
+
+                updates.image_url =
+                    SUPABASE_URL +
+                    "/storage/v1/object/public/product-images/" +
+                    fileName;
+
             }
 
-        );
+
+            /*
+             * Update product
+             */
+
+            const updateResponse =
+                await fetch(
+                    SUPABASE_URL +
+                    "/rest/v1/products?id=eq." +
+                    encodeURIComponent(productId),
+                    {
+                        method: "PATCH",
+
+                        headers: {
+
+                            "apikey":
+                                SUPABASE_KEY,
+
+                            "Authorization":
+                                "Bearer " + token,
+
+                            "Content-Type":
+                                "application/json",
+
+                            "Prefer":
+                                "return=representation"
+                        },
+
+                        body:
+                            JSON.stringify(updates)
+                    }
+                );
 
 
-        if (!response.ok) {
+            if (!updateResponse.ok) {
 
-            throw new Error(
-                await response.text()
+                const error =
+                    await updateResponse.text();
+
+                throw new Error(error);
+
+            }
+
+
+            alert(
+                "✅ Listing updated successfully!"
             );
+
+
+            window.location.href =
+                "my-listings.html";
 
         }
 
+        catch (error) {
 
-        alert(
-            "✅ Listing deleted successfully."
-        );
+            console.error(error);
+
+            alert(
+                "❌ Update failed:\n\n" +
+                error.message
+            );
 
 
-        loadListings();
+            saveButton.disabled =
+                false;
 
+            saveButton.textContent =
+                "💾 Save Changes";
 
-    } catch (error) {
-
-        console.error(error);
-
-        alert(
-            "❌ Could not delete listing."
-        );
+        }
 
     }
-
-}
-
-
-/* START */
-
-loadListings();
+);
 
 </script>
 
 </body>
+
 </html>
