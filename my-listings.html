@@ -1,4 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>My Listings - BUYZA</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
+
+header {
+    background: #111827;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.back-btn {
+    color: white;
+    text-decoration: none;
+    background: #374151;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    margin-bottom: 25px;
+}
+
+.listing {
+    background: white;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    padding: 18px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.listing img {
+    width: 180px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #eee;
+}
+
+.info {
+    flex: 1;
+}
+
+.info h2 {
+    margin: 0 0 8px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.details {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.description {
+    margin-bottom: 15px;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.edit-btn {
+    background: #111827;
+    color: white;
+    border: none;
+}
+
+.delete-btn {
+    background: white;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+}
+
+.edit-btn:hover {
+    background: #374151;
+}
+
+.delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
+
+.empty {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+}
+
+.error-box {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 12px;
+    color: #dc2626;
+}
+
+@media (max-width: 700px) {
+
+    .listing {
+        flex-direction: column;
+    }
+
+    .listing img {
+        width: 100%;
+        height: 220px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        text-align: center;
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        BUYZA
+    </div>
+
+    <a href="account.html" class="back-btn">
+        ← My Account
+    </a>
+
+</header>
+
+
+<div class="container">
+
+    <h1>My Listings</h1>
+
+    <div id="listings" class="loading">
+        Loading your listings...
+    </div>
+
+</div>
+
+
+<!-- BUYZA SESSION REFRESH -->
 <script src="auth.js"></script>
+
 
 <script>
 
@@ -7,6 +208,7 @@ const SUPABASE_URL =
 
 const SUPABASE_KEY =
 "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
 
 const listingsContainer =
 document.getElementById("listings");
@@ -32,32 +234,25 @@ async function loadListings() {
     try {
 
         listingsContainer.innerHTML =
-            "<div class='loading'>" +
-            "🔄 Checking login..." +
-            "</div>";
+            "<div class='loading'>🔄 Checking your login...</div>";
 
 
-        console.log("STEP 1: Checking session");
-
-
+        /*
+         * Refresh the Supabase session first.
+         */
         const sessionOK =
             await checkBuyzaSession();
-
-
-        console.log(
-            "STEP 2: Session result:",
-            sessionOK
-        );
 
 
         if (!sessionOK) {
 
             listingsContainer.innerHTML =
-                "<div class='empty'>" +
+                "<div class='error-box'>" +
                 "<h2>Login required</h2>" +
-                "<p>Please login again.</p>" +
+                "<p>Your session has expired.</p>" +
+                "<br>" +
                 "<a href='login.html' class='edit-btn'>" +
-                "Login" +
+                "Login Again" +
                 "</a>" +
                 "</div>";
 
@@ -65,6 +260,9 @@ async function loadListings() {
         }
 
 
+        /*
+         * Get the latest user information.
+         */
         const userData =
             localStorage.getItem("buyza_user");
 
@@ -78,64 +276,63 @@ async function loadListings() {
         }
 
 
-        const user =
-            JSON.parse(userData);
+        let user;
+
+        try {
+
+            user =
+                JSON.parse(userData);
+
+        } catch (error) {
+
+            localStorage.removeItem(
+                "buyza_user"
+            );
+
+            localStorage.removeItem(
+                "buyza_access_token"
+            );
+
+            localStorage.removeItem(
+                "buyza_refresh_token"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
 
 
+        /*
+         * Get the newest access token
+         * AFTER the refresh.
+         */
         const token =
             localStorage.getItem(
                 "buyza_access_token"
             );
 
 
-        console.log(
-            "STEP 3: User ID:",
-            user.id
-        );
+        if (!token) {
 
+            window.location.href =
+                "login.html";
 
-        console.log(
-            "STEP 4: Access token exists:",
-            !!token
-        );
+            return;
+        }
 
 
         listingsContainer.innerHTML =
-            "<div class='loading'>" +
-            "🔄 Connecting to BUYZA..." +
-            "</div>";
-
-
-        const url =
-            SUPABASE_URL +
-            "/rest/v1/products?select=*&user_id=eq." +
-            encodeURIComponent(user.id) +
-            "&order=created_at.desc";
-
-
-        console.log(
-            "STEP 5: Requesting listings"
-        );
-
-
-        /*
-         * Stop waiting after 10 seconds.
-         */
-        const controller =
-            new AbortController();
-
-
-        const timeout =
-            setTimeout(() => {
-
-                controller.abort();
-
-            }, 10000);
+            "<div class='loading'>🔄 Loading your listings...</div>";
 
 
         const response =
             await fetch(
-                url,
+                SUPABASE_URL +
+                "/rest/v1/products?select=*&user_id=eq." +
+                encodeURIComponent(user.id) +
+                "&order=created_at.desc",
                 {
                     method: "GET",
 
@@ -143,20 +340,9 @@ async function loadListings() {
                         "apikey": SUPABASE_KEY,
                         "Authorization":
                             "Bearer " + token
-                    },
-
-                    signal: controller.signal
+                    }
                 }
             );
-
-
-        clearTimeout(timeout);
-
-
-        console.log(
-            "STEP 6: Supabase response:",
-            response.status
-        );
 
 
         if (!response.ok) {
@@ -164,32 +350,24 @@ async function loadListings() {
             const errorText =
                 await response.text();
 
-
             console.error(
-                "SUPABASE ERROR:",
+                "Supabase error:",
                 errorText
             );
 
-
             listingsContainer.innerHTML =
-                "<div class='empty'>" +
-
-                "<h2>❌ Supabase Error</h2>" +
-
+                "<div class='error-box'>" +
+                "<h2>❌ Could not load listings</h2>" +
                 "<p>" +
                 escapeHtml(errorText) +
                 "</p>" +
-
                 "<br>" +
-
                 "<button " +
                 "class='edit-btn' " +
                 "onclick='loadListings()'>" +
                 "Try Again" +
                 "</button>" +
-
                 "</div>";
-
 
             return;
         }
@@ -199,12 +377,6 @@ async function loadListings() {
             await response.json();
 
 
-        console.log(
-            "STEP 7: Products:",
-            products
-        );
-
-
         if (!products.length) {
 
             listingsContainer.innerHTML =
@@ -212,7 +384,9 @@ async function loadListings() {
 
                 "<h2>You have no listings yet.</h2>" +
 
-                "<p>Start selling on BUYZA.</p>" +
+                "<p>" +
+                "Start selling on BUYZA." +
+                "</p>" +
 
                 "<br>" +
 
@@ -311,53 +485,33 @@ async function loadListings() {
     } catch (error) {
 
         console.error(
-            "LOAD LISTINGS ERROR:",
+            "Load listings error:",
             error
         );
 
 
-        if (error.name === "AbortError") {
+        listingsContainer.innerHTML =
+            "<div class='error-box'>" +
 
-            listingsContainer.innerHTML =
-                "<div class='empty'>" +
+            "<h2>❌ Connection Error</h2>" +
 
-                "<h2>⏱️ Supabase connection timed out</h2>" +
+            "<p>" +
+            "Could not load your listings." +
+            "</p>" +
 
-                "<p>" +
-                "The database did not respond within 10 seconds." +
-                "</p>" +
+            "<p>" +
+            escapeHtml(error.message) +
+            "</p>" +
 
-                "<br>" +
+            "<br>" +
 
-                "<button " +
-                "class='edit-btn' " +
-                "onclick='loadListings()'>" +
-                "Try Again" +
-                "</button>" +
+            "<button " +
+            "class='edit-btn' " +
+            "onclick='loadListings()'>" +
+            "Try Again" +
+            "</button>" +
 
-                "</div>";
-
-        } else {
-
-            listingsContainer.innerHTML =
-                "<div class='empty'>" +
-
-                "<h2>❌ Error</h2>" +
-
-                "<p>" +
-                escapeHtml(error.message) +
-                "</p>" +
-
-                "<br>" +
-
-                "<button " +
-                "class='edit-btn' " +
-                "onclick='loadListings()'>" +
-                "Try Again" +
-                "</button>" +
-
-                "</div>";
-        }
+            "</div>";
     }
 }
 
@@ -368,13 +522,20 @@ async function deleteListing(encodedId) {
         decodeURIComponent(encodedId);
 
 
-    if (!confirm(
-        "Are you sure you want to delete this listing?"
-    )) {
+    const confirmed =
+        confirm(
+            "Are you sure you want to delete this listing?"
+        );
+
+
+    if (!confirmed) {
         return;
     }
 
 
+    /*
+     * Refresh session before deleting.
+     */
     const sessionOK =
         await checkBuyzaSession();
 
@@ -382,7 +543,7 @@ async function deleteListing(encodedId) {
     if (!sessionOK) {
 
         alert(
-            "Your session has expired. Please login again."
+            "Your login session has expired. Please login again."
         );
 
         window.location.href =
@@ -396,6 +557,19 @@ async function deleteListing(encodedId) {
         localStorage.getItem(
             "buyza_access_token"
         );
+
+
+    if (!token) {
+
+        alert(
+            "Your login session has expired. Please login again."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
 
 
     try {
@@ -426,8 +600,13 @@ async function deleteListing(encodedId) {
             const error =
                 await response.text();
 
+            console.error(
+                "Delete error:",
+                error
+            );
+
             alert(
-                "❌ Delete failed:\n\n" +
+                "❌ Delete failed.\n\n" +
                 error
             );
 
@@ -440,19 +619,28 @@ async function deleteListing(encodedId) {
         );
 
 
-        loadListings();
-
+        await loadListings();
 
     } catch (error) {
 
+        console.error(
+            "Delete error:",
+            error
+        );
+
         alert(
-            "❌ Delete error:\n\n" +
-            error.message
+            "❌ Something went wrong while deleting."
         );
     }
 }
 
 
+/*
+ * Start loading.
+ */
 loadListings();
 
 </script>
+
+</body>
+</html>
