@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Product Details - BUYZA</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
+
+        header {
+            background: white;
+            padding: 18px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .logo {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ff6b00;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            margin-left: 25px;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            background: #ff6b00;
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .product-box {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .image-section {
+            background: #f0f0f0;
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-section img {
+            width: 100%;
+            height: 450px;
+            object-fit: contain;
+        }
+
+        .no-image {
+            color: #777;
+            font-size: 20px;
+        }
+
+        .details {
+            padding: 40px;
+        }
+
+        .category {
+            display: inline-block;
+            background: #fff0e6;
+            color: #ff6b00;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6b00;
+            margin-bottom: 25px;
+        }
+
+        .info {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .info strong {
+            display: inline-block;
+            width: 90px;
+        }
+
+        .description-title {
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        .description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            white-space: pre-wrap;
+        }
+
+        .contact-button {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+        }
+
+        .call-button {
+            background: #ff6b00;
+            color: white;
+        }
+
+        .whatsapp-button {
+            background: #25d366;
+            color: white;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        .loading {
+            text-align: center;
+            font-size: 20px;
+            padding: 60px;
+        }
+
+        .error {
+            background: #ffe8e8;
+            color: #b00000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        footer {
+            background: #222;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 800px) {
+
+            .product-box {
+                grid-template-columns: 1fr;
+            }
+
+            .image-section {
+                min-height: 300px;
+            }
+
+            .image-section img {
+                height: 300px;
+            }
+
+            .details {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            BUYZA
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="sell.html"
+                class="home-btn">
+                Sell
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- PRODUCT -->
+
+    <div class="container">
+
+        <a href="index.html"
+            class="back-button">
+            ← Back to BUYZA
+        </a>
+
+
+        <div id="productContainer">
+
+            <div class="loading">
+                Loading product...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <h2>
+            BUYZA
+        </h2>
+
+        <p>
+            Buy. Sell. Connect.
+        </p>
+
+        <p>
+            © 2026 BUYZA. All rights reserved.
+        </p>
+
+    </footer>
+
+
+    <!-- SUPABASE -->
+
+    <script>
+
+        const SUPABASE_URL =
+            "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+
+        function escapeHtml(value) {
+
+            return String(value || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        function contactSeller(phone) {
+
+            if (!phone) {
+
+                alert(
+                    "Seller phone number is not available."
+                );
+
+                return;
+
+            }
+
+
+            let number =
+                phone
+                .replace(/\s/g, "")
+                .replace(/-/g, "")
+                .replace(/\+/g, "");
+
+
+            if (number.startsWith("0")) {
+
+                number =
+                    "256" +
+                    number.substring(1);
+
+            }
+
+
+            const callNumber =
+                phone
+                .replace(/\s/g, "");
+
+
+            window.location.href =
+                "tel:" + callNumber;
+
+        }
+
+
+        function whatsappSeller(phone) {
+
+            if (!phone) {
+
+                alert(
+                    "Seller phone number is not available."
+                );
+
+                return;
+
+            }
+
+
+            let number =
+                phone
+                .replace(/\s/g, "")
+                .replace(/-/g, "")
+                .replace(/\+/g, "");
+
+
+            if (number.startsWith("0")) {
+
+                number =
+                    "256" +
+                    number.substring(1);
+
+            }
+
+
+            const message =
+                "Hello, I found your product on BUYZA. Is it still available?";
+
+
+            const whatsappUrl =
+                "https://wa.me/" +
+                number +
+                "?text=" +
+                encodeURIComponent(message);
+
+
+            window.open(
+                whatsappUrl,
+                "_blank"
+            );
+
+        }
+
+
+        async function loadProduct() {
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const productId =
+                params.get("id");
+
+
+            if (!productId) {
+
+                showError(
+                    "Product not found."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        SUPABASE_URL +
+                        "/rest/v1/products?id=eq." +
+                        encodeURIComponent(productId) +
+                        "&select=*",
+                        {
+                            headers: {
+
+                                "apikey":
+                                    SUPABASE_KEY,
+
+                                "Authorization":
+                                    "Bearer " +
+                                    SUPABASE_KEY
+
+                            }
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    showError(
+                        "Could not load this product."
+                    );
+
+                    return;
+
+                }
+
+
+                const products =
+                    await response.json();
+
+
+                if (
+                    !products ||
+                    products.length === 0
+                ) {
+
+                    showError(
+                        "Product not found."
+                    );
+
+                    return;
+
+                }
+
+
+                const product =
+                    products[0];
+
+
+                displayProduct(product);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showError(
+                    "Could not connect to BUYZA."
+                );
+
+            }
+
+        }
+
+
+        function displayProduct(product) {
+
+            const container =
+                document.getElementById(
+                    "productContainer"
+                );
+
+
+            let imageHtml = "";
+
+
+            if (product.image_url) {
+
+                imageHtml =
+                    `
+                    <img
+                        src="${escapeHtml(product.image_url)}"
+                        alt="${escapeHtml(product.name)}"
+                    >
+                    `;
+
+            } else {
+
+                imageHtml =
+                    `
+                    <div class="no-image">
+                        📦 No image available
+                    </div>
+                    `;
+
+            }
+
+
+            container.innerHTML =
+
+                `
+                <div class="product-box">
+
+                    <div class="image-section">
+
+                        ${imageHtml}
+
+                    </div>
+
+
+                    <div class="details">
+
+                        <span class="category">
+
+                            ${escapeHtml(product.category)}
+
+                        </span>
+
+
+                        <h1>
+
+                            ${escapeHtml(product.name)}
+
+                        </h1>
+
+
+                        <div class="price">
+
+                            UGX
+                            ${Number(product.price).toLocaleString()}
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <strong>📍 Location:</strong>
+
+                            ${escapeHtml(product.location)}
+
+                        </div>
+
+
+                        <div class="info">
+
+                            <strong>📞 Phone:</strong>
+
+                            ${escapeHtml(product.phone)}
+
+                        </div>
+
+
+                        <h3 class="description-title">
+
+                            Description
+
+                        </h3>
+
+
+                        <div class="description">
+
+                            ${escapeHtml(product.description)}
+
+                        </div>
+
+
+                        <button
+                            class="contact-button call-button"
+                            onclick="contactSeller('${escapeHtml(product.phone)}')"
+                        >
+
+                            📞 Call Seller
+
+                        </button>
+
+
+                        <button
+                            class="contact-button whatsapp-button"
+                            onclick="whatsappSeller('${escapeHtml(product.phone)}')"
+                        >
+
+                            💬 WhatsApp Seller
+
+                        </button>
+
+                    </div>
+
+                </div>
+                `;
+
+        }
+
+
+        function showError(message) {
+
+            document.getElementById(
+                "productContainer"
+            ).innerHTML =
+
+                `
+                <div class="error">
+
+                    ${escapeHtml(message)}
+
+                </div>
+                `;
+
+        }
+
+
+        loadProduct();
+
+    </script>
+
+
+</body>
+
+</html>
