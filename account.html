@@ -1,457 +1,194 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>My Account - BUYZA</title>
 
     <style>
-
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
             background: #f5f6f8;
             color: #222;
         }
 
         header {
-            background: white;
-            padding: 18px 7%;
+            background: #111;
+            color: white;
+            padding: 18px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #ff6b00;
+        header h1 {
+            margin: 0;
+            font-size: 28px;
         }
 
-        nav {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        nav a {
+        header a {
+            color: white;
             text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .home-btn {
-            background: #ff6b00;
-            color: white !important;
-            padding: 10px 18px;
-            border-radius: 8px;
+            margin-left: 15px;
         }
 
         .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        .welcome {
+        .account-card {
             background: white;
+            border-radius: 14px;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
-        .welcome h1 {
-            margin-bottom: 10px;
+        .account-card h2 {
+            margin-top: 0;
         }
 
         .email {
-            color: #777;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.07);
-        }
-
-        .card-icon {
-            font-size: 35px;
-            margin-bottom: 15px;
-        }
-
-        .card h2 {
-            margin-bottom: 10px;
-        }
-
-        .card p {
-            color: #777;
-            margin-bottom: 20px;
+            background: #f5f6f8;
+            padding: 14px;
+            border-radius: 8px;
+            margin: 20px 0;
         }
 
         .button {
-            display: inline-block;
-            background: #ff6b00;
-            color: white;
-            text-decoration: none;
-            padding: 12px 20px;
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
             border-radius: 8px;
-            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            background: #111;
+            color: white;
         }
 
         .button:hover {
-            background: #e85f00;
+            opacity: 0.9;
+        }
+
+        .favorite-button {
+            background: #e91e63;
         }
 
         .logout {
-            background: #222;
-            border: none;
-            color: white;
-            padding: 13px 25px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 25px;
+            background: #d32f2f;
         }
 
-        .logout:hover {
-            background: #444;
-        }
-
-        .message {
-            text-align: center;
-            padding: 40px;
-            background: white;
-            border-radius: 15px;
-        }
-
-        footer {
-            background: #222;
-            color: white;
-            text-align: center;
-            padding: 30px;
-            margin-top: 60px;
-        }
-
-        footer h2 {
-            color: #ff6b00;
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 650px) {
-
+        @media (max-width: 600px) {
             header {
-                padding: 15px 20px;
+                padding: 15px;
             }
 
-            .logo {
-                font-size: 25px;
-            }
-
-            nav a {
-                font-size: 13px;
-            }
-
-            .dashboard {
-                grid-template-columns: 1fr;
+            header h1 {
+                font-size: 23px;
             }
 
             .container {
                 margin-top: 25px;
             }
-
         }
-
     </style>
-
 </head>
-
 
 <body>
 
-
 <header>
 
-    <div class="logo">
-        BUYZA
+    <h1>BUYZA</h1>
+
+    <div>
+        <a href="index.html">Home</a>
+        <a href="sell.html">Sell</a>
     </div>
-
-    <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="sell.html"
-           class="home-btn">
-            Sell
-        </a>
-
-    </nav>
 
 </header>
 
 
-<div class="container"
-     id="accountContainer">
+<div class="container">
 
-    <div class="message">
-        Loading account...
+    <div class="account-card">
+
+        <h2>👤 My Account</h2>
+
+        <div class="email">
+            <strong>Email:</strong>
+            <span id="userEmail">Loading...</span>
+        </div>
+
+
+        <a href="my-listings.html" class="button">
+            📋 My Listings
+        </a>
+
+
+        <a href="favorites.html" class="button favorite-button">
+            ❤️ My Favorites
+        </a>
+
+
+        <a href="sell.html" class="button">
+            ➕ Sell a Product
+        </a>
+
+
+        <button
+            class="button logout"
+            onclick="logout()"
+        >
+            🚪 Logout
+        </button>
+
     </div>
 
 </div>
 
 
-<footer>
-
-    <h2>
-        BUYZA
-    </h2>
-
-    <p>
-        Buy. Sell. Connect.
-    </p>
-
-    <p style="margin-top:10px;">
-        © 2026 BUYZA. All rights reserved.
-    </p>
-
-</footer>
-
-
 <script>
 
+const userData = localStorage.getItem("buyza_user");
 
-const user =
-    JSON.parse(
-        localStorage.getItem(
-            "buyza_user"
-        )
-    );
+const accessToken =
+    localStorage.getItem("buyza_access_token");
 
 
-const token =
-    localStorage.getItem(
-        "buyza_access_token"
-    );
+if (!userData || !accessToken) {
 
+    window.location.href = "login.html";
 
-const container =
-    document.getElementById(
-        "accountContainer"
-    );
+} else {
 
+    const user = JSON.parse(userData);
 
-if (!user || !token) {
-
-    window.location.href =
-        "login.html";
-
-}
-
-
-else {
-
-    const email =
-        user.email || "BUYZA User";
-
-
-    container.innerHTML =
-
-        `
-        <div class="welcome">
-
-            <h1>
-                👋 Welcome to BUYZA
-            </h1>
-
-            <p class="email">
-                ${escapeHtml(email)}
-            </p>
-
-            <button
-                class="logout"
-                onclick="logout()">
-
-                🚪 Logout
-
-            </button>
-
-        </div>
-
-
-        <div class="dashboard">
-
-
-            <!-- MY LISTINGS -->
-
-            <div class="card">
-
-                <div class="card-icon">
-                    📦
-                </div>
-
-                <h2>
-                    My Listings
-                </h2>
-
-                <p>
-                    View and manage the products
-                    you have posted on BUYZA.
-                </p>
-
-                <a
-                    href="my-listings.html"
-                    class="button">
-
-                    📋 My Listings
-
-                </a>
-
-            </div>
-
-
-            <!-- SELL PRODUCT -->
-
-            <div class="card">
-
-                <div class="card-icon">
-                    ➕
-                </div>
-
-                <h2>
-                    Sell a Product
-                </h2>
-
-                <p>
-                    List a new product for buyers
-                    around Uganda.
-                </p>
-
-                <a
-                    href="sell.html"
-                    class="button">
-
-                    Sell Product
-
-                </a>
-
-            </div>
-
-
-            <!-- FAVORITES -->
-
-            <div class="card">
-
-                <div class="card-icon">
-                    ❤️
-                </div>
-
-                <h2>
-                    Favorites
-                </h2>
-
-                <p>
-                    Products you save will appear
-                    here.
-                </p>
-
-                <a
-                    href="#"
-                    class="button">
-
-                    Favorites
-
-                </a>
-
-            </div>
-
-
-            <!-- SETTINGS -->
-
-            <div class="card">
-
-                <div class="card-icon">
-                    ⚙️
-                </div>
-
-                <h2>
-                    Account Settings
-                </h2>
-
-                <p>
-                    Manage your BUYZA account
-                    information.
-                </p>
-
-                <a
-                    href="#"
-                    class="button">
-
-                    Settings
-
-                </a>
-
-            </div>
-
-
-        </div>
-        `;
-
-}
-
-
-function escapeHtml(value) {
-
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
+    document.getElementById("userEmail").textContent =
+        user.email || "User";
 }
 
 
 function logout() {
 
-    localStorage.removeItem(
-        "buyza_access_token"
-    );
+    localStorage.removeItem("buyza_user");
 
-    localStorage.removeItem(
-        "buyza_user"
-    );
+    localStorage.removeItem("buyza_access_token");
 
-
-    window.location.href =
-        "index.html";
-
+    window.location.href = "index.html";
 }
-
 
 </script>
 
-
 </body>
-
 </html>
