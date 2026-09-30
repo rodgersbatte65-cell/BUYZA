@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Login - BUYZA</title>
 
     <style>
@@ -13,25 +14,22 @@
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            background: #f5f5f5;
+            background: #f5f6f8;
         }
 
         header {
             background: #111;
             color: white;
-            padding: 18px 25px;
+            padding: 18px 30px;
         }
 
-        .logo {
-            max-width: 1100px;
-            margin: auto;
-            font-size: 28px;
-            font-weight: bold;
+        header h1 {
+            margin: 0;
         }
 
         .container {
-            max-width: 430px;
-            margin: 60px auto;
+            max-width: 450px;
+            margin: 50px auto;
             padding: 20px;
         }
 
@@ -39,81 +37,52 @@
             background: white;
             padding: 30px;
             border-radius: 14px;
-            box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
 
         h2 {
-            text-align: center;
             margin-top: 0;
-        }
-
-        .subtitle {
             text-align: center;
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 7px;
-            font-weight: bold;
         }
 
         input {
             width: 100%;
             padding: 13px;
-            border: 1px solid #ccc;
+            margin: 8px 0 15px;
+            border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 16px;
         }
 
         button {
             width: 100%;
-            margin-top: 22px;
             padding: 14px;
-            background: #111;
-            color: white;
             border: none;
             border-radius: 8px;
+            background: #111;
+            color: white;
             font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
         }
 
-        button:disabled {
-            background: #777;
+        button:hover {
+            opacity: 0.9;
         }
 
         #message {
-            margin-top: 18px;
-            padding: 12px;
-            border-radius: 8px;
+            margin-top: 15px;
             text-align: center;
-            display: none;
+            color: #d32f2f;
         }
 
-        .success {
-            display: block !important;
-            background: #e8f5e9;
-            color: #176b2c;
-        }
-
-        .error {
-            display: block !important;
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .links {
+        .signup {
             text-align: center;
             margin-top: 20px;
         }
 
-        .links a {
+        .signup a {
             color: #111;
             font-weight: bold;
-            text-decoration: none;
         }
     </style>
 </head>
@@ -121,56 +90,46 @@
 <body>
 
 <header>
-    <div class="logo">BUYZA</div>
+    <h1>BUYZA</h1>
 </header>
 
 <div class="container">
 
     <div class="box">
 
-        <h2>Welcome Back</h2>
-
-        <div class="subtitle">
-            Login to your BUYZA account
-        </div>
+        <h2>👤 Login to BUYZA</h2>
 
         <form id="loginForm">
 
-            <label for="email">Email</label>
+            <label>Email</label>
 
             <input
                 type="email"
                 id="email"
                 placeholder="Enter your email"
-                autocomplete="email"
                 required
             >
 
-            <label for="password">Password</label>
+            <label>Password</label>
 
             <input
                 type="password"
                 id="password"
                 placeholder="Enter your password"
-                autocomplete="current-password"
                 required
             >
 
-            <button type="submit" id="loginButton">
-                🔐 Login
+            <button type="submit">
+                Login
             </button>
 
         </form>
 
         <div id="message"></div>
 
-        <div class="links">
+        <div class="signup">
             Don't have an account?
             <a href="signup.html">Create Account</a>
-        </div>
-
-        <div class="links">
-            <a href="index.html">← Back to BUYZA</a>
         </div>
 
     </div>
@@ -187,161 +146,118 @@ const SUPABASE_KEY =
     "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 
-const form =
-    document.getElementById("loginForm");
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    async function(event) {
 
-const button =
-    document.getElementById("loginButton");
+        event.preventDefault();
 
-const message =
-    document.getElementById("message");
+        const email =
+            document.getElementById("email").value.trim();
 
+        const password =
+            document.getElementById("password").value;
 
-function showMessage(text, type) {
+        const message =
+            document.getElementById("message");
 
-    message.textContent = text;
-
-    message.className = type;
-
-}
-
-
-form.addEventListener("submit", async function(event) {
-
-    event.preventDefault();
-
-    const email =
-        document.getElementById("email").value.trim();
-
-    const password =
-        document.getElementById("password").value;
+        message.style.color = "#333";
+        message.textContent = "Logging in...";
 
 
-    button.disabled = true;
+        try {
 
-    button.textContent = "Logging in...";
+            const response = await fetch(
+                SUPABASE_URL +
+                "/auth/v1/token?grant_type=password",
+                {
+                    method: "POST",
 
-    message.className = "";
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    },
 
-    message.style.display = "none";
-
-
-    try {
-
-        const response = await fetch(
-            SUPABASE_URL +
-            "/auth/v1/token?grant_type=password",
-            {
-                method: "POST",
-
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            }
-        );
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                }
+            );
 
 
-        const data = await response.json();
+            const data = await response.json();
 
 
-        if (!response.ok) {
+            if (!response.ok) {
 
-            showMessage(
-                "❌ " +
-                (
-                    data.error_description ||
-                    data.message ||
+                throw new Error(
                     data.msg ||
-                    "Login failed."
-                ),
-                "error"
+                    data.message ||
+                    data.error_description ||
+                    "Login failed"
+                );
+            }
+
+
+            /*
+             * Save the access token
+             */
+            localStorage.setItem(
+                "buyza_access_token",
+                data.access_token
             );
 
-            button.disabled = false;
-            button.textContent = "🔐 Login";
 
-            return;
+            /*
+             * Save the refresh token
+             */
+            if (data.refresh_token) {
+
+                localStorage.setItem(
+                    "buyza_refresh_token",
+                    data.refresh_token
+                );
+            }
+
+
+            /*
+             * Save the user
+             */
+            if (data.user) {
+
+                localStorage.setItem(
+                    "buyza_user",
+                    JSON.stringify(data.user)
+                );
+            }
+
+
+            message.style.color = "green";
+
+            message.textContent =
+                "✅ Login successful!";
+
+
+            setTimeout(function() {
+
+                window.location.replace("index.html");
+
+            }, 500);
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            message.style.color = "#d32f2f";
+
+            message.textContent =
+                "❌ " + error.message;
         }
 
-
-        if (!data.access_token || !data.user) {
-
-            showMessage(
-                "❌ Login response is missing account information.",
-                "error"
-            );
-
-            button.disabled = false;
-            button.textContent = "🔐 Login";
-
-            return;
-        }
-
-
-        /*
-        REMOVE OLD LOGIN
-        */
-
-        localStorage.removeItem("buyza_access_token");
-        localStorage.removeItem("buyza_user");
-
-
-        /*
-        SAVE FRESH LOGIN
-        */
-
-        localStorage.setItem(
-            "buyza_access_token",
-            data.access_token
-        );
-
-        localStorage.setItem(
-            "buyza_user",
-            JSON.stringify(data.user)
-        );
-
-
-        showMessage(
-            "✅ Login successful! Opening BUYZA...",
-            "success"
-        );
-
-
-        /*
-        GO TO THE HOMEPAGE
-        */
-
-        setTimeout(function() {
-
-            window.location.replace("index.html");
-
-        }, 1000);
-
     }
-
-    catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "❌ Connection error. Please try again.",
-            "error"
-        );
-
-        button.disabled = false;
-
-        button.textContent =
-            "🔐 Login";
-
-    }
-
-});
+);
 
 </script>
 
