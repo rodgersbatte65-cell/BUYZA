@@ -5,7 +5,8 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>BUYZA - Uganda Marketplace</title>
 
@@ -403,11 +404,14 @@
             Home
         </a>
 
-        <a href="sell.html" class="sell-btn">
+        <a href="sell.html"
+           class="sell-btn">
             Sell
         </a>
 
-        <a href="login.html" class="login-btn">
+        <a id="accountButton"
+           href="login.html"
+           class="login-btn">
             👤 Login
         </a>
 
@@ -607,6 +611,52 @@ const SUPABASE_KEY =
 let allProducts = [];
 
 
+/* ACCOUNT BUTTON */
+
+function updateAccountButton() {
+
+    const user =
+        localStorage.getItem(
+            "buyza_user"
+        );
+
+    const token =
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+    const button =
+        document.getElementById(
+            "accountButton"
+        );
+
+
+    if (user && token) {
+
+        button.href =
+            "account.html";
+
+        button.innerHTML =
+            "👤 My Account";
+
+    }
+
+    else {
+
+        button.href =
+            "login.html";
+
+        button.innerHTML =
+            "👤 Login";
+
+    }
+
+}
+
+
+updateAccountButton();
+
+
 function escapeHtml(value) {
 
     return String(value || "")
@@ -779,7 +829,9 @@ function displayProducts(products) {
                 >
                 `;
 
-        } else {
+        }
+
+        else {
 
             imageHtml =
 
@@ -907,7 +959,9 @@ async function loadProducts() {
         );
 
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(error);
 
