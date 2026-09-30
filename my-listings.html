@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>My Listings - BUYZA</title>
 
@@ -184,15 +183,13 @@ h1 {
 
 <body>
 
-
 <header>
 
     <div class="logo">
         BUYZA
     </div>
 
-    <a href="account.html"
-       class="back-btn">
+    <a href="account.html" class="back-btn">
         ← My Account
     </a>
 
@@ -203,18 +200,11 @@ h1 {
 
     <h1>My Listings</h1>
 
-    <div id="listings"
-         class="loading">
-
+    <div id="listings" class="loading">
         🔄 Loading your listings...
-
     </div>
 
 </div>
-
-
-<!-- BUYZA SESSION SYSTEM -->
-<script src="auth.js"></script>
 
 
 <script>
@@ -230,6 +220,185 @@ const listingsContainer =
 document.getElementById("listings");
 
 
+/* ================================
+   REFRESH LOGIN SESSION
+================================ */
+
+async function refreshSession() {
+
+    const refreshToken =
+    localStorage.getItem(
+        "buyza_refresh_token"
+    );
+
+
+    if (!refreshToken) {
+
+        return false;
+
+    }
+
+
+    try {
+
+        const response =
+        await fetch(
+
+            SUPABASE_URL +
+            "/auth/v1/token?grant_type=refresh_token",
+
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "apikey":
+                    SUPABASE_KEY,
+
+                    "Content-Type":
+                    "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    refresh_token:
+                    refreshToken
+
+                })
+
+            }
+
+        );
+
+
+        const data =
+        await response.json();
+
+
+        console.log(
+            "Session refresh:",
+            response.status
+        );
+
+
+        if (!response.ok) {
+
+            console.error(
+                "Refresh failed:",
+                data
+            );
+
+            return false;
+
+        }
+
+
+        if (data.access_token) {
+
+            localStorage.setItem(
+                "buyza_access_token",
+                data.access_token
+            );
+
+        }
+
+
+        if (data.refresh_token) {
+
+            localStorage.setItem(
+                "buyza_refresh_token",
+                data.refresh_token
+            );
+
+        }
+
+
+        if (data.user) {
+
+            localStorage.setItem(
+                "buyza_user",
+                JSON.stringify(data.user)
+            );
+
+        }
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Refresh error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+/* ================================
+   CHECK SESSION
+================================ */
+
+async function checkSession() {
+
+    const accessToken =
+    localStorage.getItem(
+        "buyza_access_token"
+    );
+
+
+    const refreshToken =
+    localStorage.getItem(
+        "buyza_refresh_token"
+    );
+
+
+    if (!accessToken && !refreshToken) {
+
+        return false;
+
+    }
+
+
+    /*
+    If we have a refresh token,
+    get a fresh access token.
+    */
+
+    if (refreshToken) {
+
+        const refreshed =
+        await refreshSession();
+
+
+        if (refreshed) {
+
+            return true;
+
+        }
+
+    }
+
+
+    return !!localStorage.getItem(
+        "buyza_access_token"
+    );
+
+}
+
+
+/* ================================
+   ESCAPE HTML
+================================ */
+
 function escapeHtml(text) {
 
     if (
@@ -240,6 +409,7 @@ function escapeHtml(text) {
         return "";
 
     }
+
 
     return String(text)
 
@@ -252,8 +422,13 @@ function escapeHtml(text) {
         .replace(/"/g, "&quot;")
 
         .replace(/'/g, "&#039;");
+
 }
 
+
+/* ================================
+   LOAD LISTINGS
+================================ */
 
 async function loadListings() {
 
@@ -265,12 +440,8 @@ async function loadListings() {
         "</div>";
 
 
-        /*
-        Check and refresh login session.
-        */
-
         const sessionOK =
-        await checkBuyzaSession();
+        await checkSession();
 
 
         if (!sessionOK) {
@@ -281,24 +452,20 @@ async function loadListings() {
 
             "<h2>🔐 Login Required</h2>" +
 
-            "<p>Your login session has expired.</p>" +
+            "<p>Please login again.</p>" +
 
             "<br>" +
 
-            "<a href='login.html' " +
-            "class='edit-btn'>" +
+            "<a href='login.html' class='edit-btn'>" +
             "Login Again" +
             "</a>" +
 
             "</div>";
 
             return;
+
         }
 
-
-        /*
-        Get user information.
-        */
 
         const userData =
         localStorage.getItem(
@@ -312,6 +479,7 @@ async function loadListings() {
             "login.html";
 
             return;
+
         }
 
 
@@ -343,12 +511,9 @@ async function loadListings() {
             "login.html";
 
             return;
+
         }
 
-
-        /*
-        Get the newest access token.
-        */
 
         const token =
         localStorage.getItem(
@@ -362,6 +527,7 @@ async function loadListings() {
             "login.html";
 
             return;
+
         }
 
 
@@ -370,10 +536,6 @@ async function loadListings() {
         "🔄 Loading your listings..." +
         "</div>";
 
-
-        /*
-        Ask Supabase for this user's listings.
-        */
 
         const url =
         SUPABASE_URL +
@@ -384,9 +546,17 @@ async function loadListings() {
         "&order=created_at.desc";
 
 
+        console.log(
+            "Loading listings for:",
+            user.id
+        );
+
+
         const response =
         await fetch(
+
             url,
+
             {
 
                 method: "GET",
@@ -402,12 +572,9 @@ async function loadListings() {
                 }
 
             }
+
         );
 
-
-        /*
-        Check Supabase response.
-        */
 
         if (!response.ok) {
 
@@ -445,6 +612,7 @@ async function loadListings() {
 
 
             return;
+
         }
 
 
@@ -452,9 +620,11 @@ async function loadListings() {
         await response.json();
 
 
-        /*
-        No listings.
-        */
+        console.log(
+            "Listings received:",
+            products
+        );
+
 
         if (!products.length) {
 
@@ -464,14 +634,11 @@ async function loadListings() {
 
             "<h2>You have no listings yet.</h2>" +
 
-            "<p>" +
-            "Start selling on BUYZA." +
-            "</p>" +
+            "<p>Start selling on BUYZA.</p>" +
 
             "<br>" +
 
-            "<a href='sell.html' " +
-            "class='edit-btn'>" +
+            "<a href='sell.html' class='edit-btn'>" +
 
             "➕ Sell a Product" +
 
@@ -480,19 +647,12 @@ async function loadListings() {
             "</div>";
 
             return;
+
         }
 
 
-        /*
-        Clear loading message.
-        */
-
         listingsContainer.innerHTML = "";
 
-
-        /*
-        Display every listing.
-        */
 
         products.forEach(
         product => {
@@ -524,10 +684,7 @@ async function loadListings() {
                 <img
                     src="${escapeHtml(image)}"
                     alt="${escapeHtml(product.name)}"
-                    onerror="
-                    this.src=
-                    'https://via.placeholder.com/180x150?text=BUYZA'
-                    "
+                    onerror="this.src='https://via.placeholder.com/180x150?text=BUYZA'"
                 >
 
                 <div class="info">
@@ -541,53 +698,33 @@ async function loadListings() {
                     </div>
 
                     <div class="details">
-
-                        📂
-                        ${escapeHtml(product.category)}
-
+                        📂 ${escapeHtml(product.category)}
                         &nbsp; • &nbsp;
-
-                        📍
-                        ${escapeHtml(product.location)}
-
+                        📍 ${escapeHtml(product.location)}
                     </div>
 
                     <div class="details">
-
-                        📞
-                        ${escapeHtml(product.phone)}
-
+                        📞 ${escapeHtml(product.phone)}
                     </div>
 
                     <div class="description">
-
-                        ${escapeHtml(
-                            product.description
-                        )}
-
+                        ${escapeHtml(product.description)}
                     </div>
 
                     <div class="buttons">
 
                         <a
                             class="edit-btn"
-                            href=
-                            "edit-listing.html?id=${encodeURIComponent(product.id)}"
+                            href="edit-listing.html?id=${encodeURIComponent(product.id)}"
                         >
-
                             ✏️ Edit
-
                         </a>
-
 
                         <button
                             class="delete-btn"
-                            onclick=
-                            "deleteListing('${encodeURIComponent(product.id)}')"
+                            onclick="deleteListing('${encodeURIComponent(product.id)}')"
                         >
-
                             🗑️ Delete
-
                         </button>
 
                     </div>
@@ -603,8 +740,8 @@ async function loadListings() {
 
         });
 
-
     }
+
 
     catch (error) {
 
@@ -621,17 +758,11 @@ async function loadListings() {
         "<h2>❌ Connection Error</h2>" +
 
         "<p>" +
-
         "Could not load your listings." +
-
         "</p>" +
 
         "<p>" +
-
-        escapeHtml(
-            error.message
-        ) +
-
+        escapeHtml(error.message) +
         "</p>" +
 
         "<br>" +
@@ -651,9 +782,9 @@ async function loadListings() {
 }
 
 
-/*
-DELETE LISTING
-*/
+/* ================================
+   DELETE LISTING
+================================ */
 
 async function deleteListing(
     encodedId
@@ -678,12 +809,8 @@ async function deleteListing(
     }
 
 
-    /*
-    Refresh session before deleting.
-    */
-
     const sessionOK =
-    await checkBuyzaSession();
+    await checkSession();
 
 
     if (!sessionOK) {
@@ -692,12 +819,11 @@ async function deleteListing(
             "Your session has expired. Please login again."
         );
 
-
         window.location.href =
         "login.html";
 
-
         return;
+
     }
 
 
@@ -714,9 +840,7 @@ async function deleteListing(
 
             SUPABASE_URL +
             "/rest/v1/products?id=eq." +
-            encodeURIComponent(
-                productId
-            ),
+            encodeURIComponent(productId),
 
             {
 
@@ -751,8 +875,8 @@ async function deleteListing(
                 error
             );
 
-
             return;
+
         }
 
 
@@ -761,19 +885,15 @@ async function deleteListing(
         );
 
 
-        loadListings();
+        await loadListings();
 
     }
 
     catch (error) {
 
-        console.error(
-            error
-        );
-
-
         alert(
-            "❌ Something went wrong while deleting."
+            "❌ Delete error:\n\n" +
+            error.message
         );
 
     }
@@ -781,14 +901,13 @@ async function deleteListing(
 }
 
 
-/*
-START
-*/
+/* ================================
+   START
+================================ */
 
 loadListings();
 
 </script>
-
 
 </body>
 
