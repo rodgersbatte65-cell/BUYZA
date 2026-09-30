@@ -1,333 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta charset="UTF-8">
+    <title>Edit Listing - BUYZA</title>
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-<title>Edit Listing - BUYZA</title>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #222;
+        }
 
-<style>
+        header {
+            background: #111;
+            color: white;
+            padding: 18px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        header h1 {
+            margin: 0;
+        }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f5f6f8;
-    color: #222;
-}
+        header a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
 
-header {
-    background: #111827;
-    color: white;
-    padding: 18px 7%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .container {
+            max-width: 650px;
+            margin: 35px auto;
+            padding: 20px;
+        }
 
-.logo {
-    font-size: 28px;
-    font-weight: bold;
-}
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
 
-.back {
-    color: white;
-    text-decoration: none;
-    background: #374151;
-    padding: 10px 16px;
-    border-radius: 8px;
-}
+        h2 {
+            margin-top: 0;
+        }
 
-.container {
-    max-width: 700px;
-    margin: 40px auto;
-    padding: 20px;
-}
+        label {
+            display: block;
+            margin-top: 16px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
 
-.form-box {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
-}
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+        }
 
-h1 {
-    margin-top: 0;
-    margin-bottom: 25px;
-}
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
 
-label {
-    display: block;
-    margin-top: 18px;
-    margin-bottom: 7px;
-    font-weight: bold;
-}
+        .current-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            background: #eee;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
 
-input,
-select,
-textarea {
-    width: 100%;
-    padding: 13px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 15px;
-}
+        button {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #111;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-textarea {
-    min-height: 130px;
-    resize: vertical;
-}
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
-.current-image {
-    width: 180px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-top: 10px;
-    display: block;
-}
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
 
-.save-btn {
-    width: 100%;
-    margin-top: 25px;
-    padding: 15px;
-    border: none;
-    border-radius: 8px;
-    background: #ff6b00;
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-}
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #111;
+            text-decoration: none;
+        }
 
-.save-btn:hover {
-    background: #e85f00;
-}
-
-.message {
-    text-align: center;
-    padding: 30px;
-}
-
-.error {
-    color: #dc2626;
-}
-
-</style>
-
+        #loading {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
 </head>
 
 <body>
 
 <header>
 
-<div class="logo">
-BUYZA
-</div>
+    <h1>BUYZA</h1>
 
-<a href="my-listings.html" class="back">
-← My Listings
-</a>
+    <div>
+        <a href="index.html">Home</a>
+        <a href="account.html">Account</a>
+    </div>
 
 </header>
 
 
 <div class="container">
 
-<div class="form-box">
+    <div class="box">
 
-<h1>
-✏️ Edit Listing
-</h1>
+        <h2>✏️ Edit Listing</h2>
 
-<div id="message" class="message">
-Loading listing...
+        <div id="loading">
+            Loading listing...
+        </div>
+
+
+        <form
+            id="editForm"
+            style="display:none;"
+        >
+
+            <label>Product Name</label>
+
+            <input
+                type="text"
+                id="name"
+                required
+            >
+
+
+            <label>Price (UGX)</label>
+
+            <input
+                type="number"
+                id="price"
+                required
+            >
+
+
+            <label>Category</label>
+
+            <select id="category" required>
+
+                <option value="">
+                    Select Category
+                </option>
+
+                <option value="Phones & Tablets">
+                    Phones & Tablets
+                </option>
+
+                <option value="Cars">
+                    Cars
+                </option>
+
+                <option value="Fashion">
+                    Fashion
+                </option>
+
+                <option value="Electronics">
+                    Electronics
+                </option>
+
+                <option value="Home & Garden">
+                    Home & Garden
+                </option>
+
+                <option value="Jobs">
+                    Jobs
+                </option>
+
+                <option value="Other">
+                    Other
+                </option>
+
+            </select>
+
+
+            <label>Location</label>
+
+            <input
+                type="text"
+                id="location"
+                required
+            >
+
+
+            <label>Phone Number</label>
+
+            <input
+                type="tel"
+                id="phone"
+                required
+            >
+
+
+            <label>Description</label>
+
+            <textarea
+                id="description"
+                required
+            ></textarea>
+
+
+            <label>Current Product Image</label>
+
+            <img
+                id="currentImage"
+                class="current-image"
+                alt="Current product image"
+            >
+
+
+            <label>
+                Replace Image
+                <small>(optional)</small>
+            </label>
+
+            <input
+                type="file"
+                id="image"
+                accept="image/*"
+            >
+
+
+            <button
+                type="submit"
+                id="saveButton"
+            >
+                💾 Save Changes
+            </button>
+
+        </form>
+
+
+        <div id="message"></div>
+
+
+        <a
+            href="my-listings.html"
+            class="back"
+        >
+            ← Back to My Listings
+        </a>
+
+    </div>
+
 </div>
 
-<form id="editForm" style="display:none;">
 
-<label>
-Product Name
-</label>
-
-<input
-type="text"
-id="name"
-required
->
-
-
-<label>
-Price (UGX)
-</label>
-
-<input
-type="number"
-id="price"
-required
->
-
-
-<label>
-Category
-</label>
-
-<select id="category" required>
-
-<option value="">Select Category</option>
-
-<option value="Phones">Phones</option>
-
-<option value="Cars">Cars</option>
-
-<option value="Fashion">Fashion</option>
-
-<option value="Electronics">Electronics</option>
-
-<option value="Home">Home</option>
-
-<option value="Other">Other</option>
-
-</select>
-
-
-<label>
-Location
-</label>
-
-<input
-type="text"
-id="location"
-required
->
-
-
-<label>
-Phone Number
-</label>
-
-<input
-type="text"
-id="phone"
-required
->
-
-
-<label>
-Description
-</label>
-
-<textarea
-id="description"
-required
-></textarea>
-
-
-<label>
-Current Product Image
-</label>
-
-<img
-id="currentImage"
-class="current-image"
-src=""
-alt="Current product image"
->
-
-
-<label>
-Change Image (optional)
-</label>
-
-<input
-type="file"
-id="image"
-accept="image/*"
->
-
-
-<button
-type="submit"
-class="save-btn"
-id="saveButton">
-
-💾 Save Changes
-
-</button>
-
-</form>
-
-</div>
-
-</div>
+<!-- BUYZA automatic session refresh -->
+<script src="auth.js"></script>
 
 
 <script>
 
 const SUPABASE_URL =
-"https://xbjmdsdgisusnxdmlrxh.supabase.co";
+    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
 
 const SUPABASE_KEY =
-"sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
 
 const params =
-new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
+
 
 const productId =
-params.get("id");
-
-const userData =
-localStorage.getItem("buyza_user");
-
-const token =
-localStorage.getItem("buyza_access_token");
-
-const message =
-document.getElementById("message");
-
-const form =
-document.getElementById("editForm");
+    params.get("id");
 
 
 let currentProduct = null;
 
-
-if (!userData || !token) {
-
-    window.location.href = "login.html";
-
-}
+let currentUser = null;
 
 
-else if (!productId) {
+async function startEditPage() {
 
-    message.innerHTML =
-        "<div class='error'>❌ No product ID was provided.</div>";
-
-}
+    const userData =
+        localStorage.getItem("buyza_user");
 
 
-else {
+    if (!userData) {
 
-    loadProduct();
+        window.location.href =
+            "login.html";
 
+        return;
+    }
+
+
+    /*
+     * Refresh the session before
+     * loading the listing.
+     */
+    const sessionOK =
+        await checkBuyzaSession();
+
+
+    const accessToken =
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+
+    if (!sessionOK || !accessToken) {
+
+        window.location.href =
+            "login.html";
+
+        return;
+    }
+
+
+    currentUser =
+        JSON.parse(userData);
+
+
+    if (!productId) {
+
+        showError(
+            "Product ID is missing."
+        );
+
+        return;
+    }
+
+
+    await loadProduct();
 }
 
 
 async function loadProduct() {
 
+    const accessToken =
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+
     try {
-
-        const user =
-            JSON.parse(userData);
-
 
         const response =
             await fetch(
@@ -339,7 +387,7 @@ async function loadProduct() {
                     headers: {
                         "apikey": SUPABASE_KEY,
                         "Authorization":
-                            "Bearer " + token
+                            "Bearer " + accessToken
                     }
                 }
             );
@@ -347,17 +395,9 @@ async function loadProduct() {
 
         if (!response.ok) {
 
-            const error =
-                await response.text();
-
-            console.error(error);
-
-            message.innerHTML =
-                "<div class='error'>" +
-                "❌ Could not load this listing." +
-                "</div>";
-
-            return;
+            throw new Error(
+                await response.text()
+            );
         }
 
 
@@ -367,10 +407,9 @@ async function loadProduct() {
 
         if (!products.length) {
 
-            message.innerHTML =
-                "<div class='error'>" +
-                "❌ Listing not found." +
-                "</div>";
+            showError(
+                "Listing not found."
+            );
 
             return;
         }
@@ -380,15 +419,18 @@ async function loadProduct() {
             products[0];
 
 
+        /*
+         * Make sure the listing belongs
+         * to the logged-in user.
+         */
         if (
-            currentProduct.user_id &&
-            currentProduct.user_id !== user.id
+            currentProduct.user_id !==
+            currentUser.id
         ) {
 
-            message.innerHTML =
-                "<div class='error'>" +
-                "❌ You can only edit your own listings." +
-                "</div>";
+            showError(
+                "You can only edit your own listings."
+            );
 
             return;
         }
@@ -418,110 +460,155 @@ async function loadProduct() {
             currentProduct.description || "";
 
 
-        const image =
-            document.getElementById("currentImage");
+        document.getElementById("currentImage").src =
+            currentProduct.image_url ||
+            "https://via.placeholder.com/500x350?text=BUYZA";
 
 
-        if (currentProduct.image_url) {
-
-            image.src =
-                currentProduct.image_url;
-
-        }
-
-        else {
-
-            image.style.display =
-                "none";
-        }
-
-
-        message.style.display =
+        document.getElementById("loading").style.display =
             "none";
 
-        form.style.display =
+
+        document.getElementById("editForm").style.display =
             "block";
 
-    }
 
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
-        message.innerHTML =
-            "<div class='error'>" +
-            "❌ Connection error." +
-            "</div>";
-
+        showError(
+            "Could not load listing."
+        );
     }
-
 }
 
 
-form.addEventListener(
+/*
+ * Save edited listing.
+ */
+document.getElementById("editForm")
+.addEventListener(
     "submit",
     async function(event) {
 
         event.preventDefault();
 
 
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
         const saveButton =
-            document.getElementById("saveButton");
+            document.getElementById(
+                "saveButton"
+            );
 
 
-        saveButton.disabled =
-            true;
+        /*
+         * Refresh the session immediately
+         * before saving.
+         */
+        const sessionOK =
+            await checkBuyzaSession();
 
-        saveButton.textContent =
-            "Saving...";
+
+        if (!sessionOK) {
+
+            message.style.color =
+                "#d32f2f";
+
+            message.textContent =
+                "❌ Your login session expired. Please login again.";
+
+            return;
+        }
+
+
+        const accessToken =
+            localStorage.getItem(
+                "buyza_access_token"
+            );
 
 
         try {
 
-            const updates = {
+            saveButton.disabled = true;
 
-                name:
-                    document.getElementById("name").value.trim(),
-
-                price:
-                    Number(
-                        document.getElementById("price").value
-                    ),
-
-                category:
-                    document.getElementById("category").value,
-
-                location:
-                    document.getElementById("location").value.trim(),
-
-                phone:
-                    document.getElementById("phone").value.trim(),
-
-                description:
-                    document.getElementById("description").value.trim()
-
-            };
+            saveButton.textContent =
+                "Saving...";
 
 
-            const imageFile =
-                document.getElementById("image").files[0];
+            const name =
+                document.getElementById(
+                    "name"
+                ).value.trim();
+
+
+            const price =
+                document.getElementById(
+                    "price"
+                ).value;
+
+
+            const category =
+                document.getElementById(
+                    "category"
+                ).value;
+
+
+            const location =
+                document.getElementById(
+                    "location"
+                ).value.trim();
+
+
+            const phone =
+                document.getElementById(
+                    "phone"
+                ).value.trim();
+
+
+            const description =
+                document.getElementById(
+                    "description"
+                ).value.trim();
+
+
+            const imageInput =
+                document.getElementById(
+                    "image"
+                );
+
+
+            const newImage =
+                imageInput.files[0];
+
+
+            let imageUrl =
+                currentProduct.image_url;
 
 
             /*
-             * Upload new image if selected
+             * If the user selected a new image,
+             * upload it first.
              */
+            if (newImage) {
 
-            if (imageFile) {
+                const extension =
+                    newImage.name
+                        .split(".")
+                        .pop();
+
 
                 const fileName =
+                    currentUser.id +
+                    "_" +
                     Date.now() +
-                    "-" +
-                    Math.random()
-                        .toString(36)
-                        .substring(2) +
-                    "-" +
-                    imageFile.name
-                        .replace(/\s+/g, "-");
+                    "." +
+                    extension;
 
 
                 const uploadResponse =
@@ -533,47 +620,39 @@ form.addEventListener(
                             method: "POST",
 
                             headers: {
-                                "apikey":
-                                    SUPABASE_KEY,
-
+                                "apikey": SUPABASE_KEY,
                                 "Authorization":
-                                    "Bearer " + token,
-
+                                    "Bearer " +
+                                    accessToken,
                                 "Content-Type":
-                                    imageFile.type
+                                    newImage.type ||
+                                    "application/octet-stream"
                             },
 
-                            body:
-                                imageFile
+                            body: newImage
                         }
                     );
 
 
                 if (!uploadResponse.ok) {
 
-                    const uploadError =
-                        await uploadResponse.text();
-
                     throw new Error(
                         "Image upload failed: " +
-                        uploadError
+                        await uploadResponse.text()
                     );
-
                 }
 
 
-                updates.image_url =
+                imageUrl =
                     SUPABASE_URL +
                     "/storage/v1/object/public/product-images/" +
                     fileName;
-
             }
 
 
             /*
-             * Update product
+             * Update product.
              */
-
             const updateResponse =
                 await fetch(
                     SUPABASE_URL +
@@ -583,69 +662,101 @@ form.addEventListener(
                         method: "PATCH",
 
                         headers: {
-
-                            "apikey":
-                                SUPABASE_KEY,
-
+                            "apikey": SUPABASE_KEY,
                             "Authorization":
-                                "Bearer " + token,
-
+                                "Bearer " +
+                                accessToken,
                             "Content-Type":
                                 "application/json",
-
                             "Prefer":
                                 "return=representation"
                         },
 
-                        body:
-                            JSON.stringify(updates)
+                        body: JSON.stringify({
+
+                            name: name,
+
+                            price: price,
+
+                            category: category,
+
+                            location: location,
+
+                            phone: phone,
+
+                            description: description,
+
+                            image_url: imageUrl
+
+                        })
                     }
                 );
 
 
             if (!updateResponse.ok) {
 
-                const error =
-                    await updateResponse.text();
-
-                throw new Error(error);
-
+                throw new Error(
+                    "Update failed: " +
+                    await updateResponse.text()
+                );
             }
 
 
-            alert(
-                "✅ Listing updated successfully!"
-            );
+            message.style.color =
+                "green";
 
 
-            window.location.href =
-                "my-listings.html";
+            message.textContent =
+                "✅ Listing updated successfully!";
 
-        }
 
-        catch (error) {
+            saveButton.textContent =
+                "✅ Saved";
+
+
+            setTimeout(function() {
+
+                window.location.href =
+                    "my-listings.html";
+
+            }, 1000);
+
+
+        } catch (error) {
 
             console.error(error);
 
-            alert(
-                "❌ Update failed:\n\n" +
-                error.message
-            );
+
+            message.style.color =
+                "#d32f2f";
+
+
+            message.textContent =
+                "❌ " + error.message;
 
 
             saveButton.disabled =
                 false;
 
+
             saveButton.textContent =
                 "💾 Save Changes";
-
         }
 
     }
 );
 
+
+function showError(message) {
+
+    document.getElementById("loading").innerHTML =
+        "❌ " + message;
+}
+
+
+startEditPage();
+
 </script>
 
 </body>
-
 </html>
