@@ -139,6 +139,14 @@ h1 {
     padding: 40px;
 }
 
+.error-box {
+    background: white;
+    padding: 30px;
+    text-align: center;
+    border-radius: 12px;
+    color: #dc2626;
+}
+
 @media (max-width: 700px) {
 
     .listing {
@@ -166,12 +174,17 @@ h1 {
 <body>
 
 <header>
-    <div class="logo">BUYZA</div>
+
+    <div class="logo">
+        BUYZA
+    </div>
 
     <a href="account.html" class="back-btn">
         ← My Account
     </a>
+
 </header>
+
 
 <div class="container">
 
@@ -182,6 +195,11 @@ h1 {
     </div>
 
 </div>
+
+
+<!-- BUYZA SESSION REFRESH -->
+<script src="auth.js"></script>
+
 
 <script>
 
@@ -213,52 +231,118 @@ function escapeHtml(text) {
 
 async function loadListings() {
 
-    const userData =
-        localStorage.getItem("buyza_user");
-
-    const token =
-        localStorage.getItem("buyza_access_token");
-
-
-    if (!userData || !token) {
-
-        window.location.href = "login.html";
-
-        return;
-    }
-
-
-    let user;
-
     try {
 
-        user = JSON.parse(userData);
-
-    } catch (error) {
-
-        localStorage.removeItem("buyza_user");
-        localStorage.removeItem("buyza_access_token");
-
-        window.location.href = "login.html";
-
-        return;
-    }
+        listingsContainer.innerHTML =
+            "<div class='loading'>🔄 Checking your login...</div>";
 
 
-    try {
+        /*
+         * Refresh the Supabase session first.
+         */
+        const sessionOK =
+            await checkBuyzaSession();
 
-        const response = await fetch(
-            SUPABASE_URL +
-            "/rest/v1/products?select=*&user_id=eq." +
-            encodeURIComponent(user.id) +
-            "&order=created_at.desc",
-            {
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + token
+
+        if (!sessionOK) {
+
+            listingsContainer.innerHTML =
+                "<div class='error-box'>" +
+                "<h2>Login required</h2>" +
+                "<p>Your session has expired.</p>" +
+                "<br>" +
+                "<a href='login.html' class='edit-btn'>" +
+                "Login Again" +
+                "</a>" +
+                "</div>";
+
+            return;
+        }
+
+
+        /*
+         * Get the latest user information.
+         */
+        const userData =
+            localStorage.getItem("buyza_user");
+
+
+        if (!userData) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        let user;
+
+        try {
+
+            user =
+                JSON.parse(userData);
+
+        } catch (error) {
+
+            localStorage.removeItem(
+                "buyza_user"
+            );
+
+            localStorage.removeItem(
+                "buyza_access_token"
+            );
+
+            localStorage.removeItem(
+                "buyza_refresh_token"
+            );
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        /*
+         * Get the newest access token
+         * AFTER the refresh.
+         */
+        const token =
+            localStorage.getItem(
+                "buyza_access_token"
+            );
+
+
+        if (!token) {
+
+            window.location.href =
+                "login.html";
+
+            return;
+        }
+
+
+        listingsContainer.innerHTML =
+            "<div class='loading'>🔄 Loading your listings...</div>";
+
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/products?select=*&user_id=eq." +
+                encodeURIComponent(user.id) +
+                "&order=created_at.desc",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization":
+                            "Bearer " + token
+                    }
                 }
-            }
-        );
+            );
 
 
         if (!response.ok) {
@@ -266,11 +350,23 @@ async function loadListings() {
             const errorText =
                 await response.text();
 
-            console.error(errorText);
+            console.error(
+                "Supabase error:",
+                errorText
+            );
 
             listingsContainer.innerHTML =
-                "<div class='empty'>" +
-                "❌ Could not load your listings." +
+                "<div class='error-box'>" +
+                "<h2>❌ Could not load listings</h2>" +
+                "<p>" +
+                escapeHtml(errorText) +
+                "</p>" +
+                "<br>" +
+                "<button " +
+                "class='edit-btn' " +
+                "onclick='loadListings()'>" +
+                "Try Again" +
+                "</button>" +
                 "</div>";
 
             return;
@@ -285,10 +381,19 @@ async function loadListings() {
 
             listingsContainer.innerHTML =
                 "<div class='empty'>" +
+
                 "<h2>You have no listings yet.</h2>" +
-                "<p>Start selling on BUYZA.</p>" +
+
+                "<p>" +
+                "Start selling on BUYZA." +
+                "</p>" +
+
                 "<br>" +
-                "<a href='sell.html' class='edit-btn'>Sell a Product</a>" +
+
+                "<a href='sell.html' class='edit-btn'>" +
+                "Sell a Product" +
+                "</a>" +
+
                 "</div>";
 
             return;
@@ -313,7 +418,9 @@ async function loadListings() {
             const card =
                 document.createElement("div");
 
-            card.className = "listing";
+
+            card.className =
+                "listing";
 
 
             card.innerHTML = `
@@ -374,13 +481,36 @@ async function loadListings() {
 
         });
 
+
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Load listings error:",
+            error
+        );
+
 
         listingsContainer.innerHTML =
-            "<div class='empty'>" +
-            "❌ Connection error. Please try again." +
+            "<div class='error-box'>" +
+
+            "<h2>❌ Connection Error</h2>" +
+
+            "<p>" +
+            "Could not load your listings." +
+            "</p>" +
+
+            "<p>" +
+            escapeHtml(error.message) +
+            "</p>" +
+
+            "<br>" +
+
+            "<button " +
+            "class='edit-btn' " +
+            "onclick='loadListings()'>" +
+            "Try Again" +
+            "</button>" +
+
             "</div>";
     }
 }
@@ -399,18 +529,41 @@ async function deleteListing(encodedId) {
 
 
     if (!confirmed) {
+        return;
+    }
+
+
+    /*
+     * Refresh session before deleting.
+     */
+    const sessionOK =
+        await checkBuyzaSession();
+
+
+    if (!sessionOK) {
+
+        alert(
+            "Your login session has expired. Please login again."
+        );
+
+        window.location.href =
+            "login.html";
 
         return;
     }
 
 
     const token =
-        localStorage.getItem("buyza_access_token");
+        localStorage.getItem(
+            "buyza_access_token"
+        );
 
 
     if (!token) {
 
-        alert("Your login session has expired. Please login again.");
+        alert(
+            "Your login session has expired. Please login again."
+        );
 
         window.location.href =
             "login.html";
@@ -431,6 +584,7 @@ async function deleteListing(encodedId) {
 
                     headers: {
                         "apikey": SUPABASE_KEY,
+
                         "Authorization":
                             "Bearer " + token,
 
@@ -446,7 +600,10 @@ async function deleteListing(encodedId) {
             const error =
                 await response.text();
 
-            console.error(error);
+            console.error(
+                "Delete error:",
+                error
+            );
 
             alert(
                 "❌ Delete failed.\n\n" +
@@ -457,14 +614,19 @@ async function deleteListing(encodedId) {
         }
 
 
-        alert("✅ Listing deleted successfully.");
+        alert(
+            "✅ Listing deleted successfully."
+        );
 
 
-        loadListings();
+        await loadListings();
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Delete error:",
+            error
+        );
 
         alert(
             "❌ Something went wrong while deleting."
@@ -473,6 +635,9 @@ async function deleteListing(encodedId) {
 }
 
 
+/*
+ * Start loading.
+ */
 loadListings();
 
 </script>
