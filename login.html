@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Login - BUYZA</title>
 
     <style>
@@ -15,7 +14,6 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background: #f4f5f7;
-            color: #222;
         }
 
         header {
@@ -25,7 +23,7 @@
         }
 
         .logo {
-            max-width: 500px;
+            max-width: 900px;
             margin: auto;
             font-size: 28px;
             font-weight: bold;
@@ -33,11 +31,11 @@
 
         .container {
             max-width: 450px;
-            margin: 60px auto;
+            margin: 50px auto;
             padding: 20px;
         }
 
-        .login-box {
+        .box {
             background: white;
             padding: 30px;
             border-radius: 14px;
@@ -45,21 +43,15 @@
         }
 
         h2 {
+            text-align: center;
             margin-top: 0;
-            text-align: center;
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-top: 16px;
-            margin-bottom: 7px;
             font-weight: bold;
+            margin-top: 18px;
+            margin-bottom: 7px;
         }
 
         input {
@@ -76,45 +68,44 @@
             padding: 14px;
             background: #111;
             color: white;
-            border: none;
+            border: 0;
             border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #333;
-        }
-
         button:disabled {
             background: #777;
-            cursor: not-allowed;
         }
 
         #message {
-            margin-top: 18px;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
             text-align: center;
-            font-weight: bold;
             line-height: 1.5;
+            display: none;
         }
 
-        .signup {
-            text-align: center;
-            margin-top: 22px;
+        .success {
+            background: #e8f5e9;
+            color: #176b2c;
         }
 
-        .signup a {
-            color: #111;
-            font-weight: bold;
-            text-decoration: none;
+        .error {
+            background: #ffebee;
+            color: #c62828;
         }
 
-        .home {
-            display: block;
+        .links {
             text-align: center;
             margin-top: 20px;
-            color: #555;
+        }
+
+        .links a {
+            color: #111;
+            font-weight: bold;
             text-decoration: none;
         }
     </style>
@@ -123,73 +114,51 @@
 <body>
 
 <header>
-    <div class="logo">
-        BUYZA
-    </div>
+    <div class="logo">BUYZA</div>
 </header>
-
 
 <div class="container">
 
-    <div class="login-box">
+    <div class="box">
 
         <h2>Welcome Back</h2>
 
-        <div class="subtitle">
-            Login to your BUYZA account
-        </div>
-
-
         <form id="loginForm">
 
-            <label for="email">
-                Email
-            </label>
+            <label for="email">Email</label>
 
             <input
                 type="email"
                 id="email"
                 placeholder="Enter your email"
                 required
-                autocomplete="email"
             >
 
-
-            <label for="password">
-                Password
-            </label>
+            <label for="password">Password</label>
 
             <input
                 type="password"
                 id="password"
                 placeholder="Enter your password"
                 required
-                autocomplete="current-password"
             >
 
-
-            <button
-                type="submit"
-                id="loginButton"
-            >
+            <button id="loginButton" type="submit">
                 🔐 Login
             </button>
 
         </form>
 
-
         <div id="message"></div>
 
-
-        <div class="signup">
+        <div class="links">
             Don't have an account?
             <a href="signup.html">Create Account</a>
         </div>
 
-
-        <a href="index.html" class="home">
-            ← Back to BUYZA
-        </a>
+        <div class="links">
+            <a href="index.html">← Back to BUYZA</a>
+        </div>
 
     </div>
 
@@ -205,19 +174,36 @@ const SUPABASE_KEY =
     "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 
-const loginForm =
+const form =
     document.getElementById("loginForm");
 
-const loginButton =
+const button =
     document.getElementById("loginButton");
 
 const message =
     document.getElementById("message");
 
 
-loginForm.addEventListener("submit", async function(event) {
+function showMessage(text, type) {
+
+    message.textContent = text;
+
+    message.className = type;
+
+    message.style.display = "block";
+
+}
+
+
+form.addEventListener("submit", async function(event) {
 
     event.preventDefault();
+
+    button.disabled = true;
+
+    button.textContent = "Logging in...";
+
+    message.style.display = "none";
 
 
     const email =
@@ -227,48 +213,24 @@ loginForm.addEventListener("submit", async function(event) {
         document.getElementById("password").value;
 
 
-    message.textContent =
-        "Logging in...";
-
-    message.style.color =
-        "#555";
-
-    loginButton.disabled = true;
-
-
     try {
 
-        /*
-         * LOGIN TO SUPABASE
-         */
-
         const response = await fetch(
-
-            `${SUPABASE_URL}/auth/v1/token?grant_type=password`,
-
+            SUPABASE_URL +
+            "/auth/v1/token?grant_type=password",
             {
                 method: "POST",
 
                 headers: {
-
-                    "apikey":
-                        SUPABASE_KEY,
-
-                    "Content-Type":
-                        "application/json"
-
+                    "apikey": SUPABASE_KEY,
+                    "Content-Type": "application/json"
                 },
 
                 body: JSON.stringify({
-
                     email: email,
-
                     password: password
-
                 })
-
             }
-
         );
 
 
@@ -276,92 +238,52 @@ loginForm.addEventListener("submit", async function(event) {
             await response.json();
 
 
-        console.log(
-            "Supabase login response:",
-            data
-        );
+        console.log("LOGIN RESPONSE:", data);
 
-
-        /*
-         * LOGIN FAILED
-         */
 
         if (!response.ok) {
 
-            let errorMessage =
-                "Login failed.";
+            showMessage(
+                "❌ " +
+                (
+                    data.error_description ||
+                    data.message ||
+                    data.msg ||
+                    "Login failed."
+                ),
+                "error"
+            );
 
-            if (data.error_description) {
-
-                errorMessage =
-                    data.error_description;
-
-            } else if (data.msg) {
-
-                errorMessage =
-                    data.msg;
-
-            } else if (data.message) {
-
-                errorMessage =
-                    data.message;
-
-            }
-
-
-            message.textContent =
-                "❌ " + errorMessage;
-
-            message.style.color =
-                "#d32f2f";
-
-            loginButton.disabled = false;
+            button.disabled = false;
+            button.textContent = "🔐 Login";
 
             return;
+        }
 
+
+        if (!data.access_token) {
+
+            showMessage(
+                "❌ Supabase did not return an access token.",
+                "error"
+            );
+
+            button.disabled = false;
+            button.textContent = "🔐 Login";
+
+            return;
         }
 
 
         /*
-         * MAKE SURE WE GOT A TOKEN
-         */
-
-        if (!data.access_token || !data.user) {
-
-            message.textContent =
-                "❌ Login succeeded but no access token was returned.";
-
-            message.style.color =
-                "#d32f2f";
-
-            loginButton.disabled = false;
-
-            return;
-
-        }
-
-
-        /*
-         * REMOVE OLD TOKEN FIRST
-         */
-
-        localStorage.removeItem(
-            "buyza_access_token"
-        );
-
-        localStorage.removeItem(
-            "buyza_user"
-        );
-
-
-        /*
-         * SAVE NEW TOKEN
-         */
+        SAVE THE NEW LOGIN
+        */
 
         localStorage.setItem(
             "buyza_access_token",
             data.access_token
         );
+
 
         localStorage.setItem(
             "buyza_user",
@@ -369,40 +291,46 @@ loginForm.addEventListener("submit", async function(event) {
         );
 
 
-        /*
-         * SUCCESS
-         */
-
-        message.textContent =
-            "✅ Login successful!";
-
-        message.style.color =
-            "green";
+        showMessage(
+            "✅ Login successful! Your account is now active.",
+            "success"
+        );
 
 
         /*
-         * GO TO HOME
-         */
+        IMPORTANT:
+        We do NOT redirect automatically.
+        */
+
+        button.textContent =
+            "✅ Logged In";
+
+
+        /*
+        Show account button
+        */
 
         setTimeout(function() {
 
             window.location.href =
-                "index.html";
+                "account.html";
 
-        }, 800);
+        }, 1500);
 
 
     } catch (error) {
 
         console.error(error);
 
-        message.textContent =
-            "❌ Connection error. Please try again.";
+        showMessage(
+            "❌ Connection error: " + error.message,
+            "error"
+        );
 
-        message.style.color =
-            "#d32f2f";
+        button.disabled = false;
 
-        loginButton.disabled = false;
+        button.textContent =
+            "🔐 Login";
 
     }
 
