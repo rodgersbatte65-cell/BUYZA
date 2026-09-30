@@ -1,319 +1,279 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Listings - BUYZA</title>
+<title>My Listings - BUYZA</title>
 
-    <style>
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        * {
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #222;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
-        }
+header {
+    background: #111827;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        header {
-            background: white;
-            padding: 18px 7%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+}
 
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #ff6b00;
-        }
+.back-btn {
+    color: white;
+    text-decoration: none;
+    background: #374151;
+    padding: 10px 16px;
+    border-radius: 8px;
+}
 
-        nav a {
-            text-decoration: none;
-            color: #333;
-            margin-left: 20px;
-            font-weight: bold;
-        }
+.container {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
 
-        .home-btn {
-            background: #ff6b00;
-            color: white !important;
-            padding: 10px 16px;
-            border-radius: 7px;
-        }
+h1 {
+    margin-bottom: 25px;
+}
 
-        .container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+.listing {
+    background: white;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    padding: 18px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
 
-        h1 {
-            margin-bottom: 8px;
-        }
+.listing img {
+    width: 180px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    background: #eee;
+}
 
-        .account {
-            color: #666;
-            margin-bottom: 30px;
-        }
+.info {
+    flex: 1;
+}
 
-        .products {
-            display: grid;
-            grid-template-columns:
-                repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-        }
+.info h2 {
+    margin: 0 0 8px;
+}
 
-        .product {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow:
-                0 3px 12px rgba(0,0,0,0.08);
-        }
+.price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
 
-        .product img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-        }
+.details {
+    color: #666;
+    margin-bottom: 10px;
+}
 
-        .product-info {
-            padding: 18px;
-        }
+.description {
+    margin-bottom: 15px;
+}
 
-        .product-info h3 {
-            margin-top: 0;
-        }
+.buttons {
+    display: flex;
+    gap: 10px;
+}
 
-        .price {
-            color: #ff6b00;
-            font-size: 20px;
-            font-weight: bold;
-        }
+.edit-btn,
+.delete-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+}
 
-        .location {
-            color: #666;
-        }
+.edit-btn {
+    background: #111827;
+    color: white;
+    border: none;
+}
 
-        .delete-btn {
-            width: 100%;
-            padding: 11px;
-            border: none;
-            border-radius: 7px;
-            background: #d93025;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 12px;
-        }
+.delete-btn {
+    background: white;
+    color: #dc2626;
+    border: 2px solid #dc2626;
+}
 
-        .delete-btn:hover {
-            background: #b82018;
-        }
+.edit-btn:hover {
+    background: #374151;
+}
 
-        .message {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-            color: #666;
-        }
+.delete-btn:hover {
+    background: #dc2626;
+    color: white;
+}
 
-        footer {
-            background: #222;
-            color: white;
-            text-align: center;
-            padding: 30px;
-            margin-top: 50px;
-        }
+.empty {
+    background: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 12px;
+}
 
-    </style>
+.loading {
+    text-align: center;
+    padding: 40px;
+}
 
+@media (max-width: 700px) {
+
+    .listing {
+        flex-direction: column;
+    }
+
+    .listing img {
+        width: 100%;
+        height: 220px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        text-align: center;
+        width: 100%;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <header>
+    <div class="logo">BUYZA</div>
 
-    <div class="logo">
-        BUYZA
-    </div>
-
-    <nav>
-
-        <a href="index.html">
-            Home
-        </a>
-
-        <a href="sell.html">
-            Sell
-        </a>
-
-    </nav>
-
+    <a href="account.html" class="back-btn">
+        ← My Account
+    </a>
 </header>
-
 
 <div class="container">
 
-    <h1>
-        📦 My Listings
-    </h1>
+    <h1>My Listings</h1>
 
-    <p
-        id="account"
-        class="account"
-    >
-        Checking account...
-    </p>
-
-
-    <div
-        id="products"
-        class="products"
-    >
-
-        <div class="message">
-            Loading your listings...
-        </div>
-
+    <div id="listings" class="loading">
+        Loading your listings...
     </div>
 
 </div>
 
-
-<footer>
-
-    <h2>
-        BUYZA
-    </h2>
-
-    <p>
-        Buy. Sell. Connect.
-    </p>
-
-    <p>
-        © 2026 BUYZA. All rights reserved.
-    </p>
-
-</footer>
-
-
 <script>
 
 const SUPABASE_URL =
-    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+"https://xbjmdsdgisusnxdmlrxh.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+"sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 
-const user =
-    JSON.parse(
-        localStorage.getItem("buyza_user")
-    );
+const listingsContainer =
+document.getElementById("listings");
 
 
-const token =
-    localStorage.getItem(
-        "buyza_access_token"
-    );
+function escapeHtml(text) {
 
+    if (text === null || text === undefined) {
+        return "";
+    }
 
-const productsBox =
-    document.getElementById(
-        "products"
-    );
-
-
-const account =
-    document.getElementById(
-        "account"
-    );
-
-
-/* CHECK LOGIN */
-
-if (!user || !token) {
-
-    account.innerHTML =
-        "⚠️ Please login to see your listings.";
-
-    productsBox.innerHTML = `
-        <div class="message">
-
-            <h3>
-                You are not logged in
-            </h3>
-
-            <p>
-                Please login to view your products.
-            </p>
-
-        </div>
-    `;
-
-}
-
-else {
-
-    account.innerHTML =
-        "Logged in as: " +
-        escapeHtml(user.email);
-
-    loadMyListings();
-
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
-/* LOAD USER PRODUCTS */
+async function loadListings() {
 
-async function loadMyListings() {
+    const userData =
+        localStorage.getItem("buyza_user");
+
+    const token =
+        localStorage.getItem("buyza_access_token");
+
+
+    if (!userData || !token) {
+
+        window.location.href = "login.html";
+
+        return;
+    }
+
+
+    let user;
 
     try {
 
-        const response =
-            await fetch(
-                SUPABASE_URL +
-                "/rest/v1/products" +
-                "?select=*" +
-                "&user_id=eq." +
-                encodeURIComponent(user.id) +
-                "&order=created_at.desc",
-                {
+        user = JSON.parse(userData);
 
-                    method: "GET",
+    } catch (error) {
 
-                    headers: {
+        localStorage.removeItem("buyza_user");
+        localStorage.removeItem("buyza_access_token");
 
-                        "apikey":
-                            SUPABASE_KEY,
+        window.location.href = "login.html";
 
-                        "Authorization":
-                            "Bearer " +
-                            token
+        return;
+    }
 
-                    }
 
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/products?select=*&user_id=eq." +
+            encodeURIComponent(user.id) +
+            "&order=created_at.desc",
+            {
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + token
                 }
-            );
+            }
+        );
 
 
         if (!response.ok) {
 
-            const error =
+            const errorText =
                 await response.text();
 
-            throw new Error(error);
+            console.error(errorText);
 
+            listingsContainer.innerHTML =
+                "<div class='empty'>" +
+                "❌ Could not load your listings." +
+                "</div>";
+
+            return;
         }
 
 
@@ -321,124 +281,116 @@ async function loadMyListings() {
             await response.json();
 
 
-        if (
-            !products ||
-            products.length === 0
-        ) {
+        if (!products.length) {
 
-            productsBox.innerHTML = `
-                <div class="message">
+            listingsContainer.innerHTML =
+                "<div class='empty'>" +
+                "<h2>You have no listings yet.</h2>" +
+                "<p>Start selling on BUYZA.</p>" +
+                "<br>" +
+                "<a href='sell.html' class='edit-btn'>Sell a Product</a>" +
+                "</div>";
 
-                    <h3>
-                        You have no listings yet.
-                    </h3>
+            return;
+        }
 
-                    <p>
-                        Sell your first product on BUYZA.
-                    </p>
+
+        listingsContainer.innerHTML = "";
+
+
+        products.forEach(product => {
+
+            const image =
+                product.image_url ||
+                "https://via.placeholder.com/180x150?text=BUYZA";
+
+
+            const price =
+                Number(product.price || 0)
+                .toLocaleString();
+
+
+            const card =
+                document.createElement("div");
+
+            card.className = "listing";
+
+
+            card.innerHTML = `
+
+                <img
+                    src="${escapeHtml(image)}"
+                    alt="${escapeHtml(product.name)}"
+                    onerror="this.src='https://via.placeholder.com/180x150?text=BUYZA'"
+                >
+
+                <div class="info">
+
+                    <h2>
+                        ${escapeHtml(product.name)}
+                    </h2>
+
+                    <div class="price">
+                        UGX ${price}
+                    </div>
+
+                    <div class="details">
+                        📂 ${escapeHtml(product.category)}
+                        &nbsp; • &nbsp;
+                        📍 ${escapeHtml(product.location)}
+                    </div>
+
+                    <div class="details">
+                        📞 ${escapeHtml(product.phone)}
+                    </div>
+
+                    <div class="description">
+                        ${escapeHtml(product.description)}
+                    </div>
+
+                    <div class="buttons">
+
+                        <a
+                            class="edit-btn"
+                            href="edit-listing.html?id=${encodeURIComponent(product.id)}"
+                        >
+                            ✏️ Edit
+                        </a>
+
+                        <button
+                            class="delete-btn"
+                            onclick="deleteListing('${encodeURIComponent(product.id)}')"
+                        >
+                            🗑️ Delete
+                        </button>
+
+                    </div>
 
                 </div>
             `;
 
-            return;
 
-        }
+            listingsContainer.appendChild(card);
 
+        });
 
-        productsBox.innerHTML =
-            products.map(
-                function(product) {
-
-                    const image =
-                        product.image_url
-                        ?
-                        `
-                        <img
-                            src="${escapeHtml(product.image_url)}"
-                            alt="${escapeHtml(product.name)}"
-                        >
-                        `
-                        :
-                        "";
-
-
-                    return `
-
-                        <div class="product">
-
-                            ${image}
-
-                            <div class="product-info">
-
-                                <h3>
-                                    ${escapeHtml(product.name)}
-                                </h3>
-
-                                <p class="price">
-                                    UGX
-                                    ${Number(
-                                        product.price
-                                    ).toLocaleString()}
-                                </p>
-
-                                <p class="location">
-                                    📍
-                                    ${escapeHtml(
-                                        product.location
-                                    )}
-                                </p>
-
-                                <p>
-                                    ${escapeHtml(
-                                        product.description
-                                    )}
-                                </p>
-
-                                <button
-                                    class="delete-btn"
-                                    onclick="deleteProduct('${product.id}')"
-                                >
-                                    🗑️ Delete Listing
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("");
-
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
-        productsBox.innerHTML = `
-            <div class="message">
-
-                <h3>
-                    Unable to load your listings
-                </h3>
-
-                <p>
-                    Please refresh the page and try again.
-                </p>
-
-            </div>
-        `;
-
+        listingsContainer.innerHTML =
+            "<div class='empty'>" +
+            "❌ Connection error. Please try again." +
+            "</div>";
     }
-
 }
 
 
-/* DELETE PRODUCT */
+async function deleteListing(encodedId) {
 
-async function deleteProduct(id) {
+    const productId =
+        decodeURIComponent(encodedId);
+
 
     const confirmed =
         confirm(
@@ -447,6 +399,22 @@ async function deleteProduct(id) {
 
 
     if (!confirmed) {
+
+        return;
+    }
+
+
+    const token =
+        localStorage.getItem("buyza_access_token");
+
+
+    if (!token) {
+
+        alert("Your login session has expired. Please login again.");
+
+        window.location.href =
+            "login.html";
+
         return;
     }
 
@@ -457,22 +425,18 @@ async function deleteProduct(id) {
             await fetch(
                 SUPABASE_URL +
                 "/rest/v1/products?id=eq." +
-                encodeURIComponent(id),
+                encodeURIComponent(productId),
                 {
-
                     method: "DELETE",
 
                     headers: {
-
-                        "apikey":
-                            SUPABASE_KEY,
-
+                        "apikey": SUPABASE_KEY,
                         "Authorization":
-                            "Bearer " +
-                            token
+                            "Bearer " + token,
 
+                        "Prefer":
+                            "return=minimal"
                     }
-
                 }
             );
 
@@ -482,45 +446,34 @@ async function deleteProduct(id) {
             const error =
                 await response.text();
 
-            throw new Error(error);
+            console.error(error);
 
+            alert(
+                "❌ Delete failed.\n\n" +
+                error
+            );
+
+            return;
         }
 
 
-        alert(
-            "Listing deleted successfully."
-        );
+        alert("✅ Listing deleted successfully.");
 
 
-        loadMyListings();
+        loadListings();
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
         alert(
-            "Could not delete the listing."
+            "❌ Something went wrong while deleting."
         );
-
     }
-
 }
 
 
-/* SECURITY */
-
-function escapeHtml(text) {
-
-    return String(text ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-}
+loadListings();
 
 </script>
 
