@@ -1,608 +1,613 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+```
+<title>BUYZA - Uganda Marketplace</title>
 
-    <title>BUYZA - Uganda Marketplace</title>
+<style>
 
-    <style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background: #f5f6f8;
+        color: #222;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
-        }
+    header {
+        background: white;
+        padding: 18px 7%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
 
-        header {
-            background: white;
-            padding: 18px 7%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .logo {
+        font-size: 30px;
+        font-weight: bold;
+        color: #ff6b00;
+    }
 
-        .logo {
-            font-size: 30px;
-            font-weight: bold;
-            color: #ff6b00;
-        }
+    nav {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    nav a {
+        text-decoration: none;
+        color: #333;
+        font-weight: bold;
+    }
 
-        nav a {
-            text-decoration: none;
-            color: #333;
-            font-weight: bold;
-        }
+    .sell-btn {
+        background: #ff6b00;
+        color: white !important;
+        padding: 10px 18px;
+        border-radius: 8px;
+    }
 
-        .sell-btn {
-            background: #ff6b00;
-            color: white !important;
-            padding: 10px 18px;
-            border-radius: 8px;
-        }
+    .login-btn {
+        background: #222;
+        color: white !important;
+        padding: 10px 18px;
+        border-radius: 8px;
+    }
 
-        .login-btn {
-            background: #222;
-            color: white !important;
-            padding: 10px 18px;
-            border-radius: 8px;
-        }
+    .hero {
+        background: linear-gradient(135deg, #ff6b00, #ff8c42);
+        color: white;
+        padding: 70px 20px;
+        text-align: center;
+    }
 
-        .hero {
-            background: linear-gradient(135deg, #ff6b00, #ff8c42);
-            color: white;
-            padding: 70px 20px;
-            text-align: center;
-        }
+    .hero h1 {
+        font-size: 44px;
+        margin-bottom: 15px;
+    }
 
-        .hero h1 {
-            font-size: 44px;
-            margin-bottom: 15px;
-        }
+    .hero p {
+        font-size: 19px;
+        margin-bottom: 30px;
+    }
 
-        .hero p {
-            font-size: 19px;
-            margin-bottom: 30px;
-        }
+    .search-box {
+        max-width: 700px;
+        margin: auto;
+        display: flex;
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
 
-        .search-box {
-            max-width: 700px;
-            margin: auto;
-            display: flex;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+    .search-box input {
+        flex: 1;
+        padding: 17px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
 
-        .search-box input {
-            flex: 1;
-            padding: 17px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
+    .search-box button {
+        background: #222;
+        color: white;
+        border: none;
+        padding: 0 25px;
+        cursor: pointer;
+        font-weight: bold;
+    }
 
-        .search-box button {
-            background: #222;
-            color: white;
-            border: none;
-            padding: 0 25px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+    .container {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
+    .section-title {
+        font-size: 28px;
+        margin-bottom: 25px;
+    }
 
-        .section-title {
-            font-size: 28px;
-            margin-bottom: 25px;
+    .categories {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+        margin-bottom: 50px;
+    }
+
+    .category {
+        background: white;
+        padding: 25px;
+        text-align: center;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .category:hover {
+        transform: translateY(-3px);
+    }
+
+    .category-icon {
+        font-size: 35px;
+        margin-bottom: 10px;
+    }
+
+    .products {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .product-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        transition: 0.2s;
+    }
+
+    .product-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .product-image {
+        width: 100%;
+        height: 210px;
+        object-fit: cover;
+        background: #eee;
+    }
+
+    .no-image {
+        width: 100%;
+        height: 210px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eee;
+        color: #777;
+        font-size: 18px;
+    }
+
+    .product-info {
+        padding: 18px;
+    }
+
+    .product-info h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .price {
+        color: #ff6b00;
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .location {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .description {
+        color: #666;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .view-btn {
+        display: block;
+        width: 100%;
+        background: #ff6b00;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        padding: 12px;
+        border-radius: 7px;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .contact-btn {
+        width: 100%;
+        background: #222;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 18px;
+        color: #777;
+        grid-column: 1 / -1;
+    }
+
+    .empty {
+        text-align: center;
+        padding: 40px;
+        color: #777;
+        grid-column: 1 / -1;
+        background: white;
+        border-radius: 12px;
+    }
+
+    footer {
+        background: #222;
+        color: white;
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 70px;
+    }
+
+    footer h2 {
+        color: #ff6b00;
+        margin-bottom: 10px;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .modal-content {
+        background: white;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+    }
+
+    .modal-content h2 {
+        margin-bottom: 10px;
+    }
+
+    .seller-phone {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .modal-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        margin: 10px 0;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .call-btn {
+        background: #ff6b00;
+        color: white;
+    }
+
+    .whatsapp-btn {
+        background: #25d366;
+        color: white;
+    }
+
+    .close-btn {
+        background: #ddd;
+        color: #222;
+    }
+
+    @media (max-width: 900px) {
+
+        .products {
+            grid-template-columns: repeat(2, 1fr);
         }
 
         .categories {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        .category {
-            background: white;
-            padding: 25px;
-            text-align: center;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            cursor: pointer;
-            transition: 0.2s;
+    }
+
+    @media (max-width: 600px) {
+
+        header {
+            padding: 15px 20px;
         }
 
-        .category:hover {
-            transform: translateY(-3px);
+        .logo {
+            font-size: 25px;
         }
 
-        .category-icon {
-            font-size: 35px;
+        nav {
+            gap: 6px;
+        }
+
+        nav a {
+            font-size: 13px;
+        }
+
+        .sell-btn,
+        .login-btn {
+            padding: 8px 10px;
+        }
+
+        .hero {
+            padding: 50px 20px;
+        }
+
+        .hero h1 {
+            font-size: 32px;
+        }
+
+        .search-box {
+            flex-direction: column;
+            background: transparent;
+        }
+
+        .search-box input {
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 10px;
+        }
+
+        .search-box button {
+            padding: 15px;
+            border-radius: 8px;
         }
 
         .products {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: 1fr;
         }
 
-        .product-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-            transition: 0.2s;
+        .categories {
+            grid-template-columns: repeat(2, 1fr);
         }
 
-        .product-card:hover {
-            transform: translateY(-4px);
-        }
+    }
 
-        .product-image {
-            width: 100%;
-            height: 210px;
-            object-fit: cover;
-            background: #eee;
-        }
-
-        .no-image {
-            width: 100%;
-            height: 210px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #eee;
-            color: #777;
-            font-size: 18px;
-        }
-
-        .product-info {
-            padding: 18px;
-        }
-
-        .product-info h3 {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .price {
-            color: #ff6b00;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .location {
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .view-btn {
-            display: block;
-            width: 100%;
-            background: #ff6b00;
-            color: white;
-            text-decoration: none;
-            text-align: center;
-            padding: 12px;
-            border-radius: 7px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .contact-btn {
-            width: 100%;
-            background: #222;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 7px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 18px;
-            color: #777;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 40px;
-            color: #777;
-        }
-
-        footer {
-            background: #222;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 70px;
-        }
-
-        footer h2 {
-            color: #ff6b00;
-            margin-bottom: 10px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-        }
-
-        .modal-content h2 {
-            margin-bottom: 10px;
-        }
-
-        .seller-phone {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        .modal-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            border-radius: 8px;
-            text-decoration: none;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .call-btn {
-            background: #ff6b00;
-            color: white;
-        }
-
-        .whatsapp-btn {
-            background: #25d366;
-            color: white;
-        }
-
-        .close-btn {
-            background: #ddd;
-            color: #222;
-        }
-
-        @media (max-width: 900px) {
-
-            .products {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .categories {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-        @media (max-width: 600px) {
-
-            header {
-                padding: 15px 20px;
-            }
-
-            .logo {
-                font-size: 25px;
-            }
-
-            nav {
-                gap: 6px;
-            }
-
-            nav a {
-                font-size: 13px;
-            }
-
-            .sell-btn,
-            .login-btn {
-                padding: 8px 10px;
-            }
-
-            .hero {
-                padding: 50px 20px;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .search-box {
-                flex-direction: column;
-                background: transparent;
-            }
-
-            .search-box input {
-                padding: 15px;
-                border-radius: 8px;
-                margin-bottom: 10px;
-            }
-
-            .search-box button {
-                padding: 15px;
-                border-radius: 8px;
-            }
-
-            .products {
-                grid-template-columns: 1fr;
-            }
-
-            .categories {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-    </style>
+</style>
+```
 
 </head>
 
-
 <body>
-
 
 <header>
 
-    <div class="logo">
-        BUYZA
-    </div>
+```
+<div class="logo">
+    BUYZA
+</div>
 
-    <nav>
+<nav>
 
-        <a href="index.html">
-            Home
-        </a>
+    <a href="index.html">
+        Home
+    </a>
 
-        <a href="sell.html"
-           class="sell-btn">
-            Sell
-        </a>
+    <a href="sell.html" class="sell-btn">
+        Sell
+    </a>
 
-        <a id="accountButton"
-           href="login.html"
-           class="login-btn">
-            👤 Login
-        </a>
+    <a id="accountButton"
+       href="login.html"
+       class="login-btn">
+        👤 Login
+    </a>
 
-    </nav>
+</nav>
+```
 
 </header>
 
-
 <section class="hero">
 
-    <h1>
-        Buy & Sell in Uganda
-    </h1>
+```
+<h1>
+    Buy & Sell in Uganda
+</h1>
 
-    <p>
-        Find great products from sellers around Uganda.
-    </p>
+<p>
+    Find great products from sellers around Uganda.
+</p>
 
-    <div class="search-box">
+<div class="search-box">
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search for products..."
-        >
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for products..."
+    >
 
-        <button onclick="searchProducts()">
-            Search
-        </button>
+    <button onclick="searchProducts()">
+        Search
+    </button>
 
-    </div>
+</div>
+```
 
 </section>
 
-
 <div class="container">
 
+```
+<h2 class="section-title">
+    Browse Categories
+</h2>
 
-    <h2 class="section-title">
-        Browse Categories
-    </h2>
+<div class="categories">
 
+    <div class="category"
+         onclick="filterCategory('Phones')">
 
-    <div class="categories">
-
-        <div class="category"
-             onclick="filterCategory('Electronics')">
-
-            <div class="category-icon">
-                📱
-            </div>
-
-            <h3>
-                Electronics
-            </h3>
-
+        <div class="category-icon">
+            📱
         </div>
 
-
-        <div class="category"
-             onclick="filterCategory('Cars')">
-
-            <div class="category-icon">
-                🚗
-            </div>
-
-            <h3>
-                Cars
-            </h3>
-
-        </div>
-
-
-        <div class="category"
-             onclick="filterCategory('Fashion')">
-
-            <div class="category-icon">
-                👕
-            </div>
-
-            <h3>
-                Fashion
-            </h3>
-
-        </div>
-
-
-        <div class="category"
-             onclick="filterCategory('Phones')">
-
-            <div class="category-icon">
-                📱
-            </div>
-
-            <h3>
-                Phones
-            </h3>
-
-        </div>
+        <h3>
+            Phones
+        </h3>
 
     </div>
 
 
-    <h2 class="section-title">
-        Latest Listings
-    </h2>
+    <div class="category"
+         onclick="filterCategory('Cars')">
 
-
-    <div id="productsContainer"
-         class="products">
-
-        <div class="loading">
-            Loading listings...
+        <div class="category-icon">
+            🚗
         </div>
+
+        <h3>
+            Cars
+        </h3>
 
     </div>
 
+
+    <div class="category"
+         onclick="filterCategory('Fashion')">
+
+        <div class="category-icon">
+            👕
+        </div>
+
+        <h3>
+            Fashion
+        </h3>
+
+    </div>
+
+
+    <div class="category"
+         onclick="filterCategory('Electronics')">
+
+        <div class="category-icon">
+            💻
+        </div>
+
+        <h3>
+            Electronics
+        </h3>
+
+    </div>
 
 </div>
 
+
+<h2 class="section-title">
+    Latest Listings
+</h2>
+
+
+<div id="productsContainer"
+     class="products">
+
+    <div class="loading">
+        Loading listings...
+    </div>
+
+</div>
+```
+
+</div>
 
 <div id="contactModal"
      class="modal">
 
-    <div class="modal-content">
+```
+<div class="modal-content">
 
-        <h2>
-            Contact Seller
-        </h2>
+    <h2>
+        Contact Seller
+    </h2>
 
-        <p class="seller-phone"
-           id="sellerPhone">
-        </p>
+    <p class="seller-phone"
+       id="sellerPhone">
+    </p>
 
+    <a id="callSeller"
+       class="modal-btn call-btn">
 
-        <a id="callSeller"
-           class="modal-btn call-btn">
+        📞 Call Seller
 
-            📞 Call Seller
+    </a>
 
-        </a>
+    <a id="whatsappSeller"
+       class="modal-btn whatsapp-btn"
+       target="_blank">
 
+        💬 WhatsApp Seller
 
-        <a id="whatsappSeller"
-           class="modal-btn whatsapp-btn"
-           target="_blank">
+    </a>
 
-            💬 WhatsApp Seller
+    <button
+        class="modal-btn close-btn"
+        onclick="closeContact()">
 
-        </a>
+        ❌ Close
 
+    </button>
 
-        <button
-            class="modal-btn close-btn"
-            onclick="closeContact()">
-
-            ❌ Close
-
-        </button>
-
-    </div>
+</div>
+```
 
 </div>
 
-
 <footer>
 
-    <h2>
-        BUYZA
-    </h2>
+```
+<h2>
+    BUYZA
+</h2>
 
-    <p>
-        Uganda's Marketplace
-    </p>
+<p>
+    Uganda's Marketplace
+</p>
 
-    <p style="margin-top:10px;">
-        Buy. Sell. Connect.
-    </p>
+<p style="margin-top:10px;">
+    Buy. Sell. Connect.
+</p>
 
-    <p style="margin-top:15px;">
-        © 2026 BUYZA. All rights reserved.
-    </p>
+<p style="margin-top:15px;">
+    © 2026 BUYZA. All rights reserved.
+</p>
+```
 
 </footer>
-
 
 <script>
 
 const SUPABASE_URL =
     "https://xbjmdsdgisusnxdmlrxh.supabase.co";
-
 
 const SUPABASE_KEY =
     "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
@@ -611,40 +616,32 @@ const SUPABASE_KEY =
 let allProducts = [];
 
 
-/* ACCOUNT BUTTON */
+/* =========================
+   ACCOUNT BUTTON
+========================= */
 
 function updateAccountButton() {
 
     const user =
-        localStorage.getItem(
-            "buyza_user"
-        );
+        localStorage.getItem("buyza_user");
 
     const token =
-        localStorage.getItem(
-            "buyza_access_token"
-        );
+        localStorage.getItem("buyza_access_token");
 
     const button =
-        document.getElementById(
-            "accountButton"
-        );
+        document.getElementById("accountButton");
 
 
     if (user && token) {
 
-        button.href =
-            "account.html";
+        button.href = "account.html";
 
         button.innerHTML =
             "👤 My Account";
 
-    }
+    } else {
 
-    else {
-
-        button.href =
-            "login.html";
+        button.href = "login.html";
 
         button.innerHTML =
             "👤 Login";
@@ -654,8 +651,9 @@ function updateAccountButton() {
 }
 
 
-updateAccountButton();
-
+/* =========================
+   ESCAPE HTML
+========================= */
 
 function escapeHtml(value) {
 
@@ -669,6 +667,10 @@ function escapeHtml(value) {
 }
 
 
+/* =========================
+   PRICE
+========================= */
+
 function formatPrice(price) {
 
     return Number(price || 0)
@@ -677,18 +679,21 @@ function formatPrice(price) {
 }
 
 
+/* =========================
+   WHATSAPP
+========================= */
+
 function normalizeWhatsApp(phone) {
 
     if (!phone) {
         return "";
     }
 
-
     let number =
-        phone
-            .replace(/\s/g, "")
-            .replace(/-/g, "")
-            .replace(/\+/g, "");
+        String(phone)
+        .replace(/\s/g, "")
+        .replace(/-/g, "")
+        .replace(/\+/g, "");
 
 
     if (number.startsWith("0")) {
@@ -705,6 +710,10 @@ function normalizeWhatsApp(phone) {
 }
 
 
+/* =========================
+   CONTACT SELLER
+========================= */
+
 function showContact(phone) {
 
     if (!phone) {
@@ -720,12 +729,14 @@ function showContact(phone) {
 
     document.getElementById(
         "sellerPhone"
-    ).textContent = phone;
+    ).textContent =
+        phone;
 
 
     document.getElementById(
         "callSeller"
-    ).href = "tel:" + phone;
+    ).href =
+        "tel:" + phone;
 
 
     const whatsappNumber =
@@ -747,7 +758,8 @@ function showContact(phone) {
 
     document.getElementById(
         "contactModal"
-    ).style.display = "flex";
+    ).style.display =
+        "flex";
 
 }
 
@@ -756,7 +768,8 @@ function closeContact() {
 
     document.getElementById(
         "contactModal"
-    ).style.display = "none";
+    ).style.display =
+        "none";
 
 }
 
@@ -778,6 +791,10 @@ window.onclick = function(event) {
 };
 
 
+/* =========================
+   DISPLAY PRODUCTS
+========================= */
+
 function displayProducts(products) {
 
     const container =
@@ -788,9 +805,8 @@ function displayProducts(products) {
 
     if (!products || products.length === 0) {
 
-        container.innerHTML =
+        container.innerHTML = `
 
-            `
             <div class="empty">
 
                 <h3>
@@ -798,11 +814,12 @@ function displayProducts(products) {
                 </h3>
 
                 <p style="margin-top:10px;">
-                    Try another search.
+                    Try another search or category.
                 </p>
 
             </div>
-            `;
+
+        `;
 
         return;
 
@@ -819,38 +836,42 @@ function displayProducts(products) {
 
         if (product.image_url) {
 
-            imageHtml =
+            imageHtml = `
 
-                `
                 <img
                     class="product-image"
                     src="${escapeHtml(product.image_url)}"
                     alt="${escapeHtml(product.name)}"
+                    onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                 >
-                `;
 
-        }
+                <div
+                    class="no-image"
+                    style="display:none;"
+                >
+                    📦 Image unavailable
+                </div>
 
-        else {
+            `;
 
-            imageHtml =
+        } else {
 
-                `
+            imageHtml = `
+
                 <div class="no-image">
                     📦 No image
                 </div>
-                `;
+
+            `;
 
         }
 
 
-        const card =
+        const card = `
 
-            `
             <div class="product-card">
 
                 ${imageHtml}
-
 
                 <div class="product-info">
 
@@ -858,46 +879,37 @@ function displayProducts(products) {
                         ${escapeHtml(product.name)}
                     </h3>
 
-
                     <div class="price">
-
-                        UGX
-                        ${formatPrice(product.price)}
-
+                        UGX ${formatPrice(product.price)}
                     </div>
-
 
                     <div class="location">
-
-                        📍
-                        ${escapeHtml(product.location)}
-
+                        📍 ${escapeHtml(product.location)}
                     </div>
 
+                    <p class="description">
+                        ${escapeHtml(product.description)}
+                    </p>
 
                     <a
                         class="view-btn"
                         href="product.html?id=${encodeURIComponent(product.id)}"
                     >
-
                         👁 View Product
-
                     </a>
-
 
                     <button
                         class="contact-btn"
                         onclick="showContact('${escapeHtml(product.phone)}')"
                     >
-
                         📞 Contact Seller
-
                     </button>
 
                 </div>
 
             </div>
-            `;
+
+        `;
 
 
         container.innerHTML += card;
@@ -907,12 +919,25 @@ function displayProducts(products) {
 }
 
 
+/* =========================
+   LOAD PRODUCTS
+========================= */
+
 async function loadProducts() {
 
     const container =
         document.getElementById(
             "productsContainer"
         );
+
+
+    container.innerHTML = `
+
+        <div class="loading">
+            Loading listings...
+        </div>
+
+    `;
 
 
     try {
@@ -924,6 +949,8 @@ async function loadProducts() {
                 "/rest/v1/products?select=*&order=created_at.desc",
 
                 {
+
+                    method: "GET",
 
                     headers: {
 
@@ -943,9 +970,15 @@ async function loadProducts() {
 
         if (!response.ok) {
 
-            throw new Error(
-                "Could not load products"
+            const error =
+                await response.text();
+
+            console.error(
+                "Supabase error:",
+                error
             );
+
+            throw new Error(error);
 
         }
 
@@ -963,12 +996,14 @@ async function loadProducts() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Could not load products:",
+            error
+        );
 
 
-        container.innerHTML =
+        container.innerHTML = `
 
-            `
             <div class="empty">
 
                 <h3>
@@ -976,25 +1011,30 @@ async function loadProducts() {
                 </h3>
 
                 <p style="margin-top:10px;">
-                    Please refresh the page.
+                    Please refresh the page and try again.
                 </p>
 
             </div>
-            `;
+
+        `;
 
     }
 
 }
 
 
+/* =========================
+   SEARCH
+========================= */
+
 function searchProducts() {
 
     const search =
         document
-            .getElementById("searchInput")
-            .value
-            .toLowerCase()
-            .trim();
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
 
 
     if (!search) {
@@ -1057,18 +1097,45 @@ function searchProducts() {
 }
 
 
+/* =========================
+   CATEGORY FILTER
+========================= */
+
 function filterCategory(category) {
+
+    const selected =
+        category
+        .toLowerCase()
+        .trim();
+
 
     const filtered =
         allProducts.filter(
             function(product) {
 
-                return String(
-                    product.category || ""
-                )
-                .toLowerCase()
-                ===
-                category.toLowerCase();
+                const productCategory =
+                    String(
+                        product.category || ""
+                    )
+                    .toLowerCase()
+                    .trim();
+
+
+                /* Phones matches Phones & Tablets */
+
+                if (selected === "phones") {
+
+                    return (
+                        productCategory === "phones" ||
+                        productCategory === "phones & tablets"
+                    );
+
+                }
+
+
+                return (
+                    productCategory === selected
+                );
 
             }
         );
@@ -1076,7 +1143,8 @@ function filterCategory(category) {
 
     document.getElementById(
         "searchInput"
-    ).value = category;
+    ).value =
+        category;
 
 
     displayProducts(
@@ -1086,18 +1154,22 @@ function filterCategory(category) {
 
     window.scrollTo({
 
-        top: document
-            .getElementById(
+        top:
+            document.getElementById(
                 "productsContainer"
-            )
-            .offsetTop - 100,
+            ).offsetTop - 100,
 
-        behavior: "smooth"
+        behavior:
+            "smooth"
 
     });
 
 }
 
+
+/* =========================
+   ENTER KEY SEARCH
+========================= */
 
 document
     .getElementById("searchInput")
@@ -1115,10 +1187,15 @@ document
     );
 
 
+/* =========================
+   START WEBSITE
+========================= */
+
+updateAccountButton();
+
 loadProducts();
 
 </script>
-
 
 </body>
 
