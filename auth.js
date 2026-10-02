@@ -1,8 +1,8 @@
 const SUPABASE_URL =
-    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+"https://xbjmdsdgisusnxdmlrxh.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+"sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 
 async function refreshBuyzaSession() {
@@ -16,30 +16,64 @@ async function refreshBuyzaSession() {
 
     try {
 
-        const response = await fetch(
-            SUPABASE_URL +
-            "/auth/v1/token?grant_type=refresh_token",
-            {
-                method: "POST",
+        const controller =
+            new AbortController();
 
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Content-Type": "application/json"
-                },
+        const timeout =
+            setTimeout(
+                () => controller.abort(),
+                10000
+            );
 
-                body: JSON.stringify({
-                    refresh_token: refreshToken
-                })
-            }
-        );
+        const response =
+            await fetch(
 
-        const data = await response.json();
+                SUPABASE_URL +
+                "/auth/v1/token?grant_type=refresh_token",
+
+                {
+                    method: "POST",
+
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        refresh_token: refreshToken
+                    }),
+
+                    signal: controller.signal
+                }
+            );
+
+        clearTimeout(timeout);
+
+        const data =
+            await response.json();
+
 
         if (!response.ok) {
 
             console.error(
-                "Session refresh failed:",
+                "Refresh failed:",
                 data
+            );
+
+            /*
+             * Remove bad session.
+             */
+
+            localStorage.removeItem(
+                "buyza_access_token"
+            );
+
+            localStorage.removeItem(
+                "buyza_refresh_token"
+            );
+
+            localStorage.removeItem(
+                "buyza_user"
             );
 
             return false;
@@ -78,8 +112,20 @@ async function refreshBuyzaSession() {
     } catch (error) {
 
         console.error(
-            "Could not refresh session:",
+            "Refresh error:",
             error
+        );
+
+        localStorage.removeItem(
+            "buyza_access_token"
+        );
+
+        localStorage.removeItem(
+            "buyza_refresh_token"
+        );
+
+        localStorage.removeItem(
+            "buyza_user"
         );
 
         return false;
@@ -89,17 +135,27 @@ async function refreshBuyzaSession() {
 
 async function checkBuyzaSession() {
 
-    const refreshToken =
-        localStorage.getItem("buyza_refresh_token");
-
     const accessToken =
-        localStorage.getItem("buyza_access_token");
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+    const refreshToken =
+        localStorage.getItem(
+            "buyza_refresh_token"
+        );
 
 
     if (!accessToken && !refreshToken) {
+
         return false;
     }
 
+
+    /*
+     * If we have a refresh token,
+     * get a fresh access token.
+     */
 
     if (refreshToken) {
 
@@ -107,14 +163,20 @@ async function checkBuyzaSession() {
             await refreshBuyzaSession();
 
         if (refreshed) {
+
             return true;
         }
+
+        return false;
     }
 
 
-    return !!localStorage.getItem(
-        "buyza_access_token"
-    );
+    /*
+     * No refresh token.
+     * Keep the existing access token.
+     */
+
+    return !!accessToken;
 }
 
 
@@ -122,6 +184,7 @@ async function getBuyzaAccessToken() {
 
     const refreshed =
         await refreshBuyzaSession();
+
 
     if (refreshed) {
 
