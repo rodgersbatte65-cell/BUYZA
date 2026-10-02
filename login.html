@@ -1,265 +1,450 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login - BUYZA</title>
+<meta charset="UTF-8">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<meta name="viewport"
+   content="width=device-width, initial-scale=1.0">
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-        }
+<title>Login - BUYZA</title>
 
-        header {
-            background: #111;
-            color: white;
-            padding: 18px 30px;
-        }
+<style>
 
-        header h1 {
-            margin: 0;
-        }
+* {
+    box-sizing: border-box;
+}
 
-        .container {
-            max-width: 450px;
-            margin: 50px auto;
-            padding: 20px;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+}
 
-        .box {
-            background: white;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+header {
+    background: #111;
+    color: white;
+    padding: 18px 30px;
+}
 
-        h2 {
-            margin-top: 0;
-            text-align: center;
-        }
+header h1 {
+    margin: 0;
+    color: #ff6b00;
+}
 
-        input {
-            width: 100%;
-            padding: 13px;
-            margin: 8px 0 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 16px;
-        }
+.container {
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 20px;
+}
 
-        button {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 8px;
-            background: #111;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
+.box {
+    background: white;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
 
-        button:hover {
-            opacity: 0.9;
-        }
+h2 {
+    margin-top: 0;
+    text-align: center;
+}
 
-        #message {
-            margin-top: 15px;
-            text-align: center;
-            color: #d32f2f;
-        }
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
 
-        .signup {
-            text-align: center;
-            margin-top: 20px;
-        }
+input {
+    width: 100%;
+    padding: 13px;
+    margin: 8px 0 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+}
 
-        .signup a {
-            color: #111;
-            font-weight: bold;
-        }
-    </style>
+button {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    background: #ff6b00;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#message {
+    margin-top: 15px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.signup {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.signup a {
+    color: #ff6b00;
+    font-weight: bold;
+}
+
+</style>
+
 </head>
 
 <body>
 
 <header>
-    <h1>BUYZA</h1>
+
+<h1>BUYZA</h1>
+
 </header>
 
 <div class="container">
 
-    <div class="box">
+<div class="box">
 
-        <h2>👤 Login to BUYZA</h2>
+<h2>👤 Login to BUYZA</h2>
 
-        <form id="loginForm">
+<form id="loginForm">
 
-            <label>Email</label>
+<label>
+Email
+</label>
 
-            <input
-                type="email"
-                id="email"
-                placeholder="Enter your email"
-                required
-            >
+<input
+type="email"
+id="email"
+placeholder="Enter your email"
+autocomplete="email"
+required
 
-            <label>Password</label>
+>
 
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter your password"
-                required
-            >
+<label>
+Password
+</label>
 
-            <button type="submit">
-                Login
-            </button>
+<input
+type="password"
+id="password"
+placeholder="Enter your password"
+autocomplete="current-password"
+required
 
-        </form>
+>
 
-        <div id="message"></div>
+<button
+type="submit"
+id="loginButton"
 
-        <div class="signup">
-            Don't have an account?
-            <a href="signup.html">Create Account</a>
-        </div>
+>
 
-    </div>
+Login </button>
+
+</form>
+
+<div id="message"></div>
+
+<div class="signup">
+
+Don't have an account?
+
+<a href="signup.html">
+Create Account
+</a>
 
 </div>
 
+</div>
+
+</div>
 
 <script>
 
 const SUPABASE_URL =
-    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+"https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
 
 const SUPABASE_KEY =
-    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+"sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 
-document.getElementById("loginForm").addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-        const email =
-            document.getElementById("email").value.trim();
-
-        const password =
-            document.getElementById("password").value;
-
-        const message =
-            document.getElementById("message");
-
-        message.style.color = "#333";
-        message.textContent = "Logging in...";
+const loginForm =
+document.getElementById("loginForm");
 
 
-        try {
+const loginButton =
+document.getElementById("loginButton");
 
-            const response = await fetch(
-                SUPABASE_URL +
-                "/auth/v1/token?grant_type=password",
-                {
-                    method: "POST",
 
-                    headers: {
-                        "apikey": SUPABASE_KEY,
-                        "Content-Type": "application/json"
-                    },
+const message =
+document.getElementById("message");
 
-                    body: JSON.stringify({
-                        email: email,
-                        password: password
-                    })
-                }
+
+loginForm.addEventListener(
+"submit",
+async function(event) {
+
+    event.preventDefault();
+
+
+    const email =
+    document.getElementById("email")
+    .value
+    .trim();
+
+
+    const password =
+    document.getElementById("password")
+    .value;
+
+
+    if (!email || !password) {
+
+        message.style.color = "#d32f2f";
+
+        message.textContent =
+        "Please enter your email and password.";
+
+        return;
+    }
+
+
+    loginButton.disabled = true;
+
+    loginButton.textContent =
+    "Logging in...";
+
+
+    message.style.color = "#333";
+
+    message.textContent =
+    "Connecting to BUYZA...";
+
+
+    /*
+     * Remove old expired session data.
+     * A fresh login will replace it.
+     */
+
+    localStorage.removeItem(
+        "buyza_access_token"
+    );
+
+    localStorage.removeItem(
+        "buyza_refresh_token"
+    );
+
+    localStorage.removeItem(
+        "buyza_user"
+    );
+
+
+    try {
+
+        const response =
+        await fetch(
+
+            SUPABASE_URL +
+            "/auth/v1/token?grant_type=password",
+
+            {
+                method: "POST",
+
+                headers: {
+
+                    "apikey":
+                    SUPABASE_KEY,
+
+                    "Content-Type":
+                    "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    email:
+                    email,
+
+                    password:
+                    password
+
+                })
+
+            }
+
+        );
+
+
+        const data =
+        await response.json();
+
+
+        console.log(
+            "BUYZA LOGIN RESPONSE:",
+            data
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                data.error_description ||
+
+                data.message ||
+
+                data.msg ||
+
+                "Login failed."
+
             );
 
-
-            const data = await response.json();
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    data.msg ||
-                    data.message ||
-                    data.error_description ||
-                    "Login failed"
-                );
-            }
-
-
-            /*
-             * Save the access token
-             */
-            localStorage.setItem(
-                "buyza_access_token",
-                data.access_token
-            );
-
-
-            /*
-             * Save the refresh token
-             */
-            if (data.refresh_token) {
-
-                localStorage.setItem(
-                    "buyza_refresh_token",
-                    data.refresh_token
-                );
-            }
-
-
-            /*
-             * Save the user
-             */
-            if (data.user) {
-
-                localStorage.setItem(
-                    "buyza_user",
-                    JSON.stringify(data.user)
-                );
-            }
-
-
-            message.style.color = "green";
-
-            message.textContent =
-                "✅ Login successful!";
-
-
-            setTimeout(function() {
-
-                window.location.replace("index.html");
-
-            }, 500);
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            message.style.color = "#d32f2f";
-
-            message.textContent =
-                "❌ " + error.message;
         }
 
+
+        /*
+         * Access token
+         */
+
+        if (!data.access_token) {
+
+            throw new Error(
+                "No access token was returned."
+            );
+
+        }
+
+
+        localStorage.setItem(
+
+            "buyza_access_token",
+
+            data.access_token
+
+        );
+
+
+        /*
+         * Refresh token
+         */
+
+        if (data.refresh_token) {
+
+            localStorage.setItem(
+
+                "buyza_refresh_token",
+
+                data.refresh_token
+
+            );
+
+        } else {
+
+            console.warn(
+                "No refresh token returned."
+            );
+
+        }
+
+
+        /*
+         * User information
+         */
+
+        if (data.user) {
+
+            localStorage.setItem(
+
+                "buyza_user",
+
+                JSON.stringify(data.user)
+
+            );
+
+        }
+
+
+        message.style.color =
+        "green";
+
+
+        message.textContent =
+        "✅ Login successful!";
+
+
+        loginButton.textContent =
+        "Success";
+
+
+        /*
+         * Give localStorage time to save
+         * before changing pages.
+         */
+
+        setTimeout(function() {
+
+            window.location.href =
+            "index.html";
+
+        }, 800);
+
+
+    } catch (error) {
+
+        console.error(
+            "BUYZA LOGIN ERROR:",
+            error
+        );
+
+
+        message.style.color =
+        "#d32f2f";
+
+
+        if (
+            error.message ===
+            "Failed to fetch"
+        ) {
+
+            message.innerHTML =
+            "❌ Could not connect to BUYZA.<br>" +
+            "Please check your internet connection and try again.";
+
+        } else {
+
+            message.textContent =
+            "❌ " + error.message;
+
+        }
+
+
+        loginButton.disabled =
+        false;
+
+
+        loginButton.textContent =
+        "Login";
+
     }
-);
+
+});
 
 </script>
 
 </body>
+
 </html>
