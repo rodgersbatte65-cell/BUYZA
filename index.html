@@ -1307,10 +1307,18 @@ function showAll(){
 
 function viewProduct(id){
 
-    window.location.href =
-        "product.html?id=" + id;
+     if(!id){
+        alert("Product ID is missing.");
+        return;
+    }
 
-}
+    const url =
+        "./product.html?id=" +
+        encodeURIComponent(String(id));
+
+    window.location.assign(url);
+
+}   
 
 
 /* =====================================================
