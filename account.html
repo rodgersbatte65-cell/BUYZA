@@ -1,147 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>My Account - BUYZA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>My Account - BUYZA</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
-        }
+<style>
 
-        header {
-            background: #111;
-            color: white;
-            padding: 18px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+*{
+    box-sizing:border-box;
+}
 
-        header h1 {
-            margin: 0;
-            font-size: 28px;
-        }
+body{
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#f5f6f8;
+    color:#222;
+}
 
-        header a {
-            color: white;
-            text-decoration: none;
-            margin-left: 15px;
-        }
+header{
+    background:#111;
+    color:white;
+    padding:16px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
 
-        .container {
-            max-width: 700px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
+.logo{
+    color:#ff6b00;
+    font-size:28px;
+    font-weight:900;
+    text-decoration:none;
+}
 
-        .account-card {
-            background: white;
-            border-radius: 14px;
-            padding: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        }
+nav a{
+    color:white;
+    text-decoration:none;
+    margin-left:15px;
+    font-weight:600;
+}
 
-        .account-card h2 {
-            margin-top: 0;
-        }
+.container{
+    max-width:800px;
+    margin:35px auto;
+    padding:0 20px;
+}
 
-        .email {
-            background: #f5f6f8;
-            padding: 14px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
+.card{
+    background:white;
+    border-radius:18px;
+    padding:28px;
+    margin-bottom:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.07);
+}
 
-        .button {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin-top: 12px;
-            border-radius: 8px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-            background: #111;
-            color: white;
-        }
+.profile-header{
+    text-align:center;
+    margin-bottom:25px;
+}
 
-        .button:hover {
-            opacity: 0.9;
-        }
+.avatar{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:#ff6b00;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 15px;
+    font-size:38px;
+    font-weight:900;
+}
 
-        .favorite-button {
-            background: #e91e63;
-        }
+.profile-header h2{
+    margin:5px 0;
+}
 
-        .logout {
-            background: #d32f2f;
-        }
+.profile-header p{
+    color:#777;
+}
 
-        @media (max-width: 600px) {
-            header {
-                padding: 15px;
-            }
+.form-group{
+    margin-bottom:18px;
+}
 
-            header h1 {
-                font-size: 23px;
-            }
+label{
+    display:block;
+    font-weight:700;
+    margin-bottom:7px;
+}
 
-            .container {
-                margin-top: 25px;
-            }
-        }
-    </style>
+input,
+textarea{
+    width:100%;
+    padding:13px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus,
+textarea:focus{
+    border-color:#ff6b00;
+}
+
+textarea{
+    min-height:110px;
+    resize:vertical;
+}
+
+.save-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:10px;
+    background:#ff6b00;
+    color:white;
+    font-size:16px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.save-btn:hover{
+    background:#e85f00;
+}
+
+.message{
+    margin-top:12px;
+    text-align:center;
+    font-weight:700;
+}
+
+.email{
+    background:#f5f6f8;
+    padding:14px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.email span{
+    color:#555;
+}
+
+.button{
+    display:block;
+    width:100%;
+    padding:14px;
+    margin-top:12px;
+    border-radius:10px;
+    text-align:center;
+    text-decoration:none;
+    font-size:16px;
+    border:none;
+    cursor:pointer;
+    background:#111;
+    color:white;
+    font-weight:700;
+}
+
+.button:hover{
+    opacity:.9;
+}
+
+.favorite-button{
+    background:#e91e63;
+}
+
+.logout{
+    background:#d32f2f;
+}
+
+.section-title{
+    margin-top:0;
+    margin-bottom:20px;
+}
+
+@media(max-width:600px){
+
+    header{
+        padding:14px;
+    }
+
+    .logo{
+        font-size:24px;
+    }
+
+    nav a{
+        margin-left:8px;
+        font-size:13px;
+    }
+
+    .container{
+        margin-top:20px;
+        padding:0 12px;
+    }
+
+    .card{
+        padding:20px;
+    }
+
+}
+
+</style>
+
 </head>
 
 <body>
 
+
 <header>
 
-    <h1>BUYZA</h1>
+    <a href="index.html" class="logo">
+        BUYZA
+    </a>
 
-    <div>
-        <a href="index.html">Home</a>
-        <a href="sell.html">Sell</a>
-    </div>
+    <nav>
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="sell.html">
+            Sell
+        </a>
+
+    </nav>
 
 </header>
 
 
 <div class="container">
 
-    <div class="account-card">
 
-        <h2>👤 My Account</h2>
+    <!-- SELLER PROFILE -->
 
-        <div class="email">
-            <strong>Email:</strong>
-            <span id="userEmail">Loading...</span>
+    <div class="card">
+
+        <div class="profile-header">
+
+            <div class="avatar" id="avatar">
+                B
+            </div>
+
+            <h2>
+                My Seller Profile
+            </h2>
+
+            <p>
+                Create your public BUYZA seller profile
+            </p>
+
         </div>
 
 
-        <a href="my-listings.html" class="button">
+        <div class="email">
+
+            <strong>
+                Account Email:
+            </strong>
+
+            <span id="userEmail">
+                Loading...
+            </span>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="fullName">
+                Full Name
+            </label>
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Enter your name"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="phone">
+                Phone Number
+            </label>
+
+            <input
+                type="tel"
+                id="phone"
+                placeholder="Example: 0701234567"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="location">
+                Location
+            </label>
+
+            <input
+                type="text"
+                id="location"
+                placeholder="Example: Kampala, Uganda"
+            >
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label for="bio">
+                About You
+            </label>
+
+            <textarea
+                id="bio"
+                placeholder="Tell buyers a little about yourself or your business..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            class="save-btn"
+            onclick="saveProfile()"
+        >
+            💾 Save Seller Profile
+        </button>
+
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+    </div>
+
+
+
+    <!-- ACCOUNT ACTIONS -->
+
+    <div class="card">
+
+        <h2 class="section-title">
+            ⚡ My BUYZA
+        </h2>
+
+
+        <a
+            href="my-listings.html"
+            class="button"
+        >
             📋 My Listings
         </a>
 
 
-        <a href="favorites.html" class="button favorite-button">
+        <a
+            href="favorites.html"
+            class="button favorite-button"
+        >
             ❤️ My Favorites
         </a>
 
 
-        <a href="sell.html" class="button">
+        <a
+            href="sell.html"
+            class="button"
+        >
             ➕ Sell a Product
         </a>
 
@@ -155,37 +389,284 @@
 
     </div>
 
+
 </div>
 
 
 <script>
 
-const userData = localStorage.getItem("buyza_user");
+
+/* SUPABASE */
+
+const SUPABASE_URL =
+    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+
+/* GET LOGIN INFORMATION */
+
+const userData =
+    localStorage.getItem("buyza_user");
 
 const accessToken =
     localStorage.getItem("buyza_access_token");
 
 
-if (!userData || !accessToken) {
+/* CHECK LOGIN */
 
-    window.location.href = "login.html";
+if(!userData || !accessToken){
 
-} else {
+    window.location.href =
+        "login.html";
 
-    const user = JSON.parse(userData);
+}else{
+
+    const user =
+        JSON.parse(userData);
 
     document.getElementById("userEmail").textContent =
         user.email || "User";
+
+    loadProfile(user.id);
+
 }
 
 
-function logout() {
+/* LOAD SELLER PROFILE */
 
-    localStorage.removeItem("buyza_user");
+async function loadProfile(userId){
 
-    localStorage.removeItem("buyza_access_token");
+    try{
 
-    window.location.href = "index.html";
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/seller_profiles?id=eq." +
+                encodeURIComponent(userId) +
+                "&select=*",
+                {
+                    headers:{
+                        "apikey":SUPABASE_KEY,
+                        "Authorization":
+                            "Bearer " + accessToken
+                    }
+                }
+            );
+
+
+        if(!response.ok){
+
+            console.log(
+                "Profile not found yet."
+            );
+
+            return;
+        }
+
+
+        const profiles =
+            await response.json();
+
+
+        if(profiles.length === 0){
+
+            return;
+        }
+
+
+        const profile =
+            profiles[0];
+
+
+        document.getElementById("fullName").value =
+            profile.full_name || "";
+
+
+        document.getElementById("phone").value =
+            profile.phone || "";
+
+
+        document.getElementById("location").value =
+            profile.location || "";
+
+
+        document.getElementById("bio").value =
+            profile.bio || "";
+
+
+        updateAvatar(
+            profile.full_name
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* SAVE PROFILE */
+
+async function saveProfile(){
+
+    const user =
+        JSON.parse(userData);
+
+
+    const fullName =
+        document.getElementById("fullName").value.trim();
+
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+
+    const location =
+        document.getElementById("location").value.trim();
+
+
+    const bio =
+        document.getElementById("bio").value.trim();
+
+
+    const message =
+        document.getElementById("message");
+
+
+    if(!fullName){
+
+        message.textContent =
+            "Please enter your name.";
+
+        message.style.color =
+            "#d32f2f";
+
+        return;
+    }
+
+
+    const profile = {
+
+        id:user.id,
+
+        full_name:fullName,
+
+        phone:phone,
+
+        location:location,
+
+        bio:bio
+
+    };
+
+
+    try{
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/seller_profiles",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "apikey":SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " + accessToken,
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Prefer":
+                            "resolution=merge-duplicates"
+                    },
+
+                    body:JSON.stringify(profile)
+                }
+            );
+
+
+        if(!response.ok){
+
+            const errorText =
+                await response.text();
+
+            console.error(errorText);
+
+            throw new Error(
+                "Could not save profile."
+            );
+
+        }
+
+
+        message.textContent =
+            "✅ Seller profile saved successfully!";
+
+        message.style.color =
+            "#16803c";
+
+
+        updateAvatar(fullName);
+
+
+    }catch(error){
+
+        console.error(error);
+
+        message.textContent =
+            "❌ Could not save your profile. Please try again.";
+
+        message.style.color =
+            "#d32f2f";
+
+    }
+
+}
+
+
+/* UPDATE AVATAR */
+
+function updateAvatar(name){
+
+    if(!name){
+
+        return;
+    }
+
+
+    const firstLetter =
+        name.trim().charAt(0).toUpperCase();
+
+
+    document.getElementById("avatar")
+        .textContent =
+        firstLetter;
+
+}
+
+
+/* LOGOUT */
+
+function logout(){
+
+    localStorage.removeItem(
+        "buyza_user"
+    );
+
+    localStorage.removeItem(
+        "buyza_access_token"
+    );
+
+    window.location.href =
+        "index.html";
+
 }
 
 </script>
