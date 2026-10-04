@@ -305,6 +305,181 @@ header{
 }
 
 
+/* REVIEWS */
+
+.reviews-card{
+    margin-top:20px;
+    padding:24px;
+    background:white;
+    border-radius:20px;
+    box-shadow:0 5px 25px rgba(0,0,0,.05);
+}
+
+.reviews-title{
+    font-size:20px;
+    font-weight:900;
+    margin-bottom:20px;
+}
+
+.rating-summary{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:18px;
+    background:#fff8f3;
+    border-radius:15px;
+    margin-bottom:22px;
+}
+
+.rating-number{
+    font-size:42px;
+    font-weight:900;
+    color:#ff6b00;
+}
+
+.rating-stars{
+    font-size:25px;
+    letter-spacing:2px;
+    color:#ff6b00;
+}
+
+.rating-count{
+    margin-top:5px;
+    color:#777;
+    font-size:14px;
+}
+
+.review-form{
+    border-top:1px solid #eee;
+    padding-top:20px;
+}
+
+.review-form-title{
+    font-size:17px;
+    font-weight:800;
+    margin-bottom:14px;
+}
+
+.star-selector{
+    display:flex;
+    gap:5px;
+    margin-bottom:15px;
+}
+
+.star-btn{
+    border:none;
+    background:#f2f2f2;
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:22px;
+    color:#999;
+}
+
+.star-btn:hover{
+    background:#fff1e8;
+    color:#ff6b00;
+}
+
+.star-btn.selected{
+    background:#ff6b00;
+    color:white;
+}
+
+.review-text{
+    width:100%;
+    min-height:110px;
+    resize:vertical;
+    border:1px solid #ddd;
+    border-radius:12px;
+    padding:13px;
+    font-family:Arial,Helvetica,sans-serif;
+    font-size:15px;
+    outline:none;
+}
+
+.review-text:focus{
+    border-color:#ff6b00;
+}
+
+.submit-review{
+    margin-top:12px;
+    background:#ff6b00;
+    color:white;
+    border:none;
+    border-radius:12px;
+    padding:13px 20px;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.submit-review:hover{
+    background:#e85e00;
+}
+
+.login-review{
+    padding:16px;
+    background:#f7f7f7;
+    border-radius:12px;
+    color:#555;
+    line-height:1.6;
+}
+
+.login-review a{
+    color:#ff6b00;
+    font-weight:800;
+    text-decoration:none;
+}
+
+.reviews-list{
+    margin-top:25px;
+}
+
+.review-item{
+    padding:18px 0;
+    border-top:1px solid #eee;
+}
+
+.review-header{
+    display:flex;
+    justify-content:space-between;
+    gap:15px;
+    margin-bottom:8px;
+}
+
+.reviewer-name{
+    font-weight:800;
+}
+
+.review-stars{
+    color:#ff6b00;
+    font-size:18px;
+}
+
+.review-date{
+    color:#999;
+    font-size:12px;
+    margin-top:4px;
+}
+
+.review-comment{
+    color:#555;
+    line-height:1.6;
+    margin-top:10px;
+    white-space:pre-wrap;
+}
+
+.no-reviews{
+    padding:20px;
+    text-align:center;
+    color:#888;
+    background:#f8f8f8;
+    border-radius:12px;
+}
+
+
 /* SAFETY */
 
 .safety-card{
@@ -446,6 +621,19 @@ footer p{
         font-size:27px;
     }
 
+    .reviews-card,
+    .seller-card{
+        padding:18px;
+    }
+
+    .rating-number{
+        font-size:34px;
+    }
+
+    .rating-stars{
+        font-size:21px;
+    }
+
 }
 
 </style>
@@ -488,7 +676,6 @@ footer p{
 </header>
 
 
-
 <main class="container">
 
 
@@ -525,7 +712,6 @@ footer p{
                 <div id="imageContainer"></div>
 
             </div>
-
 
 
             <!-- PRODUCT INFORMATION -->
@@ -624,7 +810,6 @@ footer p{
                 </div>
 
 
-
                 <!-- SELLER PROFILE -->
 
                 <div class="seller-card">
@@ -690,6 +875,77 @@ footer p{
                 </div>
 
 
+                <!-- SELLER RATINGS AND REVIEWS -->
+
+                <div class="reviews-card">
+
+
+                    <div class="reviews-title">
+
+                        ⭐ Seller Ratings & Reviews
+
+                    </div>
+
+
+                    <div class="rating-summary">
+
+
+                        <div
+                            id="ratingNumber"
+                            class="rating-number">
+
+                            0.0
+
+                        </div>
+
+
+                        <div>
+
+                            <div
+                                id="ratingStars"
+                                class="rating-stars">
+
+                                ☆☆☆☆☆
+
+                            </div>
+
+
+                            <div
+                                id="ratingCount"
+                                class="rating-count">
+
+                                No reviews yet
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div
+                        id="reviewArea"
+                        class="review-form">
+
+                    </div>
+
+
+                    <div
+                        id="reviewsList"
+                        class="reviews-list">
+
+                        <div class="no-reviews">
+
+                            Loading reviews...
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
 
                 <!-- SAFETY -->
 
@@ -739,7 +995,6 @@ footer p{
 </main>
 
 
-
 <footer>
 
     <strong>
@@ -759,15 +1014,15 @@ footer p{
 </footer>
 
 
-
 <script>
-
 
 let currentProduct = null;
 
 let currentProductId = null;
 
 let currentSellerProfile = null;
+
+let selectedRating = 0;
 
 
 /* GET PRODUCT ID */
@@ -882,9 +1137,15 @@ async function loadProduct(){
                 currentProduct.user_id
             );
 
+            await loadSellerReviews(
+                currentProduct.user_id
+            );
+
         }else{
 
             showDefaultSeller();
+
+            showNoSellerReviews();
 
         }
 
@@ -1189,17 +1450,10 @@ function displaySellerProfile(
 
 function showDefaultSeller(){
 
-    const name =
-        currentProduct &&
-        currentProduct.phone
-            ? "BUYZA Seller"
-            : "BUYZA Seller";
-
-
     document.getElementById(
         "sellerName"
     ).textContent =
-        name;
+        "BUYZA Seller";
 
 
     document.getElementById(
@@ -1226,6 +1480,842 @@ function showDefaultSeller(){
                 )}
 
             </span>
+
+        </div>
+
+    `;
+
+}
+
+
+/* LOAD SELLER REVIEWS */
+
+async function loadSellerReviews(
+    sellerId
+){
+
+    try{
+
+        const response =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/seller_reviews?seller_id=eq." +
+                encodeURIComponent(
+                    sellerId
+                ) +
+                "&select=id,reviewer_id,rating,review,created_at&order=created_at.desc",
+
+                {
+                    headers:{
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_KEY
+                    }
+                }
+
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Unable to load reviews."
+            );
+
+        }
+
+
+        const reviews =
+            await response.json();
+
+
+        displayRatingSummary(
+            reviews
+        );
+
+
+        displayReviews(
+            reviews
+        );
+
+
+        setupReviewForm(
+            sellerId
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById(
+            "ratingNumber"
+        ).textContent =
+            "0.0";
+
+
+        document.getElementById(
+            "ratingStars"
+        ).textContent =
+            "☆☆☆☆☆";
+
+
+        document.getElementById(
+            "ratingCount"
+        ).textContent =
+            "Reviews unavailable";
+
+
+        document.getElementById(
+            "reviewsList"
+        ).innerHTML = `
+
+            <div class="no-reviews">
+
+                Reviews could not be loaded.
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+/* RATING SUMMARY */
+
+function displayRatingSummary(
+    reviews
+){
+
+    const ratingNumber =
+        document.getElementById(
+            "ratingNumber"
+        );
+
+
+    const ratingStars =
+        document.getElementById(
+            "ratingStars"
+        );
+
+
+    const ratingCount =
+        document.getElementById(
+            "ratingCount"
+        );
+
+
+    if(!reviews.length){
+
+        ratingNumber.textContent =
+            "0.0";
+
+        ratingStars.textContent =
+            "☆☆☆☆☆";
+
+        ratingCount.textContent =
+            "No reviews yet";
+
+        return;
+    }
+
+
+    const total =
+        reviews.reduce(
+            (sum, review) =>
+                sum +
+                Number(review.rating || 0),
+            0
+        );
+
+
+    const average =
+        total /
+        reviews.length;
+
+
+    ratingNumber.textContent =
+        average.toFixed(1);
+
+
+    ratingStars.textContent =
+        buildStars(
+            Math.round(average)
+        );
+
+
+    ratingCount.textContent =
+        reviews.length +
+        (
+            reviews.length === 1
+                ? " review"
+                : " reviews"
+        );
+
+}
+
+
+/* BUILD STARS */
+
+function buildStars(
+    rating
+){
+
+    let stars = "";
+
+
+    for(let i = 1; i <= 5; i++){
+
+        stars +=
+            i <= rating
+                ? "★"
+                : "☆";
+
+    }
+
+
+    return stars;
+
+}
+
+
+/* DISPLAY REVIEWS */
+
+function displayReviews(
+    reviews
+){
+
+    const list =
+        document.getElementById(
+            "reviewsList"
+        );
+
+
+    if(!reviews.length){
+
+        list.innerHTML = `
+
+            <div class="no-reviews">
+
+                No reviews yet. Be the first buyer to review this seller!
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    list.innerHTML =
+        reviews.map(
+            review => {
+
+                const date =
+                    review.created_at
+                        ? new Date(
+                            review.created_at
+                        ).toLocaleDateString(
+                            "en-GB",
+                            {
+                                day:"numeric",
+                                month:"short",
+                                year:"numeric"
+                            }
+                        )
+                        : "";
+
+
+                return `
+
+                    <div class="review-item">
+
+                        <div class="review-header">
+
+                            <div>
+
+                                <div class="reviewer-name">
+
+                                    BUYZA Buyer
+
+                                </div>
+
+                                <div class="review-date">
+
+                                    ${escapeHtml(date)}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="review-stars">
+
+                                ${buildStars(
+                                    Number(review.rating || 0)
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            review.review
+                                ? `
+                                    <div class="review-comment">
+
+                                        ${escapeHtml(
+                                            review.review
+                                        )}
+
+                                    </div>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* REVIEW FORM */
+
+function setupReviewForm(
+    sellerId
+){
+
+    const area =
+        document.getElementById(
+            "reviewArea"
+        );
+
+
+    const token =
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+
+    const userData =
+        localStorage.getItem(
+            "buyza_user"
+        );
+
+
+    if(!token || !userData){
+
+        area.innerHTML = `
+
+            <div class="login-review">
+
+                🔐 Please
+                <a href="login.html">
+                    log in
+                </a>
+                to rate and review this seller.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    try{
+
+        const user =
+            JSON.parse(
+                userData
+            );
+
+
+        if(
+            user.id === sellerId
+        ){
+
+            area.innerHTML = `
+
+                <div class="login-review">
+
+                    👤 You are the seller of this listing.
+
+                    <br>
+
+                    You cannot review your own listing.
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+    }catch(error){
+
+        console.error(error);
+
+        area.innerHTML = `
+
+            <div class="login-review">
+
+                Please log in again to leave a review.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    area.innerHTML = `
+
+        <div class="review-form-title">
+
+            Rate this seller
+
+        </div>
+
+
+        <div
+            class="star-selector"
+            id="starSelector">
+
+            <button
+                type="button"
+                class="star-btn"
+                onclick="selectRating(1)">
+
+                ★
+
+            </button>
+
+
+            <button
+                type="button"
+                class="star-btn"
+                onclick="selectRating(2)">
+
+                ★
+
+            </button>
+
+
+            <button
+                type="button"
+                class="star-btn"
+                onclick="selectRating(3)">
+
+                ★
+
+            </button>
+
+
+            <button
+                type="button"
+                class="star-btn"
+                onclick="selectRating(4)">
+
+                ★
+
+            </button>
+
+
+            <button
+                type="button"
+                class="star-btn"
+                onclick="selectRating(5)">
+
+                ★
+
+            </button>
+
+        </div>
+
+
+        <textarea
+            id="reviewText"
+            class="review-text"
+            placeholder="Write your experience with this seller...">
+        </textarea>
+
+
+        <button
+            type="button"
+            class="submit-review"
+            onclick="submitReview()">
+
+            ⭐ Submit Review
+
+        </button>
+
+    `;
+
+}
+
+
+/* SELECT RATING */
+
+function selectRating(
+    rating
+){
+
+    selectedRating =
+        rating;
+
+
+    const buttons =
+        document.querySelectorAll(
+            "#starSelector .star-btn"
+        );
+
+
+    buttons.forEach(
+        (button,index) => {
+
+            if(index < rating){
+
+                button.classList.add(
+                    "selected"
+                );
+
+            }else{
+
+                button.classList.remove(
+                    "selected"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* SUBMIT REVIEW */
+
+async function submitReview(){
+
+    const token =
+        localStorage.getItem(
+            "buyza_access_token"
+        );
+
+
+    const userData =
+        localStorage.getItem(
+            "buyza_user"
+        );
+
+
+    if(!token || !userData){
+
+        alert(
+            "Please log in to submit a review."
+        );
+
+        window.location.href =
+            "login.html";
+
+        return;
+
+    }
+
+
+    if(
+        !currentProduct ||
+        !currentProduct.user_id
+    ){
+
+        alert(
+            "This listing is not connected to a seller profile yet."
+        );
+
+        return;
+
+    }
+
+
+    if(
+        selectedRating < 1 ||
+        selectedRating > 5
+    ){
+
+        alert(
+            "Please select a rating from 1 to 5 stars."
+        );
+
+        return;
+
+    }
+
+
+    const reviewElement =
+        document.getElementById(
+            "reviewText"
+        );
+
+
+    const reviewText =
+        reviewElement
+            ? reviewElement.value.trim()
+            : "";
+
+
+    if(!reviewText){
+
+        alert(
+            "Please write a review before submitting."
+        );
+
+        return;
+
+    }
+
+
+    try{
+
+        const user =
+            JSON.parse(
+                userData
+            );
+
+
+        if(
+            user.id === currentProduct.user_id
+        ){
+
+            alert(
+                "You cannot review your own listing."
+            );
+
+            return;
+
+        }
+
+
+        /* CHECK EXISTING REVIEW */
+
+        const checkResponse =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/seller_reviews?seller_id=eq." +
+                encodeURIComponent(
+                    currentProduct.user_id
+                ) +
+                "&reviewer_id=eq." +
+                encodeURIComponent(
+                    user.id
+                ) +
+                "&product_id=eq." +
+                encodeURIComponent(
+                    currentProductId
+                ) +
+                "&select=id",
+
+                {
+                    headers:{
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            token
+
+                    }
+
+                }
+
+            );
+
+
+        if(!checkResponse.ok){
+
+            throw new Error(
+                "Could not check existing review."
+            );
+
+        }
+
+
+        const existing =
+            await checkResponse.json();
+
+
+        if(existing.length){
+
+            alert(
+                "You have already reviewed this listing."
+            );
+
+            return;
+
+        }
+
+
+        /* INSERT REVIEW */
+
+        const insertResponse =
+            await fetch(
+
+                SUPABASE_URL +
+                "/rest/v1/seller_reviews",
+
+                {
+                    method:
+                        "POST",
+
+                    headers:{
+
+                        "apikey":
+                            SUPABASE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            token,
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Prefer":
+                            "return=minimal"
+
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            seller_id:
+                                currentProduct.user_id,
+
+                            reviewer_id:
+                                user.id,
+
+                            product_id:
+                                Number(
+                                    currentProductId
+                                ),
+
+                            rating:
+                                selectedRating,
+
+                            review:
+                                reviewText
+
+                        })
+
+                }
+
+            );
+
+
+        if(!insertResponse.ok){
+
+            const errorText =
+                await insertResponse.text();
+
+            console.error(
+                errorText
+            );
+
+            throw new Error(
+                "Review could not be submitted."
+            );
+
+        }
+
+
+        alert(
+            "✅ Your review has been submitted!"
+        );
+
+
+        selectedRating =
+            0;
+
+
+        await loadSellerReviews(
+            currentProduct.user_id
+        );
+
+
+    }catch(error){
+
+        console.error(error);
+
+        alert(
+            "Unable to submit review. Please try again."
+        );
+
+    }
+
+}
+
+
+/* NO SELLER REVIEWS */
+
+function showNoSellerReviews(){
+
+    document.getElementById(
+        "ratingNumber"
+    ).textContent =
+        "0.0";
+
+
+    document.getElementById(
+        "ratingStars"
+    ).textContent =
+        "☆☆☆☆☆";
+
+
+    document.getElementById(
+        "ratingCount"
+    ).textContent =
+        "No seller reviews yet";
+
+
+    document.getElementById(
+        "reviewArea"
+    ).innerHTML = `
+
+        <div class="login-review">
+
+            Seller reviews are available for listings created by registered BUYZA sellers.
+
+        </div>
+
+    `;
+
+
+    document.getElementById(
+        "reviewsList"
+    ).innerHTML = `
+
+        <div class="no-reviews">
+
+            No reviews available for this listing.
 
         </div>
 
@@ -1429,7 +2519,7 @@ async function shareProduct(){
 
 
         alert(
-            "✅ Product link copied!\n\nYou can now paste it into WhatsApp, Facebook, Messenger or anywhere you want."
+            "✅ Product link copied!\n\nYou can now paste it into WhatsApp, Facebook, Messenger or anywhere you want to share it."
         );
 
 
@@ -1615,6 +2705,7 @@ async function toggleFavorite(){
                             token
 
                     }
+
                 }
 
             );
@@ -1655,6 +2746,7 @@ async function toggleFavorite(){
                                 token
 
                         }
+
                     }
 
                 );
