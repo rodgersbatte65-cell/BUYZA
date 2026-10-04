@@ -1,610 +1,1131 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<title>BUYZA - Uganda Marketplace</title>
+    <meta name="description"
+          content="BUYZA - Buy and sell products in Uganda. Find phones, cars, fashion, electronics and more.">
 
-<style>
+    <title>BUYZA - Buy & Sell in Uganda</title>
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    <style>
 
-    body {
-        font-family: Arial, sans-serif;
-        background: #f5f6f8;
-        color: #222;
-    }
-
-    header {
-        background: white;
-        padding: 18px 7%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        position: sticky;
-        top: 0;
-        z-index: 100;
-    }
-
-    .logo {
-        font-size: 30px;
-        font-weight: bold;
-        color: #ff6b00;
-    }
-
-    nav {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    nav a {
-        text-decoration: none;
-        color: #333;
-        font-weight: bold;
-    }
-
-    .sell-btn {
-        background: #ff6b00;
-        color: white !important;
-        padding: 10px 18px;
-        border-radius: 8px;
-    }
-
-    .login-btn {
-        background: #222;
-        color: white !important;
-        padding: 10px 18px;
-        border-radius: 8px;
-    }
-
-    .hero {
-        background: linear-gradient(135deg, #ff6b00, #ff8c42);
-        color: white;
-        padding: 70px 20px;
-        text-align: center;
-    }
-
-    .hero h1 {
-        font-size: 44px;
-        margin-bottom: 15px;
-    }
-
-    .hero p {
-        font-size: 19px;
-        margin-bottom: 30px;
-    }
-
-    .search-box {
-        max-width: 700px;
-        margin: auto;
-        display: flex;
-        background: white;
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .search-box input {
-        flex: 1;
-        padding: 17px;
-        border: none;
-        outline: none;
-        font-size: 16px;
-    }
-
-    .search-box button {
-        background: #222;
-        color: white;
-        border: none;
-        padding: 0 25px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 50px auto;
-        padding: 0 20px;
-    }
-
-    .section-title {
-        font-size: 28px;
-        margin-bottom: 25px;
-    }
-
-    .categories {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-        margin-bottom: 50px;
-    }
-
-    .category {
-        background: white;
-        padding: 25px;
-        text-align: center;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .category:hover {
-        transform: translateY(-3px);
-    }
-
-    .category-icon {
-        font-size: 35px;
-        margin-bottom: 10px;
-    }
-
-    .products {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
-    }
-
-    .product-card {
-        background: white;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        transition: 0.2s;
-    }
-
-    .product-card:hover {
-        transform: translateY(-4px);
-    }
-
-    .product-image {
-        width: 100%;
-        height: 210px;
-        object-fit: cover;
-        background: #eee;
-    }
-
-    .no-image {
-        width: 100%;
-        height: 210px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #eee;
-        color: #777;
-        font-size: 18px;
-    }
-
-    .product-info {
-        padding: 18px;
-    }
-
-    .product-info h3 {
-        font-size: 18px;
-        margin-bottom: 10px;
-    }
-
-    .price {
-        color: #ff6b00;
-        font-size: 20px;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-
-    .location {
-        color: #666;
-        margin-bottom: 15px;
-    }
-
-    .description {
-        color: #666;
-        margin-bottom: 15px;
-        line-height: 1.5;
-    }
-
-    .view-btn {
-        display: block;
-        width: 100%;
-        background: #ff6b00;
-        color: white;
-        text-decoration: none;
-        text-align: center;
-        padding: 12px;
-        border-radius: 7px;
-        font-weight: bold;
-        margin-bottom: 8px;
-    }
-
-    .contact-btn {
-        width: 100%;
-        background: #222;
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 7px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .loading {
-        text-align: center;
-        padding: 40px;
-        font-size: 18px;
-        color: #777;
-        grid-column: 1 / -1;
-    }
-
-    .empty {
-        text-align: center;
-        padding: 40px;
-        color: #777;
-        grid-column: 1 / -1;
-        background: white;
-        border-radius: 12px;
-    }
-
-    footer {
-        background: #222;
-        color: white;
-        text-align: center;
-        padding: 40px 20px;
-        margin-top: 70px;
-    }
-
-    footer h2 {
-        color: #ff6b00;
-        margin-bottom: 10px;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 999;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-    }
-
-    .modal-content {
-        background: white;
-        width: 100%;
-        max-width: 400px;
-        border-radius: 15px;
-        padding: 30px;
-        text-align: center;
-    }
-
-    .modal-content h2 {
-        margin-bottom: 10px;
-    }
-
-    .seller-phone {
-        color: #666;
-        margin-bottom: 20px;
-    }
-
-    .modal-btn {
-        display: block;
-        width: 100%;
-        padding: 14px;
-        margin: 10px 0;
-        border-radius: 8px;
-        text-decoration: none;
-        border: none;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-    }
-
-    .call-btn {
-        background: #ff6b00;
-        color: white;
-    }
-
-    .whatsapp-btn {
-        background: #25d366;
-        color: white;
-    }
-
-    .close-btn {
-        background: #ddd;
-        color: #222;
-    }
-
-    @media (max-width: 900px) {
-
-        .products {
-            grid-template-columns: repeat(2, 1fr);
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .categories {
-            grid-template-columns: repeat(2, 1fr);
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f6f7f9;
+            color: #1f2937;
         }
 
-    }
+        a {
+            text-decoration: none;
+        }
 
-    @media (max-width: 600px) {
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
 
         header {
-            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            background: white;
+
+            border-bottom: 1px solid #eee;
+
+            box-shadow:
+                0 2px 12px rgba(0,0,0,0.06);
+        }
+
+        .header-inner {
+            max-width: 1250px;
+            margin: auto;
+
+            padding: 14px 20px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
         }
 
         .logo {
-            font-size: 25px;
+            font-size: 32px;
+            font-weight: 900;
+            color: #ff6b00;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: #222;
         }
 
         nav {
-            gap: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         nav a {
-            font-size: 13px;
+            color: #333;
+            font-weight: 600;
+            padding: 10px 13px;
+            border-radius: 8px;
         }
 
-        .sell-btn,
-        .login-btn {
-            padding: 8px 10px;
+        nav a:hover {
+            background: #f5f5f5;
         }
+
+        .sell-btn {
+            background: #ff6b00 !important;
+            color: white !important;
+            padding: 11px 18px !important;
+        }
+
+        .sell-btn:hover {
+            background: #e85d00 !important;
+        }
+
+        .login-btn {
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+
+        /* =========================
+           HERO
+        ========================= */
 
         .hero {
-            padding: 50px 20px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ff6b00 0%,
+                    #ff7f27 55%,
+                    #ff9b55 100%
+                );
+
+            color: white;
+
+            padding: 65px 20px 75px;
+
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+
+            background: rgba(255,255,255,0.18);
+
+            border: 1px solid rgba(255,255,255,0.3);
+
+            padding: 7px 14px;
+
+            border-radius: 50px;
+
+            font-size: 14px;
+
+            margin-bottom: 18px;
         }
 
         .hero h1 {
-            font-size: 32px;
+            font-size: 48px;
+            line-height: 1.1;
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .hero p {
+            font-size: 19px;
+            opacity: 0.95;
+            margin-bottom: 30px;
         }
 
         .search-box {
-            flex-direction: column;
-            background: transparent;
+            max-width: 760px;
+            margin: auto;
+
+            display: flex;
+
+            background: white;
+
+            padding: 6px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 10px 30px rgba(0,0,0,0.15);
         }
 
         .search-box input {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            flex: 1;
+
+            border: none;
+            outline: none;
+
+            padding: 16px;
+
+            font-size: 16px;
+
+            color: #222;
+
+            min-width: 0;
         }
 
         .search-box button {
-            padding: 15px;
+            border: none;
+
+            background: #222;
+            color: white;
+
+            padding: 0 27px;
+
             border-radius: 8px;
+
+            font-weight: bold;
+
+            cursor: pointer;
         }
 
-        .products {
-            grid-template-columns: 1fr;
+        .search-box button:hover {
+            background: #000;
         }
+
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        .container {
+            max-width: 1250px;
+
+            margin: 0 auto;
+
+            padding: 45px 20px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 22px;
+
+            gap: 15px;
+        }
+
+        .section-title {
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .section-subtitle {
+            color: #777;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+
+        /* =========================
+           CATEGORIES
+        ========================= */
 
         .categories {
-            grid-template-columns: repeat(2, 1fr);
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, 1fr);
+
+            gap: 15px;
+
+            margin-bottom: 55px;
         }
 
-    }
+        .category {
+            background: white;
 
-</style>
-```
+            border: 1px solid #eee;
+
+            padding: 22px 12px;
+
+            text-align: center;
+
+            border-radius: 14px;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+        }
+
+        .category:hover {
+            transform: translateY(-4px);
+
+            border-color: #ff6b00;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .category-icon {
+            width: 58px;
+            height: 58px;
+
+            margin: 0 auto 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #fff3eb;
+
+            border-radius: 50%;
+
+            font-size: 28px;
+        }
+
+        .category h3 {
+            font-size: 15px;
+        }
+
+
+        /* =========================
+           PRODUCTS
+        ========================= */
+
+        .products {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+        }
+
+        .product-card {
+            position: relative;
+
+            background: white;
+
+            border: 1px solid #eee;
+
+            border-radius: 14px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 3px 12px rgba(0,0,0,0.05);
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+
+            box-shadow:
+                0 12px 30px rgba(0,0,0,0.10);
+        }
+
+        .image-wrapper {
+            position: relative;
+            background: #f0f1f3;
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+
+            object-fit: cover;
+
+            display: block;
+        }
+
+        .no-image {
+            width: 100%;
+            height: 220px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #f0f1f3;
+
+            color: #999;
+
+            font-size: 18px;
+        }
+
+        .favorite-btn {
+            position: absolute;
+
+            top: 12px;
+            right: 12px;
+
+            width: 38px;
+            height: 38px;
+
+            border: none;
+
+            border-radius: 50%;
+
+            background: white;
+
+            box-shadow:
+                0 3px 10px rgba(0,0,0,0.12);
+
+            font-size: 19px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.08);
+        }
+
+        .product-info {
+            padding: 17px;
+        }
+
+        .product-category {
+            display: inline-block;
+
+            background: #fff3eb;
+
+            color: #ff6b00;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            padding: 5px 8px;
+
+            border-radius: 5px;
+
+            margin-bottom: 9px;
+        }
+
+        .product-info h3 {
+            font-size: 17px;
+
+            margin-bottom: 9px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+        }
+
+        .price {
+            color: #ff6b00;
+
+            font-size: 19px;
+
+            font-weight: 800;
+
+            margin-bottom: 8px;
+        }
+
+        .location {
+            color: #777;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            margin-bottom: 15px;
+
+            display: -webkit-box;
+
+            -webkit-line-clamp: 2;
+
+            -webkit-box-orient: vertical;
+
+            overflow: hidden;
+        }
+
+        .view-btn {
+            display: block;
+
+            width: 100%;
+
+            background: #ff6b00;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+        .view-btn:hover {
+            background: #e85d00;
+        }
+
+        .contact-btn {
+            width: 100%;
+
+            background: #222;
+
+            color: white;
+
+            border: none;
+
+            padding: 11px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .contact-btn:hover {
+            background: #000;
+        }
+
+
+        /* =========================
+           LOADING / EMPTY
+        ========================= */
+
+        .loading {
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #777;
+
+            grid-column: 1 / -1;
+        }
+
+        .loading-icon {
+            font-size: 35px;
+            margin-bottom: 12px;
+        }
+
+        .empty {
+            text-align: center;
+
+            padding: 60px 20px;
+
+            color: #777;
+
+            grid-column: 1 / -1;
+
+            background: white;
+
+            border-radius: 14px;
+
+            border: 1px solid #eee;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #171717;
+
+            color: white;
+
+            text-align: center;
+
+            padding: 45px 20px;
+
+            margin-top: 40px;
+        }
+
+        footer h2 {
+            color: #ff6b00;
+
+            font-size: 28px;
+
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            color: #bbb;
+        }
+
+
+        /* =========================
+           MODAL
+        ========================= */
+
+        .modal {
+            display: none;
+
+            position: fixed;
+
+            z-index: 2000;
+
+            left: 0;
+            top: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background:
+                rgba(0,0,0,0.65);
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+
+            width: 100%;
+
+            max-width: 420px;
+
+            border-radius: 16px;
+
+            padding: 30px;
+
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 8px;
+        }
+
+        .seller-phone {
+            color: #777;
+            margin-bottom: 20px;
+        }
+
+        .modal-btn {
+            display: block;
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin: 10px 0;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            border: none;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .call-btn {
+            background: #ff6b00;
+            color: white;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+        }
+
+        .close-btn {
+            background: #eee;
+            color: #222;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1050px) {
+
+            .categories {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .products {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .products {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .header-inner {
+                padding: 12px 15px;
+            }
+
+            .logo {
+                font-size: 25px;
+            }
+
+            nav {
+                gap: 4px;
+            }
+
+            nav a {
+                font-size: 12px;
+                padding: 8px 7px;
+            }
+
+            .sell-btn {
+                padding: 9px 11px !important;
+            }
+
+            .hero {
+                padding: 50px 15px 55px;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .search-box {
+                flex-direction: column;
+
+                background: transparent;
+
+                box-shadow: none;
+
+                padding: 0;
+            }
+
+            .search-box input {
+                border-radius: 9px;
+
+                margin-bottom: 9px;
+
+                padding: 15px;
+            }
+
+            .search-box button {
+                padding: 14px;
+
+                border-radius: 9px;
+            }
+
+            .container {
+                padding: 35px 15px;
+            }
+
+            .section-title {
+                font-size: 22px;
+            }
+
+            .categories {
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 10px;
+            }
+
+            .category {
+                padding: 18px 8px;
+            }
+
+            .products {
+                grid-template-columns: 1fr;
+
+                gap: 15px;
+            }
+
+            .product-image,
+            .no-image {
+                height: 240px;
+            }
+
+        }
+
+    </style>
 
 </head>
 
+
 <body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
 
 <header>
 
-```
-<div class="logo">
-    BUYZA
-</div>
+    <div class="header-inner">
 
-<nav>
+        <a href="index.html"
+           class="logo">
+            BUY<span>ZA</span>
+        </a>
 
-    <a href="index.html">
-        Home
-    </a>
 
-    <a href="sell.html" class="sell-btn">
-        Sell
-    </a>
+        <nav>
 
-    <a id="accountButton"
-       href="login.html"
-       class="login-btn">
-        👤 Login
-    </a>
+            <a href="index.html">
+                Home
+            </a>
 
-</nav>
-```
+            <a href="sell.html"
+               class="sell-btn">
+                + Sell
+            </a>
+
+            <a id="accountButton"
+               href="login.html"
+               class="login-btn">
+                👤 Login
+            </a>
+
+        </nav>
+
+    </div>
 
 </header>
 
+
+<!-- =========================
+     HERO
+========================= -->
+
 <section class="hero">
 
-```
-<h1>
-    Buy & Sell in Uganda
-</h1>
+    <div class="hero-content">
 
-<p>
-    Find great products from sellers around Uganda.
-</p>
+        <div class="hero-badge">
+            🇺🇬 Uganda's Marketplace
+        </div>
 
-<div class="search-box">
+        <h1>
+            Buy & Sell Anything
+        </h1>
 
-    <input
-        type="text"
-        id="searchInput"
-        placeholder="Search for products..."
-    >
+        <p>
+            Find great deals from sellers around Uganda.
+        </p>
 
-    <button onclick="searchProducts()">
-        Search
-    </button>
 
-</div>
-```
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="What are you looking for?"
+                autocomplete="off"
+            >
+
+            <button onclick="searchProducts()">
+                🔎 Search
+            </button>
+
+        </div>
+
+    </div>
 
 </section>
 
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
 <div class="container">
 
-```
-<h2 class="section-title">
-    Browse Categories
-</h2>
 
-<div class="categories">
+    <!-- CATEGORIES -->
 
-    <div class="category"
-         onclick="filterCategory('Phones')">
+    <div class="section-header">
 
-        <div class="category-icon">
-            📱
+        <div>
+
+            <h2 class="section-title">
+                Browse Categories
+            </h2>
+
+            <p class="section-subtitle">
+                Find what you need faster
+            </p>
+
         </div>
-
-        <h3>
-            Phones
-        </h3>
 
     </div>
 
 
-    <div class="category"
-         onclick="filterCategory('Cars')">
+    <div class="categories">
 
-        <div class="category-icon">
-            🚗
+
+        <div class="category"
+             onclick="filterCategory('Phones')">
+
+            <div class="category-icon">
+                📱
+            </div>
+
+            <h3>
+                Phones
+            </h3>
+
         </div>
 
-        <h3>
-            Cars
-        </h3>
+
+        <div class="category"
+             onclick="filterCategory('Cars')">
+
+            <div class="category-icon">
+                🚗
+            </div>
+
+            <h3>
+                Cars
+            </h3>
+
+        </div>
+
+
+        <div class="category"
+             onclick="filterCategory('Fashion')">
+
+            <div class="category-icon">
+                👕
+            </div>
+
+            <h3>
+                Fashion
+            </h3>
+
+        </div>
+
+
+        <div class="category"
+             onclick="filterCategory('Electronics')">
+
+            <div class="category-icon">
+                💻
+            </div>
+
+            <h3>
+                Electronics
+            </h3>
+
+        </div>
+
+
+        <div class="category"
+             onclick="filterCategory('Home & Garden')">
+
+            <div class="category-icon">
+                🏠
+            </div>
+
+            <h3>
+                Home
+            </h3>
+
+        </div>
+
+
+        <div class="category"
+             onclick="filterCategory('Jobs')">
+
+            <div class="category-icon">
+                💼
+            </div>
+
+            <h3>
+                Jobs
+            </h3>
+
+        </div>
 
     </div>
 
 
-    <div class="category"
-         onclick="filterCategory('Fashion')">
+    <!-- PRODUCTS -->
 
-        <div class="category-icon">
-            👕
+    <div class="section-header">
+
+        <div>
+
+            <h2 class="section-title">
+                Latest Listings
+            </h2>
+
+            <p class="section-subtitle">
+                Recently posted products
+            </p>
+
         </div>
-
-        <h3>
-            Fashion
-        </h3>
 
     </div>
 
 
-    <div class="category"
-         onclick="filterCategory('Electronics')">
+    <div id="productsContainer"
+         class="products">
 
-        <div class="category-icon">
-            💻
+        <div class="loading">
+
+            <div class="loading-icon">
+                ⏳
+            </div>
+
+            Loading listings...
+
         </div>
-
-        <h3>
-            Electronics
-        </h3>
 
     </div>
 
 </div>
 
 
-<h2 class="section-title">
-    Latest Listings
-</h2>
-
-
-<div id="productsContainer"
-     class="products">
-
-    <div class="loading">
-        Loading listings...
-    </div>
-
-</div>
-```
-
-</div>
+<!-- =========================
+     CONTACT MODAL
+========================= -->
 
 <div id="contactModal"
      class="modal">
 
-```
-<div class="modal-content">
+    <div class="modal-content">
 
-    <h2>
-        Contact Seller
-    </h2>
+        <h2>
+            Contact Seller
+        </h2>
 
-    <p class="seller-phone"
-       id="sellerPhone">
-    </p>
+        <p class="seller-phone"
+           id="sellerPhone">
+        </p>
 
-    <a id="callSeller"
-       class="modal-btn call-btn">
 
-        📞 Call Seller
+        <a id="callSeller"
+           class="modal-btn call-btn">
 
-    </a>
+            📞 Call Seller
 
-    <a id="whatsappSeller"
-       class="modal-btn whatsapp-btn"
-       target="_blank">
+        </a>
 
-        💬 WhatsApp Seller
 
-    </a>
+        <a id="whatsappSeller"
+           class="modal-btn whatsapp-btn"
+           target="_blank">
 
-    <button
-        class="modal-btn close-btn"
-        onclick="closeContact()">
+            💬 WhatsApp Seller
 
-        ❌ Close
+        </a>
 
-    </button>
+
+        <button
+            class="modal-btn close-btn"
+            onclick="closeContact()">
+
+            Close
+
+        </button>
+
+    </div>
 
 </div>
-```
 
-</div>
+
+<!-- =========================
+     FOOTER
+========================= -->
 
 <footer>
 
-```
-<h2>
-    BUYZA
-</h2>
+    <h2>
+        BUYZA
+    </h2>
 
-<p>
-    Uganda's Marketplace
-</p>
+    <p>
+        Uganda's Marketplace
+    </p>
 
-<p style="margin-top:10px;">
-    Buy. Sell. Connect.
-</p>
+    <p style="margin-top:10px;">
+        Buy. Sell. Connect.
+    </p>
 
-<p style="margin-top:15px;">
-    © 2026 BUYZA. All rights reserved.
-</p>
-```
+    <p style="margin-top:15px;">
+        © 2026 BUYZA. All rights reserved.
+    </p>
 
 </footer>
 
+
 <script>
+
+
+/* =========================
+   SUPABASE
+========================= */
 
 const SUPABASE_URL =
     "https://xbjmdsdgisusnxdmlrxh.supabase.co";
@@ -623,25 +1144,33 @@ let allProducts = [];
 function updateAccountButton() {
 
     const user =
-        localStorage.getItem("buyza_user");
+        localStorage.getItem(
+            "buyza_user"
+        );
 
     const token =
-        localStorage.getItem("buyza_access_token");
+        localStorage.getItem(
+            "buyza_access_token"
+        );
 
     const button =
-        document.getElementById("accountButton");
+        document.getElementById(
+            "accountButton"
+        );
 
 
     if (user && token) {
 
-        button.href = "account.html";
+        button.href =
+            "account.html";
 
         button.innerHTML =
             "👤 My Account";
 
     } else {
 
-        button.href = "login.html";
+        button.href =
+            "login.html";
 
         button.innerHTML =
             "👤 Login";
@@ -668,7 +1197,7 @@ function escapeHtml(value) {
 
 
 /* =========================
-   PRICE
+   FORMAT PRICE
 ========================= */
 
 function formatPrice(price) {
@@ -691,9 +1220,9 @@ function normalizeWhatsApp(phone) {
 
     let number =
         String(phone)
-        .replace(/\s/g, "")
-        .replace(/-/g, "")
-        .replace(/\+/g, "");
+            .replace(/\s/g, "")
+            .replace(/-/g, "")
+            .replace(/\+/g, "");
 
 
     if (number.startsWith("0")) {
@@ -809,6 +1338,10 @@ function displayProducts(products) {
 
             <div class="empty">
 
+                <div class="empty-icon">
+                    🔍
+                </div>
+
                 <h3>
                     No products found
                 </h3>
@@ -871,25 +1404,62 @@ function displayProducts(products) {
 
             <div class="product-card">
 
-                ${imageHtml}
+                <div class="image-wrapper">
+
+                    ${imageHtml}
+
+                    <button
+                        class="favorite-btn"
+                        onclick="alert('Login to save favorites')"
+                        title="Add to favorites"
+                    >
+                        ♡
+                    </button>
+
+                </div>
+
 
                 <div class="product-info">
+
+                    <div class="product-category">
+
+                        ${escapeHtml(
+                            product.category || "Other"
+                        )}
+
+                    </div>
+
 
                     <h3>
                         ${escapeHtml(product.name)}
                     </h3>
 
+
                     <div class="price">
+
                         UGX ${formatPrice(product.price)}
+
                     </div>
+
 
                     <div class="location">
-                        📍 ${escapeHtml(product.location)}
+
+                        📍 ${escapeHtml(
+                            product.location || "Uganda"
+                        )}
+
                     </div>
 
+
                     <p class="description">
-                        ${escapeHtml(product.description)}
+
+                        ${escapeHtml(
+                            product.description ||
+                            "No description available."
+                        )}
+
                     </p>
+
 
                     <a
                         class="view-btn"
@@ -898,9 +1468,10 @@ function displayProducts(products) {
                         👁 View Product
                     </a>
 
+
                     <button
                         class="contact-btn"
-                        onclick="showContact('${escapeHtml(product.phone)}')"
+                        onclick="showContact('${escapeHtml(product.phone || "")}')"
                     >
                         📞 Contact Seller
                     </button>
@@ -934,7 +1505,13 @@ async function loadProducts() {
     container.innerHTML = `
 
         <div class="loading">
+
+            <div class="loading-icon">
+                ⏳
+            </div>
+
             Loading listings...
+
         </div>
 
     `;
@@ -1006,6 +1583,10 @@ async function loadProducts() {
 
             <div class="empty">
 
+                <div class="empty-icon">
+                    ⚠️
+                </div>
+
                 <h3>
                     Could not load listings
                 </h3>
@@ -1031,10 +1612,12 @@ function searchProducts() {
 
     const search =
         document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase()
-        .trim();
+            .getElementById(
+                "searchInput"
+            )
+            .value
+            .toLowerCase()
+            .trim();
 
 
     if (!search) {
@@ -1057,32 +1640,32 @@ function searchProducts() {
                     String(
                         product.name || ""
                     )
-                    .toLowerCase()
-                    .includes(search)
+                        .toLowerCase()
+                        .includes(search)
 
                     ||
 
                     String(
                         product.category || ""
                     )
-                    .toLowerCase()
-                    .includes(search)
+                        .toLowerCase()
+                        .includes(search)
 
                     ||
 
                     String(
                         product.location || ""
                     )
-                    .toLowerCase()
-                    .includes(search)
+                        .toLowerCase()
+                        .includes(search)
 
                     ||
 
                     String(
                         product.description || ""
                     )
-                    .toLowerCase()
-                    .includes(search)
+                        .toLowerCase()
+                        .includes(search)
 
                 );
 
@@ -1105,8 +1688,8 @@ function filterCategory(category) {
 
     const selected =
         category
-        .toLowerCase()
-        .trim();
+            .toLowerCase()
+            .trim();
 
 
     const filtered =
@@ -1117,13 +1700,13 @@ function filterCategory(category) {
                     String(
                         product.category || ""
                     )
-                    .toLowerCase()
-                    .trim();
+                        .toLowerCase()
+                        .trim();
 
 
-                /* Phones matches Phones & Tablets */
-
-                if (selected === "phones") {
+                if (
+                    selected === "phones"
+                ) {
 
                     return (
                         productCategory === "phones" ||
@@ -1134,7 +1717,8 @@ function filterCategory(category) {
 
 
                 return (
-                    productCategory === selected
+                    productCategory ===
+                    selected
                 );
 
             }
@@ -1172,12 +1756,16 @@ function filterCategory(category) {
 ========================= */
 
 document
-    .getElementById("searchInput")
+    .getElementById(
+        "searchInput"
+    )
     .addEventListener(
         "keydown",
         function(event) {
 
-            if (event.key === "Enter") {
+            if (
+                event.key === "Enter"
+            ) {
 
                 searchProducts();
 
@@ -1188,7 +1776,7 @@ document
 
 
 /* =========================
-   START WEBSITE
+   START
 ========================= */
 
 updateAccountButton();
@@ -1196,6 +1784,7 @@ updateAccountButton();
 loadProducts();
 
 </script>
+
 
 </body>
 
