@@ -1,44 +1,936 @@
-.rating-breakdown {
-    display: grid;
-    gap: 8px;
-    max-width: 440px;
-    margin: 0 0 22px;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product - BUYZA</title>
+<script src="auth.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f7f9;color:#171717}
+header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-index:1000}
+.header-inner{max-width:1200px;margin:auto;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-size:30px;font-weight:900;color:#ff6b00;text-decoration:none}
+.nav{display:flex;align-items:center;gap:10px}
+.nav a{text-decoration:none;color:#333;font-weight:600;padding:10px 14px;border-radius:10px}
+.nav a:hover{background:#fff3eb;color:#ff6b00}
+.sell-btn{background:#ff6b00!important;color:white!important}
+.container{max-width:1200px;margin:30px auto;padding:0 20px}
+.back-btn{border:none;background:white;padding:11px 17px;border-radius:10px;cursor:pointer;font-weight:700;margin-bottom:20px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.back-btn:hover{color:#ff6b00}
+.product-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:28px}
+.card{background:white;border-radius:20px;box-shadow:0 5px 25px rgba(0,0,0,.06)}
+.image-card{padding:18px}
+.product-image{width:100%;height:560px;object-fit:contain;background:#f4f5f7;border-radius:16px}
+.no-image{height:560px;display:flex;align-items:center;justify-content:center;background:#f1f2f4;color:#888;border-radius:16px;font-size:18px}
+.info-card{padding:30px}
+.category{display:inline-block;background:#fff1e8;color:#ff6b00;padding:7px 12px;border-radius:30px;font-size:13px;font-weight:800;margin-bottom:15px}
+.product-name{font-size:36px;line-height:1.15;margin-bottom:15px}
+.price{font-size:34px;font-weight:900;color:#ff6b00;margin-bottom:18px}
+.location{display:flex;align-items:center;gap:8px;color:#555;font-size:16px;margin-bottom:25px}
+.divider{height:1px;background:#eee;margin:22px 0}
+.description-title{font-size:18px;font-weight:800;margin-bottom:10px}
+.description{color:#555;line-height:1.7;white-space:pre-wrap}
+.actions{display:grid;gap:12px;margin-top:28px}
+.action-btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer}
+.action-btn:hover{transform:translateY(-1px)}
+.call-btn{background:#171717;color:white}
+.whatsapp-btn{background:#20c76a;color:white}
+.favorite-btn{background:#fff1e8;color:#ff6b00;border:1px solid #ffd8c0}
+.share-btn{background:#f1f2f4;color:#333}
+.seller-card{margin-top:20px;padding:24px;background:white;border-radius:20px;box-shadow:0 5px 25px rgba(0,0,0,.05)}
+.seller-title{font-size:19px;font-weight:800;margin-bottom:18px}
+.seller-box{display:flex;align-items:center;gap:15px}
+.seller-avatar{width:60px;height:60px;min-width:60px;border-radius:50%;background:#ff6b00;color:white;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900}
+.seller-name{font-size:18px;font-weight:800;margin-bottom:6px}
+.seller-status{color:#777;font-size:14px}
+.seller-details{margin-top:20px;border-top:1px solid #eee;padding-top:18px}
+.seller-detail{display:flex;gap:10px;margin-bottom:12px;color:#555;line-height:1.5}
+.seller-detail strong{color:#222}
+.seller-bio{margin-top:15px;padding:15px;background:#f7f7f7;border-radius:12px;color:#555;line-height:1.6}
+.profile-loading{color:#888;font-size:14px}
+.reviews-card{margin-top:20px;padding:24px;background:white;border-radius:20px;box-shadow:0 5px 25px rgba(0,0,0,.05)}
+.reviews-title{font-size:20px;font-weight:900;margin-bottom:20px}
+.rating-summary{display:flex;align-items:center;gap:18px;padding:18px;background:#fff8f3;border-radius:15px;margin-bottom:22px}
+.rating-number{font-size:42px;font-weight:900;color:#ff6b00}
+.rating-stars{font-size:25px;letter-spacing:2px;color:#ff6b00}
+.rating-count{margin-top:5px;color:#777;font-size:14px}
+.rating-breakdown{display:grid;gap:8px;max-width:440px;margin:0 0 22px}
+.rating-breakdown-row{display:grid;grid-template-columns:45px minmax(80px,1fr) 35px;align-items:center;gap:10px;color:#555;font-size:13px}
+.rating-breakdown-label{font-weight:700;white-space:nowrap}
+.rating-breakdown-track{height:10px;overflow:hidden;background:#eee;border-radius:999px}
+.rating-breakdown-fill{height:100%;background:#ff6b00;border-radius:inherit;transition:width .2s ease}
+.rating-breakdown-count{color:#777;text-align:right}
+.rating-breakdown-unavailable{color:#888;font-size:13px}
+.review-form{border-top:1px solid #eee;padding-top:20px}
+.review-form-title{font-size:17px;font-weight:800;margin-bottom:14px}
+.star-selector{display:flex;gap:5px;margin-bottom:15px}
+.star-btn{border:none;background:#f2f2f2;width:42px;height:42px;border-radius:10px;cursor:pointer;font-size:22px;color:#999}
+.star-btn:hover{background:#fff1e8;color:#ff6b00}
+.star-btn.selected{background:#ff6b00;color:white}
+.review-text{width:100%;min-height:110px;resize:vertical;border:1px solid #ddd;border-radius:12px;padding:13px;font-family:Arial,Helvetica,sans-serif;font-size:15px;outline:none}
+.review-text:focus{border-color:#ff6b00}
+.submit-review{margin-top:12px;background:#ff6b00;color:white;border:none;border-radius:12px;padding:13px 20px;font-size:15px;font-weight:800;cursor:pointer}
+.submit-review:hover{background:#e85e00}
+.login-review{padding:16px;background:#f7f7f7;border-radius:12px;color:#555;line-height:1.6}
+.login-review a{color:#ff6b00;font-weight:800;text-decoration:none}
+.reviews-list{margin-top:25px}
+.review-item{padding:18px 0;border-top:1px solid #eee}
+.review-header{display:flex;justify-content:space-between;gap:15px;margin-bottom:8px}
+.reviewer-name{font-weight:800}
+.review-stars{color:#ff6b00;font-size:18px}
+.review-date{color:#999;font-size:12px;margin-top:4px}
+.review-comment{color:#555;line-height:1.6;margin-top:10px;white-space:pre-wrap}
+.no-reviews{padding:20px;text-align:center;color:#888;background:#f8f8f8;border-radius:12px}
+.safety-card{margin-top:20px;padding:22px;background:#fffaf6;border:1px solid #ffe3d0;border-radius:20px}
+.safety-title{color:#ff6b00;font-size:18px;font-weight:800;margin-bottom:12px}
+.safety-card ul{padding-left:20px;color:#555;line-height:1.8}
+.loading{text-align:center;padding:80px 20px;color:#777}
+.error{max-width:700px;margin:60px auto;background:white;padding:40px;border-radius:20px;text-align:center;box-shadow:0 5px 25px rgba(0,0,0,.06)}
+.error h2{margin-bottom:10px}
+footer{margin-top:60px;background:#171717;color:white;padding:35px 20px;text-align:center}
+footer strong{color:#ff6b00;font-size:22px}
+footer p{margin-top:8px;color:#aaa}
+@media(max-width:850px){
+    .product-layout{grid-template-columns:1fr}
+    .product-image,.no-image{height:420px}
+    .product-name{font-size:29px}
+    .price{font-size:29px}
+    .nav a{padding:8px;font-size:14px}
+}
+@media(max-width:550px){
+    .header-inner{padding:13px 14px}
+    .logo{font-size:25px}
+    .nav{gap:2px}
+    .nav a{font-size:12px;padding:7px}
+    .container{margin-top:18px;padding:0 12px}
+    .image-card{padding:10px}
+    .product-image,.no-image{height:320px}
+    .info-card{padding:20px}
+    .product-name{font-size:25px}
+    .price{font-size:27px}
+    .reviews-card,.seller-card{padding:18px}
+    .rating-number{font-size:34px}
+    .rating-stars{font-size:21px}
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="header-inner">
+        <a href="index.html" class="logo">BUYZA</a>
+        <nav class="nav">
+            <a href="index.html">Home</a>
+            <a href="favorites.html">Favorites</a>
+            <a href="account.html">Account</a>
+            <a href="sell.html" class="sell-btn">Sell</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+    <button class="back-btn" onclick="goBack()">← Back to Listings</button>
+    <div id="loading" class="loading">Loading product...</div>
+    <div id="productContent" style="display:none;">
+        <div class="product-layout">
+            <div class="card image-card"><div id="imageContainer"></div></div>
+            <div>
+                <div class="card info-card">
+                    <div id="category" class="category"></div>
+                    <h1 id="productName" class="product-name"></h1>
+                    <div id="productPrice" class="price"></div>
+                    <div class="location">📍 <span id="productLocation"></span></div>
+                    <div class="divider"></div>
+                    <div class="description-title">Description</div>
+                    <div id="productDescription" class="description"></div>
+                    <div class="actions">
+                        <button id="favoriteBtn" class="action-btn favorite-btn" onclick="toggleFavorite()">♡ Save to Favorites</button>
+                        <button class="action-btn call-btn" onclick="callSeller()">📞 Call Seller</button>
+                        <button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
+                        <button class="action-btn share-btn" onclick="shareProduct()">📤 Share Product</button>
+                    </div>
+                </div>
+
+                <div class="seller-card">
+                    <div class="seller-title">👤 Seller Information</div>
+                    <div class="seller-box">
+                        <div id="sellerAvatar" class="seller-avatar">B</div>
+                        <div>
+                            <div id="sellerName" class="seller-name">BUYZA Seller</div>
+                            <div id="sellerStatus" class="seller-status">Loading seller profile...</div>
+                        </div>
+                    </div>
+                    <div id="sellerDetails" class="seller-details">
+                        <div class="profile-loading">Seller information will appear here.</div>
+                    </div>
+                </div>
+
+                <div class="reviews-card">
+                    <div class="reviews-title">⭐ Seller Ratings &amp; Reviews</div>
+                    <div class="rating-summary">
+                        <div id="ratingNumber" class="rating-number">0.0</div>
+                        <div>
+                            <div id="ratingStars" class="rating-stars">☆☆☆☆☆</div>
+                            <div id="ratingCount" class="rating-count">No reviews yet</div>
+                        </div>
+                    </div>
+                    <div id="ratingBreakdown" class="rating-breakdown" aria-label="Rating breakdown"></div>
+                    <div id="reviewArea" class="review-form"></div>
+                    <div id="reviewsList" class="reviews-list">
+                        <div class="no-reviews">Loading reviews...</div>
+                    </div>
+                </div>
+
+                <div class="safety-card">
+                    <div class="safety-title">🛡️ Stay Safe on BUYZA</div>
+                    <ul>
+                        <li>Meet the seller in a safe public place.</li>
+                        <li>Check the product before making payment.</li>
+                        <li>Never share your passwords or verification codes.</li>
+                        <li>Be careful with requests for advance payments.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <strong>BUYZA</strong>
+    <p>Buy. Sell. Connect.</p>
+    <p>© 2026 BUYZA. All rights reserved.</p>
+</footer>
+
+<script>
+let currentProduct = null;
+let currentProductId = null;
+let currentSellerProfile = null;
+let selectedRating = 0;
+
+const params = new URLSearchParams(window.location.search);
+currentProductId = params.get("id");
+
+function goBack(){
+    if(document.referrer){
+        window.history.back();
+    }else{
+        window.location.href = "index.html";
+    }
 }
 
-.rating-breakdown-row {
-    display: grid;
-    grid-template-columns: 45px minmax(80px, 1fr) 35px;
-    align-items: center;
-    gap: 10px;
-    color: #555;
-    font-size: 13px;
+async function loadProduct(){
+    if(!currentProductId){
+        showError("Product ID is missing.");
+        return;
+    }
+
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/products?id=eq." +
+            encodeURIComponent(currentProductId) + "&select=*",
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                }
+            }
+        );
+
+        if(!response.ok) throw new Error("Unable to load product.");
+
+        const products = await response.json();
+
+        if(!products.length){
+            showError("This product could not be found.");
+            return;
+        }
+
+        currentProduct = products[0];
+        displayProduct(currentProduct);
+        await updateFavoriteButton();
+
+        if(currentProduct.user_id){
+            await loadSellerProfile(currentProduct.user_id);
+            await loadSellerReviews(currentProduct.user_id);
+        }else{
+            showDefaultSeller();
+            showNoSellerReviews();
+        }
+    }catch(error){
+        console.error(error);
+        showError("Something went wrong while loading this product.");
+    }
 }
 
-.rating-breakdown-label {
-    font-weight: 700;
-    white-space: nowrap;
+function displayProduct(product){
+    document.title = (product.name || "Product") + " - BUYZA";
+    document.getElementById("category").textContent = product.category || "Other";
+    document.getElementById("productName").textContent = product.name || "Product";
+    document.getElementById("productPrice").textContent =
+        "UGX " + Number(product.price || 0).toLocaleString();
+    document.getElementById("productLocation").textContent = product.location || "Uganda";
+    document.getElementById("productDescription").textContent =
+        product.description || "No description provided by the seller.";
+
+    const imageContainer = document.getElementById("imageContainer");
+
+    if(product.image_url){
+        imageContainer.innerHTML = `
+            <img class="product-image"
+                src="${escapeHtml(product.image_url)}"
+                alt="${escapeHtml(product.name || "BUYZA product")}"
+                onerror="this.style.display='none'; document.getElementById('imageFallback').style.display='flex';">
+            <div id="imageFallback" class="no-image" style="display:none;">
+                No image available
+            </div>
+        `;
+    }else{
+        imageContainer.innerHTML = `
+            <div class="no-image">No image available</div>
+        `;
+    }
+
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("productContent").style.display = "block";
 }
 
-.rating-breakdown-track {
-    height: 10px;
-    overflow: hidden;
-    background: #eee;
-    border-radius: 999px;
+async function loadSellerProfile(sellerId){
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/seller_profiles?id=eq." +
+            encodeURIComponent(sellerId) + "&select=*",
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                }
+            }
+        );
+
+        if(!response.ok){
+            showDefaultSeller();
+            return;
+        }
+
+        const profiles = await response.json();
+
+        if(!profiles.length){
+            showDefaultSeller();
+            return;
+        }
+
+        currentSellerProfile = profiles[0];
+        displaySellerProfile(currentSellerProfile);
+    }catch(error){
+        console.error(error);
+        showDefaultSeller();
+    }
 }
 
-.rating-breakdown-fill {
-    height: 100%;
-    background: #ff6b00;
-    border-radius: inherit;
-    transition: width .2s ease;
+function displaySellerProfile(profile){
+    const name = profile.full_name || "BUYZA Seller";
+    const location = profile.location || currentProduct.location || "Uganda";
+    const phone = profile.phone || currentProduct.phone || "";
+
+    document.getElementById("sellerName").textContent = name;
+    document.getElementById("sellerStatus").textContent = "BUYZA Seller";
+    document.getElementById("sellerAvatar").textContent =
+        name.trim().charAt(0).toUpperCase() || "B";
+
+    let details = `
+        <div class="seller-detail">
+            📍 <span><strong>Location:</strong> ${escapeHtml(location)}</span>
+        </div>
+    `;
+
+    if(phone){
+        details += `
+            <div class="seller-detail">
+                📞 <span><strong>Phone:</strong> ${escapeHtml(phone)}</span>
+            </div>
+        `;
+    }
+
+    if(profile.bio){
+        details += `
+            <div class="seller-bio">
+                <strong>About the seller</strong><br><br>
+                ${escapeHtml(profile.bio)}
+            </div>
+        `;
+    }
+
+    document.getElementById("sellerDetails").innerHTML = details;
 }
 
-.rating-breakdown-count {
-    color: #777;
-    text-align: right;
+function showDefaultSeller(){
+    document.getElementById("sellerName").textContent = "BUYZA Seller";
+    document.getElementById("sellerStatus").textContent =
+        "Contact the seller directly about this listing.";
+    document.getElementById("sellerDetails").innerHTML = `
+        <div class="seller-detail">
+            📍 <span><strong>Location:</strong>
+            ${escapeHtml(currentProduct.location || "Uganda")}</span>
+        </div>
+    `;
 }
 
-.rating-breakdown-unavailable {
-    color: #888;
-    font-size: 13px;
+async function loadSellerReviews(sellerId){
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/seller_reviews?seller_id=eq." +
+            encodeURIComponent(sellerId) +
+            "&select=id,reviewer_id,rating,review,created_at&order=created_at.desc",
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                }
+            }
+        );
+
+        if(!response.ok) throw new Error("Unable to load reviews.");
+
+        const reviews = await response.json();
+        displayRatingSummary(reviews);
+        displayReviews(reviews);
+        setupReviewForm(sellerId);
+    }catch(error){
+        console.error(error);
+        document.getElementById("ratingNumber").textContent = "0.0";
+        document.getElementById("ratingStars").textContent = "☆☆☆☆☆";
+        document.getElementById("ratingCount").textContent = "Reviews unavailable";
+        document.getElementById("ratingBreakdown").innerHTML =
+            '<div class="rating-breakdown-unavailable">Rating breakdown unavailable.</div>';
+        document.getElementById("reviewsList").innerHTML = `
+            <div class="no-reviews">Reviews could not be loaded.</div>
+        `;
+    }
 }
+
+function displayRatingSummary(reviews){
+    displayRatingBreakdown(reviews);
+
+    const ratingNumber = document.getElementById("ratingNumber");
+    const ratingStars = document.getElementById("ratingStars");
+    const ratingCount = document.getElementById("ratingCount");
+
+    if(!reviews.length){
+        ratingNumber.textContent = "0.0";
+        ratingStars.textContent = "☆☆☆☆☆";
+        ratingCount.textContent = "No reviews yet";
+        return;
+    }
+
+    const total = reviews.reduce(
+        (sum, review) => sum + Number(review.rating || 0),
+        0
+    );
+    const average = total / reviews.length;
+
+    ratingNumber.textContent = average.toFixed(1);
+    ratingStars.textContent = buildStars(Math.round(average));
+    ratingCount.textContent = reviews.length +
+        (reviews.length === 1 ? " review" : " reviews");
+}
+
+function displayRatingBreakdown(reviews){
+    const container = document.getElementById("ratingBreakdown");
+    if(!container) return;
+
+    const counts = {1:0, 2:0, 3:0, 4:0, 5:0};
+
+    reviews.forEach(review => {
+        const rating = Number(review.rating);
+        if(Number.isInteger(rating) && rating >= 1 && rating <= 5){
+            counts[rating]++;
+        }
+    });
+
+    const total = Object.values(counts).reduce(
+        (sum, count) => sum + count,
+        0
+    );
+
+    container.innerHTML = "";
+
+    [5, 4, 3, 2, 1].forEach(rating => {
+        const count = counts[rating];
+        const percentage = total ? (count / total) * 100 : 0;
+
+        const row = document.createElement("div");
+        row.className = "rating-breakdown-row";
+
+        const label = document.createElement("span");
+        label.className = "rating-breakdown-label";
+        label.textContent = rating + " ★";
+
+        const track = document.createElement("div");
+        track.className = "rating-breakdown-track";
+        track.setAttribute("role", "progressbar");
+        track.setAttribute("aria-label", rating + "-star reviews");
+        track.setAttribute("aria-valuemin", "0");
+        track.setAttribute("aria-valuemax", String(Math.max(total, 1)));
+        track.setAttribute("aria-valuenow", String(count));
+
+        const fill = document.createElement("div");
+        fill.className = "rating-breakdown-fill";
+        fill.style.width = percentage.toFixed(1) + "%";
+        track.appendChild(fill);
+
+        const countLabel = document.createElement("span");
+        countLabel.className = "rating-breakdown-count";
+        countLabel.textContent = String(count);
+
+        row.appendChild(label);
+        row.appendChild(track);
+        row.appendChild(countLabel);
+        container.appendChild(row);
+    });
+}
+
+function buildStars(rating){
+    let stars = "";
+    for(let i = 1; i <= 5; i++){
+        stars += i <= rating ? "★" : "☆";
+    }
+    return stars;
+}
+
+function displayReviews(reviews){
+    const list = document.getElementById("reviewsList");
+
+    if(!reviews.length){
+        list.innerHTML = `
+            <div class="no-reviews">
+                No reviews yet. Be the first buyer to review this seller!
+            </div>
+        `;
+        return;
+    }
+
+    list.innerHTML = reviews.map(review => {
+        const date = review.created_at
+            ? new Date(review.created_at).toLocaleDateString("en-GB", {
+                day:"numeric",
+                month:"short",
+                year:"numeric"
+            })
+            : "";
+
+        return `
+            <div class="review-item">
+                <div class="review-header">
+                    <div>
+                        <div class="reviewer-name">BUYZA Buyer</div>
+                        <div class="review-date">${escapeHtml(date)}</div>
+                    </div>
+                    <div class="review-stars">
+                        ${buildStars(Number(review.rating || 0))}
+                    </div>
+                </div>
+                ${
+                    review.review
+                        ? `<div class="review-comment">${escapeHtml(review.review)}</div>`
+                        : ""
+                }
+            </div>
+        `;
+    }).join("");
+}
+
+function setupReviewForm(sellerId){
+    const area = document.getElementById("reviewArea");
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+
+    if(!token || !userData){
+        area.innerHTML = `
+            <div class="login-review">
+                🔐 Please <a href="login.html">log in</a>
+                to rate and review this seller.
+            </div>
+        `;
+        return;
+    }
+
+    try{
+        const user = JSON.parse(userData);
+
+        if(user.id === sellerId){
+            area.innerHTML = `
+                <div class="login-review">
+                    👤 You are the seller of this listing.<br>
+                    You cannot review your own listing.
+                </div>
+            `;
+            return;
+        }
+    }catch(error){
+        console.error(error);
+        area.innerHTML = `
+            <div class="login-review">
+                Please log in again to leave a review.
+            </div>
+        `;
+        return;
+    }
+
+    area.innerHTML = `
+        <div class="review-form-title">Rate this seller</div>
+        <div class="star-selector" id="starSelector">
+            <button type="button" class="star-btn" onclick="selectRating(1)">★</button>
+            <button type="button" class="star-btn" onclick="selectRating(2)">★</button>
+            <button type="button" class="star-btn" onclick="selectRating(3)">★</button>
+            <button type="button" class="star-btn" onclick="selectRating(4)">★</button>
+            <button type="button" class="star-btn" onclick="selectRating(5)">★</button>
+        </div>
+        <textarea id="reviewText" class="review-text"
+            placeholder="Write your experience with this seller..."></textarea>
+        <button type="button" class="submit-review" onclick="submitReview()">
+            ⭐ Submit Review
+        </button>
+    `;
+}
+
+function selectRating(rating){
+    selectedRating = rating;
+    const buttons = document.querySelectorAll("#starSelector .star-btn");
+
+    buttons.forEach((button, index) => {
+        if(index < rating){
+            button.classList.add("selected");
+        }else{
+            button.classList.remove("selected");
+        }
+    });
+}
+
+async function submitReview(){
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+
+    if(!token || !userData){
+        alert("Please log in to submit a review.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    if(!currentProduct || !currentProduct.user_id){
+        alert("This listing is not connected to a seller profile yet.");
+        return;
+    }
+
+    if(selectedRating < 1 || selectedRating > 5){
+        alert("Please select a rating from 1 to 5 stars.");
+        return;
+    }
+
+    const reviewElement = document.getElementById("reviewText");
+    const reviewText = reviewElement ? reviewElement.value.trim() : "";
+
+    if(!reviewText){
+        alert("Please write a review before submitting.");
+        return;
+    }
+
+    try{
+        const user = JSON.parse(userData);
+
+        if(user.id === currentProduct.user_id){
+            alert("You cannot review your own listing.");
+            return;
+        }
+
+        const checkResponse = await fetch(
+            SUPABASE_URL + "/rest/v1/seller_reviews?seller_id=eq." +
+            encodeURIComponent(currentProduct.user_id) +
+            "&reviewer_id=eq." + encodeURIComponent(user.id) +
+            "&product_id=eq." + encodeURIComponent(currentProductId) +
+            "&select=id",
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        if(!checkResponse.ok){
+            throw new Error("Could not check existing review.");
+        }
+
+        const existing = await checkResponse.json();
+
+        if(existing.length){
+            alert("You have already reviewed this listing.");
+            return;
+        }
+
+        const insertResponse = await fetch(
+            SUPABASE_URL + "/rest/v1/seller_reviews",
+            {
+                method:"POST",
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body:JSON.stringify({
+                    seller_id:currentProduct.user_id,
+                    reviewer_id:user.id,
+                    product_id:Number(currentProductId),
+                    rating:selectedRating,
+                    review:reviewText
+                })
+            }
+        );
+
+        if(!insertResponse.ok){
+            const errorText = await insertResponse.text();
+            console.error(errorText);
+            throw new Error("Review could not be submitted.");
+        }
+
+        alert("✅ Your review has been submitted!");
+        selectedRating = 0;
+        await loadSellerReviews(currentProduct.user_id);
+    }catch(error){
+        console.error(error);
+        alert("Unable to submit review. Please try again.");
+    }
+}
+
+function showNoSellerReviews(){
+    document.getElementById("ratingNumber").textContent = "0.0";
+    document.getElementById("ratingStars").textContent = "☆☆☆☆☆";
+    document.getElementById("ratingCount").textContent = "No seller reviews yet";
+    displayRatingBreakdown([]);
+
+    document.getElementById("reviewArea").innerHTML = `
+        <div class="login-review">
+            Seller reviews are available for listings created by registered BUYZA sellers.
+        </div>
+    `;
+
+    document.getElementById("reviewsList").innerHTML = `
+        <div class="no-reviews">No reviews available for this listing.</div>
+    `;
+}
+
+function escapeHtml(value){
+    return String(value)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function callSeller(){
+    if(!currentProduct || !currentProduct.phone){
+        alert("Seller phone number is not available.");
+        return;
+    }
+    window.location.href = "tel:" + currentProduct.phone;
+}
+
+function whatsappSeller(){
+    if(!currentProduct || !currentProduct.phone){
+        alert("Seller phone number is not available.");
+        return;
+    }
+
+    let phone = String(currentProduct.phone).replace(/\D/g,"");
+
+    if(phone.startsWith("0")){
+        phone = "256" + phone.substring(1);
+    }
+
+    if(!phone.startsWith("256")){
+        phone = "256" + phone;
+    }
+
+    const message =
+        "Hello, I am interested in your BUYZA listing: " +
+        currentProduct.name;
+    const url =
+        "https://wa.me/" + phone + "?text=" +
+        encodeURIComponent(message);
+
+    window.open(url, "_blank");
+}
+
+async function shareProduct(){
+    if(!currentProduct){
+        alert("Product information is still loading.");
+        return;
+    }
+
+    const shareUrl = window.location.href;
+    const shareTitle = currentProduct.name + " - BUYZA";
+    const shareText =
+        "Check out this product on BUYZA:\n\n" +
+        currentProduct.name +
+        "\nPrice: UGX " +
+        Number(currentProduct.price || 0).toLocaleString() +
+        "\nLocation: " +
+        (currentProduct.location || "Uganda");
+
+    if(navigator.share){
+        try{
+            await navigator.share({
+                title:shareTitle,
+                text:shareText,
+                url:shareUrl
+            });
+            return;
+        }catch(error){
+            if(error.name === "AbortError"){
+                return;
+            }
+        }
+    }
+
+    try{
+        await navigator.clipboard.writeText(shareUrl);
+        alert(
+            "✅ Product link copied!\n\nYou can now paste it into WhatsApp, Facebook, Messenger or anywhere you want to share it."
+        );
+    }catch(error){
+        prompt("Copy this product link:", shareUrl);
+    }
+}
+
+async function updateFavoriteButton(){
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+    const button = document.getElementById("favoriteBtn");
+
+    if(!token || !userData){
+        button.textContent = "♡ Save to Favorites";
+        return;
+    }
+
+    try{
+        const user = JSON.parse(userData);
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/favorites?user_id=eq." +
+            encodeURIComponent(user.id) +
+            "&product_id=eq." + encodeURIComponent(currentProductId),
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        if(!response.ok) return;
+
+        const data = await response.json();
+        button.textContent = data.length
+            ? "♥ Saved to Favorites"
+            : "♡ Save to Favorites";
+    }catch(error){
+        console.error(error);
+    }
+}
+
+async function toggleFavorite(){
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+
+    if(!token || !userData){
+        alert("Please log in to save products to Favorites.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try{
+        const user = JSON.parse(userData);
+        const checkResponse = await fetch(
+            SUPABASE_URL + "/rest/v1/favorites?user_id=eq." +
+            encodeURIComponent(user.id) +
+            "&product_id=eq." + encodeURIComponent(currentProductId),
+            {
+                headers:{
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + token
+                }
+            }
+        );
+
+        const existing = await checkResponse.json();
+
+        if(existing.length > 0){
+            const deleteResponse = await fetch(
+                SUPABASE_URL + "/rest/v1/favorites?user_id=eq." +
+                encodeURIComponent(user.id) +
+                "&product_id=eq." + encodeURIComponent(currentProductId),
+                {
+                    method:"DELETE",
+                    headers:{
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + token
+                    }
+                }
+            );
+
+            if(!deleteResponse.ok){
+                throw new Error("Could not remove favorite.");
+            }
+        }else{
+            const insertResponse = await fetch(
+                SUPABASE_URL + "/rest/v1/favorites",
+                {
+                    method:"POST",
+                    headers:{
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json",
+                        "Prefer": "return=minimal"
+                    },
+                    body:JSON.stringify({
+                        user_id:user.id,
+                        product_id:Number(currentProductId)
+                    })
+                }
+            );
+
+            if(!insertResponse.ok){
+                throw new Error("Could not save favorite.");
+            }
+        }
+
+        await updateFavoriteButton();
+    }catch(error){
+        console.error(error);
+        alert("Unable to update Favorites. Please try again.");
+    }
+}
+
+function showError(message){
+    document.getElementById("loading").style.display = "none";
+    document.getElementById("productContent").style.display = "none";
+
+    const errorBox = document.createElement("div");
+    errorBox.className = "error";
+    errorBox.innerHTML = `
+        <h2>Product unavailable</h2>
+        <p>${escapeHtml(message)}</p>
+        <br>
+        <button class="action-btn call-btn"
+            onclick="window.location.href='index.html'">
+            Back to BUYZA
+        </button>
+    `;
+
+    document.querySelector(".container").appendChild(errorBox);
+}
+
+loadProduct();
+</script>
+</body>
+</html>
