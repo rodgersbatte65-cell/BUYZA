@@ -231,6 +231,7 @@ header{
     display:flex;
     align-items:center;
     gap:10px;
+    flex-wrap:wrap;
 }
 
 .sort-label{
@@ -925,6 +926,11 @@ footer{
         <option value="newest">Newest</option>
         <option value="top-rated">Top rated</option>
     </select>
+    <label class="sort-label" for="ratingFilter">Rating</label>
+    <select id="ratingFilter" class="sort-select" onchange="filterProducts()">
+        <option value="all">Any rating</option>
+        <option value="4">4★ and up</option>
+    </select>
     <button class="view-all" onclick="showAll()">
         View All →
     </button>
@@ -1395,7 +1401,27 @@ function filterProducts(){
         });
 
 
-    displayProducts(sortProductsByRating(filtered));
+    const ratingThreshold = Number(
+        document.getElementById("ratingFilter").value
+    );
+
+    const ratingFiltered = filtered.filter(product => {
+        if(!ratingThreshold){
+            return true;
+        }
+
+        const summary = product.user_id
+            ? sellerRatingSummaries[product.user_id]
+            : null;
+
+        return Boolean(
+            summary &&
+            summary.count > 0 &&
+            summary.average >= ratingThreshold
+        );
+    });
+
+    displayProducts(sortProductsByRating(ratingFiltered));
 
 }
 
@@ -1854,3 +1880,4 @@ loadProducts();
 
 </body>
 </html>
+
