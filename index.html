@@ -367,6 +367,13 @@ header{
     margin:8px 0;
 }
 
+.seller-rating{
+    color:#c85b00;
+    font-size:12px;
+    font-weight:700;
+    margin:-3px 0 8px;
+}
+
 .location{
     color:#777;
     font-size:13px;
@@ -1001,6 +1008,8 @@ const SUPABASE_KEY =
 
 let allProducts = [];
 
+let sellerRatingSummaries = {};
+
 let selectedCategory = "";
 
 
@@ -1041,6 +1050,7 @@ async function loadProducts(){
 
         allProducts = await response.json();
 
+        await loadSellerRatingSummaries(allProducts);
 
         document.getElementById("productCount")
             .textContent =
@@ -1068,6 +1078,89 @@ async function loadProducts(){
 /* =====================================================
    DISPLAY PRODUCTS
 ===================================================== */
+
+async function loadSellerRatingSummaries(products){
+
+    sellerRatingSummaries = {};
+
+    const sellerIds = [...new Set(
+        products
+            .map(product => product.user_id)
+            .filter(Boolean)
+    )];
+
+    if(sellerIds.length === 0){
+        return;
+    }
+
+    try{
+        const totals = {};
+        const batchSize = 50;
+
+        for(let index = 0; index < sellerIds.length; index += batchSize){
+            const batch = sellerIds.slice(index, index + batchSize);
+            const query = new URLSearchParams({
+                select: "seller_id,rating",
+                seller_id: `in.(${batch.join(",")})`
+            });
+
+            const response = await fetch(
+                SUPABASE_URL + "/rest/v1/seller_reviews?" + query.toString(),
+                {
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + SUPABASE_KEY
+                    }
+                }
+            );
+
+            if(!response.ok){
+                throw new Error("Could not load seller ratings");
+            }
+
+            const reviews = await response.json();
+            reviews.forEach(review => {
+                const rating = Number(review.rating);
+                if(!review.seller_id || !Number.isFinite(rating)) return;
+
+                if(!totals[review.seller_id]){
+                    totals[review.seller_id] = { sum: 0, count: 0 };
+                }
+
+                totals[review.seller_id].sum += rating;
+                totals[review.seller_id].count += 1;
+            });
+        }
+
+        Object.entries(totals).forEach(([sellerId, total]) => {
+            sellerRatingSummaries[sellerId] = {
+                average: total.sum / total.count,
+                count: total.count
+            };
+        });
+    }catch(error){
+        console.error("Seller ratings could not be loaded:", error);
+        sellerRatingSummaries = {};
+    }
+}
+
+
+function getSellerRatingMarkup(product){
+
+    const summary = product.user_id
+        ? sellerRatingSummaries[product.user_id]
+        : null;
+
+    if(!summary || summary.count === 0){
+        return "";
+    }
+
+    const reviewLabel = summary.count === 1 ? "review" : "reviews";
+    const average = summary.average.toFixed(1);
+
+    return `<div class="seller-rating" aria-label="Seller rating ${average} out of 5 from ${summary.count} ${reviewLabel}">★ ${average} · ${summary.count} ${reviewLabel}</div>`;
+}
+
 
 function displayProducts(products){
 
@@ -1167,6 +1260,7 @@ function displayProducts(products){
                         UGX ${formatPrice(product.price)}
                     </div>
 
+                    ${getSellerRatingMarkup(product)}
 
                     <div class="location">
                         📍 ${safeLocation}
@@ -1689,3 +1783,4 @@ loadProducts();
 
 </body>
 </html>
+
