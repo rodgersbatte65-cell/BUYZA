@@ -227,6 +227,27 @@ header{
     background:none;
 }
 
+.listing-controls{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.sort-label{
+    color:#777;
+    font-size:13px;
+    font-weight:700;
+}
+
+.sort-select{
+    border:1px solid #ddd;
+    border-radius:8px;
+    background:white;
+    color:#333;
+    padding:9px 10px;
+    font-weight:700;
+}
+
 /* ================= CATEGORIES ================= */
 
 .categories{
@@ -709,6 +730,19 @@ footer{
     }
 }
 
+@media(max-width:600px){
+    .section-head{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:12px;
+    }
+
+    .listing-controls{
+        width:100%;
+        justify-content:flex-end;
+    }
+}
+
 @media(max-width:400px){
 
     .categories{
@@ -885,9 +919,16 @@ footer{
     <p>Fresh products added by sellers</p>
 </div>
 
-<button class="view-all" onclick="showAll()">
-    View All →
-</button>
+<div class="listing-controls">
+    <label class="sort-label" for="sortOrder">Sort by</label>
+    <select id="sortOrder" class="sort-select" onchange="filterProducts()">
+        <option value="newest">Newest</option>
+        <option value="top-rated">Top rated</option>
+    </select>
+    <button class="view-all" onclick="showAll()">
+        View All →
+    </button>
+</div>
 
 </div>
 
@@ -1354,8 +1395,38 @@ function filterProducts(){
         });
 
 
-    displayProducts(filtered);
+    displayProducts(sortProductsByRating(filtered));
 
+}
+
+
+function sortProductsByRating(products){
+
+    const sortOrder =
+        document.getElementById("sortOrder").value;
+
+    if(sortOrder !== "top-rated"){
+        return products;
+    }
+
+    return [...products].sort((productA, productB) => {
+        const ratingA = productA.user_id
+            ? sellerRatingSummaries[productA.user_id]
+            : null;
+        const ratingB = productB.user_id
+            ? sellerRatingSummaries[productB.user_id]
+            : null;
+
+        const hasRatingA = Boolean(ratingA && ratingA.count > 0);
+        const hasRatingB = Boolean(ratingB && ratingB.count > 0);
+
+        if(hasRatingA && !hasRatingB) return -1;
+        if(!hasRatingA && hasRatingB) return 1;
+        if(!hasRatingA && !hasRatingB) return 0;
+
+        return (ratingB.average - ratingA.average) ||
+            (ratingB.count - ratingA.count);
+    });
 }
 
 
@@ -1390,7 +1461,7 @@ function showAll(){
         .getElementById("searchInput")
         .value = "";
 
-    displayProducts(allProducts);
+    filterProducts();
 
 }
 
@@ -1412,7 +1483,7 @@ function viewProduct(id){
 
     window.location.assign(url);
 
-}   
+}
 
 
 /* =====================================================
@@ -1783,4 +1854,3 @@ loadProducts();
 
 </body>
 </html>
-
