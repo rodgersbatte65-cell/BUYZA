@@ -92,113 +92,113 @@ footer{margin-top:60px;background:#171717;color:white;padding:35px 20px;text-ali
 footer strong{color:#ff6b00;font-size:22px}
 footer p{margin-top:8px;color:#aaa}
 @media(max-width:850px){
-    .product-layout{grid-template-columns:1fr}
-    .product-image,.no-image{height:420px}
-    .product-name{font-size:29px}
-    .price{font-size:29px}
-    .nav a{padding:8px;font-size:14px}
+.product-layout{grid-template-columns:1fr}
+.product-image,.no-image{height:420px}
+.product-name{font-size:29px}
+.price{font-size:29px}
+.nav a{padding:8px;font-size:14px}
 }
 @media(max-width:550px){
-    .header-inner{padding:13px 14px}
-    .logo{font-size:25px}
-    .nav{gap:2px}
-    .nav a{font-size:12px;padding:7px}
-    .container{margin-top:18px;padding:0 12px}
-    .image-card{padding:10px}
-    .product-image,.no-image{height:320px}
-    .info-card{padding:20px}
-    .product-name{font-size:25px}
-    .price{font-size:27px}
-    .reviews-card,.seller-card{padding:18px}
-    .rating-number{font-size:34px}
-    .rating-stars{font-size:21px}
+.header-inner{padding:13px 14px}
+.logo{font-size:25px}
+.nav{gap:2px}
+.nav a{font-size:12px;padding:7px}
+.container{margin-top:18px;padding:0 12px}
+.image-card{padding:10px}
+.product-image,.no-image{height:320px}
+.info-card{padding:20px}
+.product-name{font-size:25px}
+.price{font-size:27px}
+.reviews-card,.seller-card{padding:18px}
+.rating-number{font-size:34px}
+.rating-stars{font-size:21px}
 }
 </style>
 </head>
 <body>
 <header>
-    <div class="header-inner">
-        <a href="index.html" class="logo">BUYZA</a>
-        <nav class="nav">
-            <a href="index.html">Home</a>
-            <a href="favorites.html">Favorites</a>
-            <a href="account.html">Account</a>
-            <a href="sell.html" class="sell-btn">Sell</a>
-        </nav>
-    </div>
+<div class="header-inner">
+<a href="index.html" class="logo">BUYZA</a>
+<nav class="nav">
+<a href="index.html">Home</a>
+<a href="favorites.html">Favorites</a>
+<a href="account.html">Account</a>
+<a href="sell.html" class="sell-btn">Sell</a>
+</nav>
+</div>
 </header>
 
 <main class="container">
-    <button class="back-btn" onclick="goBack()">← Back to Listings</button>
-    <div id="loading" class="loading">Loading product...</div>
-    <div id="productContent" style="display:none;">
-        <div class="product-layout">
-            <div class="card image-card"><div id="imageContainer"></div></div>
-            <div>
-                <div class="card info-card">
-                    <div id="category" class="category"></div>
-                    <h1 id="productName" class="product-name"></h1>
-                    <div id="productPrice" class="price"></div>
-                    <div class="location">📍 <span id="productLocation"></span></div>
-                    <div class="divider"></div>
-                    <div class="description-title">Description</div>
-                    <div id="productDescription" class="description"></div>
-                    <div class="actions">
-                        <button id="favoriteBtn" class="action-btn favorite-btn" onclick="toggleFavorite()">♡ Save to Favorites</button>
-                        <button class="action-btn call-btn" onclick="callSeller()">📞 Call Seller</button>
-                        <button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
-                        <button class="action-btn share-btn" onclick="shareProduct()">📤 Share Product</button>
-                    </div>
-                </div>
+<button class="back-btn" onclick="goBack()">← Back to Listings</button>
+<div id="loading" class="loading">Loading product...</div>
+<div id="productContent" style="display:none;">
+<div class="product-layout">
+<div class="card image-card"><div id="imageContainer"></div></div>
+<div>
+<div class="card info-card">
+<div id="category" class="category"></div>
+<h1 id="productName" class="product-name"></h1>
+<div id="productPrice" class="price"></div>
+<div class="location">📍 <span id="productLocation"></span></div>
+<div class="divider"></div>
+<div class="description-title">Description</div>
+<div id="productDescription" class="description"></div>
+<div class="actions">
+<button id="favoriteBtn" class="action-btn favorite-btn" onclick="toggleFavorite()">♡ Save to Favorites</button>
+<button class="action-btn call-btn" onclick="callSeller()">📞 Call Seller</button>
+<button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
+<button class="action-btn share-btn" onclick="shareProduct()">📤 Share Product</button>
+</div>
+</div>
 
-                <div class="seller-card">
-                    <div class="seller-title">👤 Seller Information</div>
-                    <div class="seller-box">
-                        <div id="sellerAvatar" class="seller-avatar">B</div>
-                        <div>
-                            <div id="sellerName" class="seller-name">BUYZA Seller</div>
-                            <div id="sellerStatus" class="seller-status">Loading seller profile...</div>
-                        </div>
-                    </div>
-                    <div id="sellerDetails" class="seller-details">
-                        <div class="profile-loading">Seller information will appear here.</div>
-                    </div>
-                </div>
+<div class="seller-card">
+<div class="seller-title">👤 Seller Information</div>
+<div class="seller-box">
+<div id="sellerAvatar" class="seller-avatar">B</div>
+<div>
+<div id="sellerName" class="seller-name">BUYZA Seller</div>
+<div id="sellerStatus" class="seller-status">Loading seller profile...</div>
+</div>
+</div>
+<div id="sellerDetails" class="seller-details">
+<div class="profile-loading">Seller information will appear here.</div>
+</div>
+</div>
 
-                <div class="reviews-card">
-                    <div class="reviews-title">⭐ Seller Ratings &amp; Reviews</div>
-                    <div class="rating-summary">
-                        <div id="ratingNumber" class="rating-number">0.0</div>
-                        <div>
-                            <div id="ratingStars" class="rating-stars">☆☆☆☆☆</div>
-                            <div id="ratingCount" class="rating-count">No reviews yet</div>
-                        </div>
-                    </div>
-                    <div id="ratingBreakdown" class="rating-breakdown" aria-label="Rating breakdown"></div>
-                    <div id="reviewArea" class="review-form"></div>
-                    <div id="reviewsList" class="reviews-list">
-                        <div class="no-reviews">Loading reviews...</div>
-                    </div>
-                </div>
+<div class="reviews-card">
+<div class="reviews-title">⭐ Seller Ratings &amp; Reviews</div>
+<div class="rating-summary">
+<div id="ratingNumber" class="rating-number">0.0</div>
+<div>
+<div id="ratingStars" class="rating-stars">☆☆☆☆☆</div>
+<div id="ratingCount" class="rating-count">No reviews yet</div>
+</div>
+</div>
+<div id="ratingBreakdown" class="rating-breakdown" aria-label="Rating breakdown"></div>
+<div id="reviewArea" class="review-form"></div>
+<div id="reviewsList" class="reviews-list">
+<div class="no-reviews">Loading reviews...</div>
+</div>
+</div>
 
-                <div class="safety-card">
-                    <div class="safety-title">🛡️ Stay Safe on BUYZA</div>
-                    <ul>
-                        <li>Meet the seller in a safe public place.</li>
-                        <li>Check the product before making payment.</li>
-                        <li>Never share your passwords or verification codes.</li>
-                        <li>Be careful with requests for advance payments.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="safety-card">
+<div class="safety-title">🛡️ Stay Safe on BUYZA</div>
+<ul>
+<li>Meet the seller in a safe public place.</li>
+<li>Check the product before making payment.</li>
+<li>Never share your passwords or verification codes.</li>
+<li>Be careful with requests for advance payments.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </main>
 
 <footer>
-    <strong>BUYZA</strong>
-    <p>Buy. Sell. Connect.</p>
-    <p>© 2026 BUYZA. All rights reserved.</p>
+<strong>BUYZA</strong>
+<p>Buy. Sell. Connect.</p>
+<p>© 2026 BUYZA. All rights reserved.</p>
 </footer>
 
 <script>
