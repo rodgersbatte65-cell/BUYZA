@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Reports - BUYZA Admin</title>
+<script src="auth.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f7f9;color:#222;font-family:Arial,Helvetica,sans-serif}
+header{background:#171717;color:white;padding:18px 22px}
+header a{color:#ff6b00;text-decoration:none;font-size:24px;font-weight:900}
+main{max-width:1000px;margin:30px auto;padding:0 18px}
+h1{margin:0 0 8px}
+.intro{color:#666;margin:0 0 22px;line-height:1.5}
+.toolbar{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.toolbar button,.report-actions button{border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}
+.toolbar button{background:#ff6b00;color:white}
+.toolbar select{padding:9px;border:1px solid #ccc;border-radius:8px;background:white}
+.message{padding:14px;background:white;border-radius:10px;color:#555;margin:14px 0}
+.report-card{background:white;border-radius:14px;padding:18px;margin:14px 0;box-shadow:0 3px 14px rgba(0,0,0,.06)}
+.report-top{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px solid #eee;padding-bottom:12px;margin-bottom:12px}
+.reason{font-weight:800;text-transform:capitalize}
+.status{font-size:12px;font-weight:800;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:#fff1e8;color:#b94c00}
+.status.reviewed{background:#e9f7ec;color:#23703a}
+.status.dismissed{background:#eee;color:#555}
+.meta{font-size:13px;color:#777;line-height:1.6}
+.review-text{white-space:pre-wrap;line-height:1.55;background:#f8f8f8;padding:12px;border-radius:8px;margin:12px 0}
+.report-details{white-space:pre-wrap;line-height:1.5;color:#555;margin:8px 0}
+.report-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.report-actions button{background:#eee;color:#333}
+.report-actions .mark-reviewed{background:#23703a;color:white}
+.report-actions .mark-dismissed{background:#555;color:white}
+.report-actions button:disabled,.toolbar button:disabled{opacity:.6;cursor:wait}
+@media(max-width:600px){
+    .report-top{align-items:flex-start;flex-direction:column}
+    .toolbar{align-items:stretch;flex-direction:column}
+}
+</style>
+</head>
+<body>
+<header><a href="index.html">BUYZA</a></header>
+<main>
+    <h1>Review reports</h1>
+    <p class="intro">
+        This private page is for BUYZA admins. Only an account added to the
+        admin list in Supabase can load these reports.
+    </p>
+    <div class="toolbar">
+        <button id="refreshButton" type="button">Refresh reports</button>
+        <select id="statusFilter" aria-label="Filter reports by status">
+            <option value="all">All statuses</option>
+            <option value="pending">Pending</option>
+            <option value="reviewed">Reviewed</option>
+            <option value="dismissed">Dismissed</option>
+        </select>
+    </div>
+    <div id="message" class="message">Loading reports...</div>
+    <section id="reportsList" aria-live="polite"></section>
+</main>
+
+<script>
+const reportsList = document.getElementById("reportsList");
+const messageBox = document.getElementById("message");
+const statusFilter = document.getElementById("statusFilter");
+const refreshButton = document.getElementById("refreshButton");
+let reports = [];
+
+function escapeHtml(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function getAccessToken(){
+    return localStorage.getItem("buyza_access_token");
+}
+
+async function loadReports(){
+    const token = getAccessToken();
+    reportsList.innerHTML = "";
+
+    if(!token){
+        messageBox.hidden = false;
+        messageBox.textContent =
+            "Please log in to your BUYZA admin account, then refresh this page.";
+        return;
+    }
+
+    refreshButton.disabled = true;
+    messageBox.hidden = false;
+    messageBox.textContent = "Loading reports...";
+
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/admin_list_seller_review_reports",
+            {
+                method:"POST",
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":"Bearer " + token,
+                    "Content-Type":"application/json"
+                },
+                body:"{}"
+            }
+        );
+
+        if(!response.ok){
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error(
+                "Could not load reports. Confirm this account is listed as a BUYZA admin in Supabase."
+            );
+        }
+
+        reports = await response.json();
+        renderReports();
+    }catch(error){
+        console.error(error);
+        reportsList.innerHTML = "";
+        messageBox.hidden = false;
+        messageBox.textContent = error.message || "Unable to load reports.";
+    }finally{
+        refreshButton.disabled = false;
+    }
+}
+
+function renderReports(){
+    const selectedStatus = statusFilter.value;
+    const visibleReports = reports.filter(report =>
+        selectedStatus === "all" || report.status === selectedStatus
+    );
+
+    reportsList.innerHTML = "";
+
+    if(!visibleReports.length){
+        messageBox.hidden = false;
+        messageBox.textContent = "No reports match this filter.";
+        return;
+    }
+
+    messageBox.hidden = true;
+
+    visibleReports.forEach(report => {
+        const productLink = report.product_id
+            ? ` <a href="product.html?id=${encodeURIComponent(report.product_id)}" target="_blank" rel="noopener">Open listing</a>`
+            : "";
+
+        const reportedDate = report.reported_at
+            ? new Date(report.reported_at).toLocaleString()
+            : "Date unavailable";
+
+        const card = document.createElement("article");
+        card.className = "report-card";
+        card.innerHTML = `
+            <div class="report-top">
+                <div>
+                    <div class="reason">${escapeHtml(report.reason || "Unspecified reason")}</div>
+                    <div class="meta">
+                        Report #${escapeHtml(report.report_id)} ·
+                        ${escapeHtml(reportedDate)}${productLink}
+                    </div>
+                </div>
+                <span class="status ${escapeHtml(report.status)}">
+                    ${escapeHtml(report.status)}
+                </span>
+            </div>
+            <div class="meta">
+                Rating: ${escapeHtml(report.rating ?? "Unavailable")} stars
+            </div>
+            <div class="review-text">
+                ${escapeHtml(report.review || "The review text is no longer available.")}
+            </div>
+            <div class="meta"><strong>Report details</strong></div>
+            <div class="report-details">
+                ${escapeHtml(report.details || "No additional details provided.")}
+            </div>
+            <div class="meta">Review ID: ${escapeHtml(report.review_id)}</div>
+            <div class="report-actions">
+                <button type="button" class="mark-reviewed"
+                    data-report-id="${escapeHtml(report.report_id)}"
+                    data-status="reviewed">Mark reviewed</button>
+                <button type="button" class="mark-dismissed"
+                    data-report-id="${escapeHtml(report.report_id)}"
+                    data-status="dismissed">Dismiss report</button>
+                <button type="button"
+                    data-report-id="${escapeHtml(report.report_id)}"
+                    data-status="pending">Return to pending</button>
+            </div>
+        `;
+
+        reportsList.appendChild(card);
+    });
+
+    reportsList.querySelectorAll(".report-actions button").forEach(button => {
+        button.addEventListener("click", () => {
+            updateReportStatus(
+                button.dataset.reportId,
+                button.dataset.status,
+                button
+            );
+        });
+    });
+}
+
+async function updateReportStatus(reportId, status, button){
+    const token = getAccessToken();
+
+    if(!token){
+        messageBox.hidden = false;
+        messageBox.textContent = "Please log in again to update a report.";
+        return;
+    }
+
+    button.disabled = true;
+
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/admin_update_seller_review_report",
+            {
+                method:"POST",
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":"Bearer " + token,
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    p_report_id:Number(reportId),
+                    p_status:status
+                })
+            }
+        );
+
+        if(!response.ok){
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error("Could not update the report status.");
+        }
+
+        const report = reports.find(
+            item => String(item.report_id) === String(reportId)
+        );
+
+        if(report){
+            report.status = status;
+        }
+
+        renderReports();
+    }catch(error){
+        console.error(error);
+        messageBox.hidden = false;
+        messageBox.textContent =
+            error.message || "Unable to update the report.";
+        button.disabled = false;
+    }
+}
+
+refreshButton.addEventListener("click", loadReports);
+statusFilter.addEventListener("change", renderReports);
+loadReports();
+</script>
+</body>
+</html>
