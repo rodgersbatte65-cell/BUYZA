@@ -60,14 +60,12 @@ h1{margin:0 0 8px}
     <div id="message" class="message">Loading reports...</div>
     <section id="reportsList" aria-live="polite"></section>
 </main>
-
 <script>
 const reportsList = document.getElementById("reportsList");
 const messageBox = document.getElementById("message");
 const statusFilter = document.getElementById("statusFilter");
 const refreshButton = document.getElementById("refreshButton");
 let reports = [];
-
 function escapeHtml(value){
     return String(value ?? "")
         .replace(/&/g,"&amp;")
@@ -76,26 +74,26 @@ function escapeHtml(value){
         .replace(/"/g,"&quot;")
         .replace(/'/g,"&#039;");
 }
-
 function getAccessToken(){
+async function getAccessToken(){
+    if(typeof getBuyzaAccessToken === "function"){
+        return await getBuyzaAccessToken();
+    }
     return localStorage.getItem("buyza_access_token");
 }
-
 async function loadReports(){
     const token = getAccessToken();
+    const token = await getAccessToken();
     reportsList.innerHTML = "";
-
     if(!token){
         messageBox.hidden = false;
         messageBox.textContent =
             "Please log in to your BUYZA admin account, then refresh this page.";
         return;
     }
-
     refreshButton.disabled = true;
     messageBox.hidden = false;
     messageBox.textContent = "Loading reports...";
-
     try{
         const response = await fetch(
             SUPABASE_URL + "/rest/v1/rpc/admin_list_seller_review_reports",
@@ -109,7 +107,6 @@ async function loadReports(){
                 body:"{}"
             }
         );
-
         if(!response.ok){
             const errorText = await response.text();
             console.error(errorText);
@@ -117,7 +114,6 @@ async function loadReports(){
                 "Could not load reports. Confirm this account is listed as a BUYZA admin in Supabase."
             );
         }
-
         reports = await response.json();
         renderReports();
     }catch(error){
@@ -129,32 +125,25 @@ async function loadReports(){
         refreshButton.disabled = false;
     }
 }
-
 function renderReports(){
     const selectedStatus = statusFilter.value;
     const visibleReports = reports.filter(report =>
         selectedStatus === "all" || report.status === selectedStatus
     );
-
     reportsList.innerHTML = "";
-
     if(!visibleReports.length){
         messageBox.hidden = false;
         messageBox.textContent = "No reports match this filter.";
         return;
     }
-
     messageBox.hidden = true;
-
     visibleReports.forEach(report => {
         const productLink = report.product_id
             ? ` <a href="product.html?id=${encodeURIComponent(report.product_id)}" target="_blank" rel="noopener">Open listing</a>`
             : "";
-
         const reportedDate = report.reported_at
             ? new Date(report.reported_at).toLocaleString()
             : "Date unavailable";
-
         const card = document.createElement("article");
         card.className = "report-card";
         card.innerHTML = `
@@ -195,17 +184,14 @@ function renderReports(){
                     data-review-id="${escapeHtml(report.review_id)}">Hide review</button>
             </div>
         `;
-
         reportsList.appendChild(card);
     });
-
     reportsList.querySelectorAll(".report-actions button").forEach(button => {
         button.addEventListener("click", () => {
             if(button.classList.contains("hide-review")){
                 hideReportedReview(button.dataset.reviewId, button);
                 return;
             }
-
             updateReportStatus(
                 button.dataset.reportId,
                 button.dataset.status,
@@ -214,24 +200,20 @@ function renderReports(){
         });
     });
 }
-
 async function hideReportedReview(reviewId, button){
     if(!window.confirm(
         "Hide this review from BUYZA product pages? It will remain saved in the database."
     )){
         return;
     }
-
     const token = getAccessToken();
-
+    const token = await getAccessToken();
     if(!token){
         messageBox.hidden = false;
         messageBox.textContent = "Please log in again to hide a review.";
         return;
     }
-
     button.disabled = true;
-
     try{
         const response = await fetch(
             SUPABASE_URL + "/rest/v1/rpc/admin_hide_seller_review",
@@ -245,13 +227,11 @@ async function hideReportedReview(reviewId, button){
                 body:JSON.stringify({p_review_id:Number(reviewId)})
             }
         );
-
         if(!response.ok){
             const errorText = await response.text();
             console.error(errorText);
             throw new Error("Could not hide the review. Please refresh and try again.");
         }
-
         button.textContent = "Review hidden";
         button.disabled = true;
     }catch(error){
@@ -261,18 +241,15 @@ async function hideReportedReview(reviewId, button){
         button.disabled = false;
     }
 }
-
 async function updateReportStatus(reportId, status, button){
     const token = getAccessToken();
-
+    const token = await getAccessToken();
     if(!token){
         messageBox.hidden = false;
         messageBox.textContent = "Please log in again to update a report.";
         return;
     }
-
     button.disabled = true;
-
     try{
         const response = await fetch(
             SUPABASE_URL + "/rest/v1/rpc/admin_update_seller_review_report",
@@ -289,21 +266,17 @@ async function updateReportStatus(reportId, status, button){
                 })
             }
         );
-
         if(!response.ok){
             const errorText = await response.text();
             console.error(errorText);
             throw new Error("Could not update the report status.");
         }
-
         const report = reports.find(
             item => String(item.report_id) === String(reportId)
         );
-
         if(report){
             report.status = status;
         }
-
         renderReports();
     }catch(error){
         console.error(error);
@@ -313,7 +286,6 @@ async function updateReportStatus(reportId, status, button){
         button.disabled = false;
     }
 }
-
 refreshButton.addEventListener("click", loadReports);
 statusFilter.addEventListener("change", renderReports);
 loadReports();
