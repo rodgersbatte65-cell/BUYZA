@@ -31,6 +31,8 @@ h1{margin:0 0 8px}
 .report-actions button{background:#eee;color:#333}
 .report-actions .mark-reviewed{background:#23703a;color:white}
 .report-actions .mark-dismissed{background:#555;color:white}
+.report-actions .hide-review{background:#b42318;color:white}
+.report-actions .hide-review:disabled{background:#23703a;color:white;opacity:1;cursor:default}
 .report-actions button:disabled,.toolbar button:disabled{opacity:.6;cursor:wait}
 @media(max-width:600px){
     .report-top{align-items:flex-start;flex-direction:column}
@@ -189,6 +191,8 @@ function renderReports(){
                 <button type="button"
                     data-report-id="${escapeHtml(report.report_id)}"
                     data-status="pending">Return to pending</button>
+                <button type="button" class="hide-review"
+                    data-review-id="${escapeHtml(report.review_id)}">Hide review</button>
             </div>
         `;
 
@@ -197,6 +201,11 @@ function renderReports(){
 
     reportsList.querySelectorAll(".report-actions button").forEach(button => {
         button.addEventListener("click", () => {
+            if(button.classList.contains("hide-review")){
+                hideReportedReview(button.dataset.reviewId, button);
+                return;
+            }
+
             updateReportStatus(
                 button.dataset.reportId,
                 button.dataset.status,
@@ -204,6 +213,53 @@ function renderReports(){
             );
         });
     });
+}
+
+async function hideReportedReview(reviewId, button){
+    if(!window.confirm(
+        "Hide this review from BUYZA product pages? It will remain saved in the database."
+    )){
+        return;
+    }
+
+    const token = getAccessToken();
+
+    if(!token){
+        messageBox.hidden = false;
+        messageBox.textContent = "Please log in again to hide a review.";
+        return;
+    }
+
+    button.disabled = true;
+
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/admin_hide_seller_review",
+            {
+                method:"POST",
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":"Bearer " + token,
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({p_review_id:Number(reviewId)})
+            }
+        );
+
+        if(!response.ok){
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error("Could not hide the review. Please refresh and try again.");
+        }
+
+        button.textContent = "Review hidden";
+        button.disabled = true;
+    }catch(error){
+        console.error(error);
+        messageBox.hidden = false;
+        messageBox.textContent = error.message || "Unable to hide the review.";
+        button.disabled = false;
+    }
 }
 
 async function updateReportStatus(reportId, status, button){
