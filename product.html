@@ -36,6 +36,7 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .action-btn:hover{transform:translateY(-1px)}
 .call-btn{background:#171717;color:white}
 .whatsapp-btn{background:#20c76a;color:white}
+.message-btn{background:#3157a4;color:white}
 .favorite-btn{background:#fff1e8;color:#ff6b00;border:1px solid #ffd8c0}
 .share-btn{background:#f1f2f4;color:#333}
 .seller-card{margin-top:20px;padding:24px;background:white;border-radius:20px;box-shadow:0 5px 25px rgba(0,0,0,.05)}
@@ -161,6 +162,7 @@ footer p{margin-top:8px;color:#aaa}
 <button id="favoriteBtn" class="action-btn favorite-btn" onclick="toggleFavorite()">♡ Save to Favorites</button>
 <button class="action-btn call-btn" onclick="callSeller()">📞 Call Seller</button>
 <button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
+<button class="action-btn message-btn" onclick="messageSeller()">✉️ Message Seller</button>
 <button class="action-btn share-btn" onclick="shareProduct()">📤 Share Product</button>
 </div>
 </div>
@@ -931,6 +933,14 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 }
 
+function messageSeller(){
+    if(!currentProduct || !currentProduct.id || !currentProduct.user_id){alert("Seller details are not available yet.");return;}
+    const savedUser=localStorage.getItem("buyza_user");
+    if(!savedUser){window.location.href="login.html";return;}
+    let user;try{user=JSON.parse(savedUser);}catch(error){user=null;}
+    if(user && user.id===currentProduct.user_id){alert("You cannot message yourself about your own listing.");return;}
+    window.location.href="messages.html?product_id="+encodeURIComponent(String(currentProduct.id))+"&seller_id="+encodeURIComponent(String(currentProduct.user_id));
+}
 function callSeller(){
     if(!currentProduct || !currentProduct.phone){
         alert("Seller phone number is not available.");
