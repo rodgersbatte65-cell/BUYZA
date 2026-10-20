@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Messages - BUYZA</title><script src="auth.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f6f8;color:#222}header{background:#171717;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}header a{color:white;text-decoration:none;font-weight:700}.logo{color:#ff6b00;font-size:26px;font-weight:900}main{max-width:1000px;margin:26px auto;padding:0 16px}h1{font-size:26px;margin:0 0 18px}.layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:16px}.panel{background:white;border-radius:14px;box-shadow:0 3px 16px #0000000f;overflow:hidden}.panel-title,#chatHeader{padding:16px;border-bottom:1px solid #eee}.panel-title,#chatTitle{font-weight:800}#conversationList{max-height:70vh;overflow:auto}.conversation{display:block;width:100%;padding:14px 16px;text-align:left;border:0;border-bottom:1px solid #eee;background:white;cursor:pointer;font:inherit}.conversation:hover,.conversation.active{background:#fff3eb}.conversation strong,.conversation small{display:block}.conversation strong{margin-bottom:5px}.conversation small{color:#777;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.badge{float:right;background:#ff6b00;color:white;border-radius:20px;padding:2px 7px;font-size:11px}#chatPanel{min-height:500px;display:flex;flex-direction:column}#chatTitle{font-size:17px}#chatSubtitle{font-size:13px;color:#777;margin-top:5px}#messages{padding:16px;flex:1;min-height:300px;max-height:55vh;overflow:auto;background:#fafafa}.message{max-width:82%;padding:10px 12px;margin:0 0 10px;border-radius:12px;background:white;box-shadow:0 1px 4px #0000000f;white-space:pre-wrap;overflow-wrap:anywhere}.message.mine{margin-left:auto;background:#fff0e5}.message time{display:block;margin-top:6px;font-size:11px;color:#888}#sendForm{display:flex;gap:8px;padding:12px;border-top:1px solid #eee}#messageText{flex:1;min-width:0;min-height:46px;max-height:120px;resize:vertical;padding:12px;border:1px solid #ddd;border-radius:10px;font:inherit}#sendButton{border:0;border-radius:10px;padding:0 18px;background:#ff6b00;color:white;font-weight:800;cursor:pointer}.status{padding:22px;color:#777;text-align:center;line-height:1.5}.hidden{display:none}@media(max-width:700px){main{margin:18px auto}.layout{grid-template-columns:1fr}#conversationList{max-height:190px}#chatPanel{min-height:420px}#messages{max-height:42vh}}
+</style></head><body><header><a class="logo" href="index.html">BUYZA</a><a href="account.html">My Account</a></header>
+<main><h1>✉️ My Messages</h1><div id="pageStatus" class="panel status">Loading messages…</div><div id="app" class="layout hidden">
+<section class="panel"><div class="panel-title">Conversations</div><div id="conversationList"></div><div id="emptyList" class="status hidden">No conversations yet. Open a listing and choose “Message Seller” to start.</div></section>
+<section id="chatPanel" class="panel"><div id="chatHeader"><div id="chatTitle">Choose a conversation</div><div id="chatSubtitle"></div></div><div id="messages"><div class="status">Your messages will appear here.</div></div><form id="sendForm" class="hidden"><textarea id="messageText" maxlength="2000" placeholder="Write a message (up to 2,000 characters)" required></textarea><button id="sendButton" type="submit">Send</button></form></section>
+</div></main><script>
+const params=new URLSearchParams(location.search),requestedProduct=params.get("product_id"),requestedSeller=params.get("seller_id");const el=id=>document.getElementById(id);let user=null,token=null,items=[],active=null,timer=null;
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function headers(t,extra={}){return Object.assign({apikey:SUPABASE_KEY,Authorization:"Bearer "+t},extra)}
+async function request(path,options={}){const r=await fetch(SUPABASE_URL+path,options);if(!r.ok)throw Error(await r.text());if(r.status===204)return null;const s=await r.text();return s?JSON.parse(s):null}
+function key(p,o){return String(p)+"|"+String(o)}
+function setStatus(s){el("pageStatus").textContent=s;el("pageStatus").classList.remove("hidden");el("app").classList.add("hidden")}
+async function listingTitle(x){try{const q=new URLSearchParams({select:"name",id:"eq."+x.productId,limit:"1"});const p=await request("/rest/v1/products?"+q,{headers:headers(SUPABASE_KEY)});if(p?.[0]?.name)x.title=p[0].name}catch(e){}}
+async function start(){
+ try{
+  token=await getBuyzaAccessToken();user=JSON.parse(localStorage.getItem("buyza_user")||"null");
+  if(!token||!user?.id){setStatus("Please log in to use BUYZA Messages. Then return to a listing and choose Message Seller.");return}
+  if(requestedProduct&&requestedSeller){if(requestedSeller===user.id){setStatus("You cannot message yourself.");return}active={productId:requestedProduct,otherId:requestedSeller,title:"Listing "+requestedProduct};await listingTitle(active)}
+  el("pageStatus").classList.add("hidden");el("app").classList.remove("hidden");await loadInbox();
+  if(active){active=items.find(x=>x.productId===active.productId&&x.otherId===active.otherId)||active;drawList();await loadThread()}
+  else if(items.length)await open(items[0]);else{drawList();emptyThread()}
+  timer=setInterval(async()=>{try{await loadInbox();drawList();if(active)await loadThread()}catch(e){console.error(e)}},15000)
+ }catch(e){console.error(e);setStatus("Messages could not load. Refresh the page and try again.")}
+}
+async function loadInbox(){
+ token=await getBuyzaAccessToken()||token;const q=new URLSearchParams({select:"product_id,sender_id,recipient_id,message,created_at,read_at",or:"(sender_id.eq."+user.id+",recipient_id.eq."+user.id+")",order:"created_at.desc",limit:"500"});
+ const rows=await request("/rest/v1/buyer_messages?"+q,{headers:headers(token)}),grouped=new Map();
+ for(const r of rows||[]){const other=r.sender_id===user.id?r.recipient_id:r.sender_id,k=key(r.product_id,other);if(!grouped.has(k))grouped.set(k,{productId:String(r.product_id),otherId:other,title:"Listing "+r.product_id,preview:r.message||"",unread:0});if(r.recipient_id===user.id&&!r.read_at)grouped.get(k).unread++}
+ items=[...grouped.values()];await Promise.all(items.slice(0,25).map(listingTitle))
+}
+function drawList(){
+ el("emptyList").classList.toggle("hidden",items.length>0);
+ el("conversationList").innerHTML=items.map(x=>'<button class="conversation '+(active&&key(active.productId,active.otherId)===key(x.productId,x.otherId)?"active":"")+'" data-p="'+esc(x.productId)+'" data-o="'+esc(x.otherId)+'"><strong>'+esc(x.title)+(x.unread?'<span class="badge">'+x.unread+'</span>':"")+'</strong><small>'+esc(x.preview)+'</small></button>').join("");
+ el("conversationList").querySelectorAll(".conversation").forEach(b=>b.onclick=()=>{const x=items.find(i=>i.productId===b.dataset.p&&i.otherId===b.dataset.o);if(x)open(x)})
+}
+async function open(x){active=x;drawList();await loadThread()}
+function emptyThread(){el("chatTitle").textContent="No conversations yet";el("chatSubtitle").textContent="";el("messages").innerHTML='<div class="status">Open a listing and choose “Message Seller” to start.</div>';el("sendForm").classList.add("hidden")}
+async function loadThread(){
+ if(!active)return;el("chatTitle").textContent=active.title||"BUYZA conversation";el("chatSubtitle").textContent="Private conversation about this listing";el("sendForm").classList.remove("hidden");
+ const q=new URLSearchParams({select:"sender_id,recipient_id,message,created_at,read_at",product_id:"eq."+active.productId,or:"(and(sender_id.eq."+user.id+",recipient_id.eq."+active.otherId+"),and(sender_id.eq."+active.otherId+",recipient_id.eq."+user.id+"))",order:"created_at.asc",limit:"500"});
+ const rows=await request("/rest/v1/buyer_messages?"+q,{headers:headers(token)});
+ el("messages").innerHTML=rows?.length?rows.map(r=>'<div class="message '+(r.sender_id===user.id?"mine":"")+'">'+esc(r.message)+'<time>'+esc(new Date(r.created_at).toLocaleString())+(r.sender_id===user.id&&r.read_at?" · Read":"")+'</time></div>').join(""):'<div class="status">This is the beginning of your conversation. Send a message to start.</div>';
+ el("messages").scrollTop=el("messages").scrollHeight;
+ const readQ=new URLSearchParams({product_id:"eq."+active.productId,sender_id:"eq."+active.otherId,recipient_id:"eq."+user.id,read_at:"is.null"});
+ await fetch(SUPABASE_URL+"/rest/v1/buyer_messages?"+readQ,{method:"PATCH",headers:headers(token,{"Content-Type":"application/json",Prefer:"return=minimal"}),body:JSON.stringify({read_at:new Date().toISOString()})});
+ const c=items.find(x=>key(x.productId,x.otherId)===key(active.productId,active.otherId));if(c)c.unread=0;drawList()
+}
+el("sendForm").addEventListener("submit",async e=>{e.preventDefault();const message=el("messageText").value.trim();if(!message||!active)return;el("sendButton").disabled=true;try{
+ token=await getBuyzaAccessToken()||token;await request("/rest/v1/buyer_messages",{method:"POST",headers:headers(token,{"Content-Type":"application/json",Prefer:"return=minimal"}),body:JSON.stringify({product_id:active.productId,sender_id:user.id,recipient_id:active.otherId,message})});
+ el("messageText").value="";await loadInbox();active=items.find(x=>key(x.productId,x.otherId)===key(active.productId,active.otherId))||active;drawList();await loadThread()
+ }catch(e){console.error(e);alert("Your message could not be sent. Refresh the page and try again.")}finally{el("sendButton").disabled=false}});
+window.addEventListener("beforeunload",()=>clearInterval(timer));start();
+</script></body></html>
