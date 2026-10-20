@@ -212,7 +212,6 @@ textarea{
 
 <body>
 
-
 <header>
 
     <a href="index.html" class="logo">
@@ -233,9 +232,7 @@ textarea{
 
 </header>
 
-
 <div class="container">
-
 
     <!-- SELLER PROFILE -->
 
@@ -257,7 +254,6 @@ textarea{
 
         </div>
 
-
         <div class="email">
 
             <strong>
@@ -269,7 +265,6 @@ textarea{
             </span>
 
         </div>
-
 
         <div class="form-group">
 
@@ -285,7 +280,6 @@ textarea{
 
         </div>
 
-
         <div class="form-group">
 
             <label for="phone">
@@ -299,7 +293,6 @@ textarea{
             >
 
         </div>
-
 
         <div class="form-group">
 
@@ -315,7 +308,6 @@ textarea{
 
         </div>
 
-
         <div class="form-group">
 
             <label for="bio">
@@ -329,7 +321,6 @@ textarea{
 
         </div>
 
-
         <button
             class="save-btn"
             onclick="saveProfile()"
@@ -337,15 +328,12 @@ textarea{
             💾 Save Seller Profile
         </button>
 
-
         <div
             id="message"
             class="message"
         ></div>
 
     </div>
-
-
 
     <!-- ACCOUNT ACTIONS -->
 
@@ -355,14 +343,12 @@ textarea{
             ⚡ My BUYZA
         </h2>
 
-
         <a
             href="my-listings.html"
             class="button"
         >
             📋 My Listings
         </a>
-
 
         <a
             href="favorites.html"
@@ -371,6 +357,12 @@ textarea{
             ❤️ My Favorites
         </a>
 
+        <a
+            href="messages.html"
+            class="button"
+        >
+            ✉️ My Messages
+        </a>
 
         <a
             href="sell.html"
@@ -378,7 +370,6 @@ textarea{
         >
             ➕ Sell a Product
         </a>
-
 
         <button
             class="button logout"
@@ -389,12 +380,9 @@ textarea{
 
     </div>
 
-
 </div>
 
-
 <script>
-
 
 /* SUPABASE */
 
@@ -404,7 +392,6 @@ const SUPABASE_URL =
 const SUPABASE_KEY =
     "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
-
 /* GET LOGIN INFORMATION */
 
 const userData =
@@ -412,7 +399,6 @@ const userData =
 
 const accessToken =
     localStorage.getItem("buyza_access_token");
-
 
 /* CHECK LOGIN */
 
@@ -432,7 +418,6 @@ if(!userData || !accessToken){
     loadProfile(user.id);
 
 }
-
 
 /* LOAD SELLER PROFILE */
 
@@ -455,7 +440,6 @@ async function loadProfile(userId){
                 }
             );
 
-
         if(!response.ok){
 
             console.log(
@@ -465,41 +449,32 @@ async function loadProfile(userId){
             return;
         }
 
-
         const profiles =
             await response.json();
-
 
         if(profiles.length === 0){
 
             return;
         }
 
-
         const profile =
             profiles[0];
-
 
         document.getElementById("fullName").value =
             profile.full_name || "";
 
-
         document.getElementById("phone").value =
             profile.phone || "";
-
 
         document.getElementById("location").value =
             profile.location || "";
 
-
         document.getElementById("bio").value =
             profile.bio || "";
-
 
         updateAvatar(
             profile.full_name
         );
-
 
     }catch(error){
 
@@ -509,7 +484,6 @@ async function loadProfile(userId){
 
 }
 
-
 /* SAVE PROFILE */
 
 async function saveProfile(){
@@ -517,26 +491,20 @@ async function saveProfile(){
     const user =
         JSON.parse(userData);
 
-
     const fullName =
         document.getElementById("fullName").value.trim();
-
 
     const phone =
         document.getElementById("phone").value.trim();
 
-
     const location =
         document.getElementById("location").value.trim();
-
 
     const bio =
         document.getElementById("bio").value.trim();
 
-
     const message =
         document.getElementById("message");
-
 
     if(!fullName){
 
@@ -548,7 +516,6 @@ async function saveProfile(){
 
         return;
     }
-
 
     const profile = {
 
@@ -563,7 +530,6 @@ async function saveProfile(){
         bio:bio
 
     };
-
 
     try{
 
@@ -591,7 +557,6 @@ async function saveProfile(){
                 }
             );
 
-
         if(!response.ok){
 
             const errorText =
@@ -605,16 +570,13 @@ async function saveProfile(){
 
         }
 
-
         message.textContent =
             "✅ Seller profile saved successfully!";
 
         message.style.color =
             "#16803c";
 
-
         updateAvatar(fullName);
-
 
     }catch(error){
 
@@ -630,7 +592,6 @@ async function saveProfile(){
 
 }
 
-
 /* UPDATE AVATAR */
 
 function updateAvatar(name){
@@ -640,17 +601,14 @@ function updateAvatar(name){
         return;
     }
 
-
     const firstLetter =
         name.trim().charAt(0).toUpperCase();
-
 
     document.getElementById("avatar")
         .textContent =
         firstLetter;
 
 }
-
 
 /* LOGOUT */
 
