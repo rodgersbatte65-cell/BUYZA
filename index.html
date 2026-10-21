@@ -39,8 +39,8 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .view-all{color:#ff6500;font-weight:800;border:0;background:none}
 .listing-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sort-label{color:#777;font-size:13px;font-weight:700}
-.sort-select,.price-filter-input{border:1px solid #ddd;border-radius:8px;background:white;color:#333;padding:9px 10px;font-weight:700}
-.price-filter-input{width:125px}
+.sort-select,.filter-input{border:1px solid #ddd;border-radius:8px;background:white;color:#333;padding:9px 10px;font-weight:700}
+.filter-input{width:125px}
 .categories{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
 .category{background:white;border:1px solid #eee;border-radius:16px;padding:22px 10px;text-align:center;transition:.2s;cursor:pointer}
 .category:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.08);border-color:#ff6500}
@@ -158,19 +158,29 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
             <option value="newest">Newest</option>
             <option value="top-rated">Top rated</option>
         </select>
+
         <label class="sort-label" for="ratingFilter">Rating</label>
         <select id="ratingFilter" class="sort-select" onchange="filterProducts()">
             <option value="all">Any rating</option>
             <option value="4">4★ and up</option>
         </select>
+
+        <label class="sort-label" for="locationFilter">Location</label>
+        <input id="locationFilter" class="filter-input" type="text" placeholder="Town / district" aria-label="Filter by location" oninput="filterProducts()">
+
         <label class="sort-label" for="minPriceFilter">Price (UGX)</label>
-        <input id="minPriceFilter" class="price-filter-input" type="number" min="0" placeholder="Min" aria-label="Minimum price" oninput="filterProducts()">
-        <input id="maxPriceFilter" class="price-filter-input" type="number" min="0" placeholder="Max" aria-label="Maximum price" oninput="filterProducts()">
+        <input id="minPriceFilter" class="filter-input" type="number" min="0" placeholder="Min" aria-label="Minimum price" oninput="filterProducts()">
+        <input id="maxPriceFilter" class="filter-input" type="number" min="0" placeholder="Max" aria-label="Maximum price" oninput="filterProducts()">
+
         <button class="view-all" onclick="showAll()">View All →</button>
     </div>
 </div>
+
 <div id="products" class="products">
-    <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
+    <div class="loading">
+        <div class="spinner"></div>
+        Loading BUYZA listings...
+    </div>
 </div>
 </section>
 
@@ -276,7 +286,7 @@ async function loadSellerRatingSummaries(products) {
                 if (!review.seller_id || !Number.isFinite(rating)) return;
 
                 if (!totals[review.seller_id]) {
-                    totals[review.seller_id] = { sum: 0, count: 0 };
+                    totals[review.seller_id] = {sum: 0, count: 0};
                 }
 
                 totals[review.seller_id].sum += rating;
@@ -377,6 +387,12 @@ function filterProducts() {
 
     const minValue = document.getElementById("minPriceFilter").value;
     const maxValue = document.getElementById("maxPriceFilter").value;
+    const locationFilter = document
+        .getElementById("locationFilter")
+        .value
+        .trim()
+        .toLowerCase();
+
     const minPrice = minValue === "" ? null : Number(minValue);
     const maxPrice = maxValue === "" ? null : Number(maxValue);
 
@@ -389,20 +405,31 @@ function filterProducts() {
         ).toLowerCase();
 
         const matchesSearch = text.includes(search);
+
         const matchesCategory =
             !selectedCategory ||
             (product.category || "")
                 .toLowerCase()
                 .includes(selectedCategory.toLowerCase());
 
+        const matchesLocation =
+            !locationFilter ||
+            String(product.location || "")
+                .toLowerCase()
+                .includes(locationFilter);
+
         const price = Number(product.price);
         const matchesMinPrice =
-            minPrice === null || (Number.isFinite(price) && price >= minPrice);
+            minPrice === null ||
+            (Number.isFinite(price) && price >= minPrice);
+
         const matchesMaxPrice =
-            maxPrice === null || (Number.isFinite(price) && price <= maxPrice);
+            maxPrice === null ||
+            (Number.isFinite(price) && price <= maxPrice);
 
         return matchesSearch &&
             matchesCategory &&
+            matchesLocation &&
             matchesMinPrice &&
             matchesMaxPrice;
     });
@@ -430,7 +457,6 @@ function filterProducts() {
 
 function sortProductsByRating(products) {
     const sortOrder = document.getElementById("sortOrder").value;
-
     if (sortOrder !== "top-rated") return products;
 
     return [...products].sort((productA, productB) => {
@@ -457,12 +483,17 @@ function selectCategory(category) {
     selectedCategory = category;
     document.getElementById("searchInput").value = "";
     filterProducts();
-    window.scrollTo({top:650, behavior:"smooth"});
+
+    window.scrollTo({
+        top: 650,
+        behavior: "smooth"
+    });
 }
 
 function showAll() {
     selectedCategory = "";
     document.getElementById("searchInput").value = "";
+    document.getElementById("locationFilter").value = "";
     document.getElementById("minPriceFilter").value = "";
     document.getElementById("maxPriceFilter").value = "";
     filterProducts();
@@ -474,7 +505,9 @@ function viewProduct(id) {
         return;
     }
 
-    window.location.assign("./product.html?id=" + encodeURIComponent(String(id)));
+    window.location.assign(
+        "./product.html?id=" + encodeURIComponent(String(id))
+    );
 }
 
 async function toggleFavorite(event, productId) {
@@ -490,7 +523,6 @@ async function toggleFavorite(event, productId) {
     }
 
     let user;
-
     try {
         user = JSON.parse(userData);
     } catch (error) {
@@ -612,11 +644,11 @@ function formatPrice(price) {
 
 function escapeHTML(value) {
     return String(value)
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 updateAccountButton();
