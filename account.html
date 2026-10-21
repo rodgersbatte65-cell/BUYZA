@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>My Account - BUYZA</title>
+<script src="auth.js"></script>
 
 <style>
 
@@ -165,6 +166,26 @@ textarea{
 
 .button:hover{
     opacity:.9;
+}
+
+.unread-count{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:22px;
+    height:22px;
+    margin-left:8px;
+    padding:0 6px;
+    border-radius:999px;
+    background:#d32f2f;
+    color:white;
+    font-size:12px;
+    font-weight:800;
+    vertical-align:middle;
+}
+
+.unread-count[hidden]{
+    display:none;
 }
 
 .favorite-button{
@@ -362,6 +383,7 @@ textarea{
             class="button"
         >
             ✉️ My Messages
+            <span id="unreadMessagesBadge" class="unread-count" hidden>0</span>
         </a>
 
         <a
@@ -383,14 +405,6 @@ textarea{
 </div>
 
 <script>
-
-/* SUPABASE */
-
-const SUPABASE_URL =
-    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
-
-const SUPABASE_KEY =
-    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 /* GET LOGIN INFORMATION */
 
@@ -416,6 +430,75 @@ if(!userData || !accessToken){
         user.email || "User";
 
     loadProfile(user.id);
+    updateUnreadMessagesCount(user.id);
+
+}
+
+/* SHOW UNREAD MESSAGE COUNT */
+
+async function updateUnreadMessagesCount(userId){
+
+    const badge =
+        document.getElementById("unreadMessagesBadge");
+
+    if(!badge){
+        return;
+    }
+
+    try{
+
+        const token =
+            await getBuyzaAccessToken();
+
+        if(!token){
+            return;
+        }
+
+        const query =
+            new URLSearchParams({
+                select:"id",
+                recipient_id:"eq." + userId,
+                read_at:"is.null"
+            });
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/buyer_messages?" +
+                query.toString(),
+                {
+                    method:"HEAD",
+                    headers:{
+                        "apikey":SUPABASE_KEY,
+                        "Authorization":"Bearer " + token,
+                        "Prefer":"count=exact",
+                        "Range":"0-0"
+                    }
+                }
+            );
+
+        if(!response.ok){
+            console.error("Unread message count could not be loaded.");
+            return;
+        }
+
+        const contentRange =
+            response.headers.get("content-range") || "";
+
+        const unreadCount =
+            Number(contentRange.split("/").pop()) || 0;
+
+        badge.textContent =
+            unreadCount > 99 ? "99+" : String(unreadCount);
+
+        badge.hidden =
+            unreadCount === 0;
+
+    }catch(error){
+
+        console.error("Unread message count failed:", error);
+
+    }
 
 }
 
