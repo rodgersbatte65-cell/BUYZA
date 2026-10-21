@@ -156,6 +156,8 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <label class="sort-label" for="sortOrder">Sort by</label>
         <select id="sortOrder" class="sort-select" onchange="filterProducts()">
             <option value="newest">Newest</option>
+            <option value="price-low">Lowest price</option>
+            <option value="price-high">Highest price</option>
             <option value="top-rated">Top rated</option>
         </select>
 
@@ -177,10 +179,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 </div>
 
 <div id="products" class="products">
-    <div class="loading">
-        <div class="spinner"></div>
-        Loading BUYZA listings...
-    </div>
+    <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
 </div>
 </section>
 
@@ -405,7 +404,6 @@ function filterProducts() {
         ).toLowerCase();
 
         const matchesSearch = text.includes(search);
-
         const matchesCategory =
             !selectedCategory ||
             (product.category || "")
@@ -422,7 +420,6 @@ function filterProducts() {
         const matchesMinPrice =
             minPrice === null ||
             (Number.isFinite(price) && price >= minPrice);
-
         const matchesMaxPrice =
             maxPrice === null ||
             (Number.isFinite(price) && price <= maxPrice);
@@ -452,12 +449,32 @@ function filterProducts() {
         );
     });
 
-    displayProducts(sortProductsByRating(ratingFiltered));
+    displayProducts(sortProducts(ratingFiltered));
 }
 
-function sortProductsByRating(products) {
+function sortProducts(products) {
     const sortOrder = document.getElementById("sortOrder").value;
-    if (sortOrder !== "top-rated") return products;
+
+    if (sortOrder === "price-low" || sortOrder === "price-high") {
+        const direction = sortOrder === "price-low" ? 1 : -1;
+
+        return [...products].sort((productA, productB) => {
+            const priceA = Number(productA.price);
+            const priceB = Number(productB.price);
+            const hasPriceA = Number.isFinite(priceA);
+            const hasPriceB = Number.isFinite(priceB);
+
+            if (hasPriceA && !hasPriceB) return -1;
+            if (!hasPriceA && hasPriceB) return 1;
+            if (!hasPriceA && !hasPriceB) return 0;
+
+            return (priceA - priceB) * direction;
+        });
+    }
+
+    if (sortOrder !== "top-rated") {
+        return products;
+    }
 
     return [...products].sort((productA, productB) => {
         const ratingA = productA.user_id
@@ -496,6 +513,8 @@ function showAll() {
     document.getElementById("locationFilter").value = "";
     document.getElementById("minPriceFilter").value = "";
     document.getElementById("maxPriceFilter").value = "";
+    document.getElementById("ratingFilter").value = "all";
+    document.getElementById("sortOrder").value = "newest";
     filterProducts();
 }
 
