@@ -34,6 +34,9 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .actions{display:grid;gap:12px;margin-top:28px}
 .action-btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer}
 .action-btn:hover{transform:translateY(-1px)}
+.action-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.sold-notice{display:inline-block;margin:0 0 18px;padding:8px 13px;border-radius:999px;background:#555;color:white;font-weight:800;font-size:14px}
+.sold-notice[hidden]{display:none}
 .call-btn{background:#171717;color:white}
 .whatsapp-btn{background:#20c76a;color:white}
 .message-btn{background:#3157a4;color:white}
@@ -154,6 +157,7 @@ footer p{margin-top:8px;color:#aaa}
 <div id="category" class="category"></div>
 <h1 id="productName" class="product-name"></h1>
 <div id="productPrice" class="price"></div>
+<div id="soldNotice" class="sold-notice" hidden>✅ This item has been sold</div>
 <div class="location">📍 <span id="productLocation"></span></div>
 <div class="divider"></div>
 <div class="description-title">Description</div>
@@ -279,6 +283,21 @@ async function loadProduct(){
 }
 
 function displayProduct(product){
+    const isSold = Boolean(product.is_sold);
+    const soldNotice = document.getElementById("soldNotice");
+    soldNotice.hidden = !isSold;
+
+    document.querySelectorAll(
+        ".call-btn, .whatsapp-btn, .message-btn"
+    ).forEach(button => {
+        button.disabled = isSold;
+        if(isSold){
+            button.title = "This listing has been sold.";
+        }else{
+            button.removeAttribute("title");
+        }
+    });
+
     document.title = (product.name || "Product") + " - BUYZA";
     document.getElementById("category").textContent = product.category || "Other";
     document.getElementById("productName").textContent = product.name || "Product";
@@ -941,6 +960,7 @@ function messageSeller(){
     if(user && user.id===currentProduct.user_id){alert("You cannot message yourself about your own listing.");return;}
     window.location.href="messages.html?product_id="+encodeURIComponent(String(currentProduct.id))+"&seller_id="+encodeURIComponent(String(currentProduct.user_id));
 }
+
 function callSeller(){
     if(!currentProduct || !currentProduct.phone){
         alert("Seller phone number is not available.");
