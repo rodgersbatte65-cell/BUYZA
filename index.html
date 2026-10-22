@@ -152,6 +152,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 <section class="section" id="recentlyViewedSection" style="display:none">
 <div class="section-head">
     <div><h2>🕘 Recently Viewed</h2><p>Listings you opened recently</p></div>
+    <button class="view-all" onclick="clearRecentlyViewed()">Clear</button>
 </div>
 <div id="recentlyViewedProducts" class="products"></div>
 </section>
@@ -167,24 +168,19 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
             <option value="price-high">Highest price</option>
             <option value="top-rated">Top rated</option>
         </select>
-
         <label class="sort-label" for="ratingFilter">Rating</label>
         <select id="ratingFilter" class="sort-select" onchange="filterProducts()">
             <option value="all">Any rating</option>
             <option value="4">4★ and up</option>
         </select>
-
         <label class="sort-label" for="locationFilter">Location</label>
         <input id="locationFilter" class="filter-input" type="text" placeholder="Town / district" aria-label="Filter by location" oninput="filterProducts()">
-
         <label class="sort-label" for="minPriceFilter">Price (UGX)</label>
         <input id="minPriceFilter" class="filter-input" type="number" min="0" placeholder="Min" aria-label="Minimum price" oninput="filterProducts()">
         <input id="maxPriceFilter" class="filter-input" type="number" min="0" placeholder="Max" aria-label="Maximum price" oninput="filterProducts()">
-
         <button class="view-all" onclick="showAll()">View All →</button>
     </div>
 </div>
-
 <div id="products" class="products">
     <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
 </div>
@@ -281,6 +277,11 @@ function loadRecentlyViewed() {
         console.error("Could not load recently viewed listings:", error);
         section.style.display = "none";
     }
+}
+
+function clearRecentlyViewed() {
+    localStorage.removeItem("buyza_recently_viewed");
+    document.getElementById("recentlyViewedSection").style.display = "none";
 }
 
 async function loadProducts() {
@@ -417,21 +418,17 @@ function displayProducts(products) {
                             ? `<img src="${image}" alt="${safeName}" loading="lazy">`
                             : `<div class="no-image">📦</div>`
                     }
-
                     <button class="favorite"
                         onclick="toggleFavorite(event, ${product.id})"
                         title="Save product">❤️</button>
-
                     <div class="category-badge">${safeCategory}</div>
                 </div>
-
                 <div class="product-body">
                     <div class="product-name">${safeName}</div>
                     <div class="price">UGX ${formatPrice(product.price)}</div>
                     ${getSellerRatingMarkup(product)}
                     <div class="location">📍 ${safeLocation}</div>
                     <div class="description">${safeDescription}</div>
-
                     <div class="product-actions">
                         <button class="view-btn" onclick="viewProduct(${product.id})">View</button>
                         <button class="contact-btn"
@@ -473,7 +470,6 @@ function filterProducts() {
         ).toLowerCase();
 
         const matchesSearch = text.includes(search);
-
         const matchesCategory =
             !selectedCategory ||
             (product.category || "")
@@ -490,7 +486,6 @@ function filterProducts() {
         const matchesMinPrice =
             minPrice === null ||
             (Number.isFinite(price) && price >= minPrice);
-
         const matchesMaxPrice =
             maxPrice === null ||
             (Number.isFinite(price) && price <= maxPrice);
