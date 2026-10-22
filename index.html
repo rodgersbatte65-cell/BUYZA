@@ -149,6 +149,13 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 </div>
 </section>
 
+<section class="section" id="recentlyViewedSection" style="display:none">
+<div class="section-head">
+    <div><h2>🕘 Recently Viewed</h2><p>Listings you opened recently</p></div>
+</div>
+<div id="recentlyViewedProducts" class="products"></div>
+</section>
+
 <section class="section">
 <div class="section-head">
     <div><h2>🔥 Latest Listings</h2><p>Fresh products added by sellers</p></div>
@@ -213,6 +220,68 @@ const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 let allProducts = [];
 let sellerRatingSummaries = {};
 let selectedCategory = "";
+
+function loadRecentlyViewed() {
+    const section = document.getElementById("recentlyViewedSection");
+    const container = document.getElementById("recentlyViewedProducts");
+
+    try {
+        const items = JSON.parse(
+            localStorage.getItem("buyza_recently_viewed") || "[]"
+        );
+
+        if (!Array.isArray(items) || items.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        const validItems = items
+            .filter(item => item && item.id)
+            .slice(0, 8);
+
+        if (validItems.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        section.style.display = "block";
+
+        container.innerHTML = validItems.map(item => {
+            const name = escapeHTML(item.name || "Product");
+            const location = escapeHTML(item.location || "Uganda");
+            const image = item.image_url
+                ? `<img src="${escapeHTML(item.image_url)}" alt="${name}" loading="lazy">`
+                : `<div class="no-image">📦</div>`;
+
+            return `
+                <div class="product">
+                    <div class="product-image">${image}</div>
+                    <div class="product-body">
+                        <div class="product-name">${name}</div>
+                        <div class="price">UGX ${formatPrice(item.price)}</div>
+                        <div class="location">📍 ${location}</div>
+                        <div class="product-actions">
+                            <button class="view-btn recent-view-button"
+                                data-product-id="${escapeHTML(item.id)}">
+                                View Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        container.querySelectorAll(".recent-view-button").forEach(button => {
+            button.addEventListener("click", () => {
+                viewProduct(button.dataset.productId);
+            });
+        });
+
+    } catch (error) {
+        console.error("Could not load recently viewed listings:", error);
+        section.style.display = "none";
+    }
+}
 
 async function loadProducts() {
     const container = document.getElementById("products");
@@ -404,6 +473,7 @@ function filterProducts() {
         ).toLowerCase();
 
         const matchesSearch = text.includes(search);
+
         const matchesCategory =
             !selectedCategory ||
             (product.category || "")
@@ -420,6 +490,7 @@ function filterProducts() {
         const matchesMinPrice =
             minPrice === null ||
             (Number.isFinite(price) && price >= minPrice);
+
         const matchesMaxPrice =
             maxPrice === null ||
             (Number.isFinite(price) && price <= maxPrice);
@@ -472,9 +543,7 @@ function sortProducts(products) {
         });
     }
 
-    if (sortOrder !== "top-rated") {
-        return products;
-    }
+    if (sortOrder !== "top-rated") return products;
 
     return [...products].sort((productA, productB) => {
         const ratingA = productA.user_id
@@ -670,6 +739,7 @@ function escapeHTML(value) {
         .replace(/'/g, "&#039;");
 }
 
+loadRecentlyViewed();
 updateAccountButton();
 loadProducts();
 </script>
