@@ -266,6 +266,7 @@ async function loadProduct(){
         }
 
         currentProduct = products[0];
+        saveRecentlyViewed(currentProduct);
         displayProduct(currentProduct);
         await updateFavoriteButton();
 
@@ -279,6 +280,34 @@ async function loadProduct(){
     }catch(error){
         console.error(error);
         showError("Something went wrong while loading this product.");
+    }
+}
+
+function saveRecentlyViewed(product){
+    try{
+        const saved = JSON.parse(
+            localStorage.getItem("buyza_recently_viewed") || "[]"
+        );
+
+        const item = {
+            id: String(product.id),
+            name: product.name || "Product",
+            price: product.price,
+            image_url: product.image_url || "",
+            location: product.location || "Uganda"
+        };
+
+        const updated = [
+            item,
+            ...saved.filter(savedItem => String(savedItem.id) !== item.id)
+        ].slice(0, 8);
+
+        localStorage.setItem(
+            "buyza_recently_viewed",
+            JSON.stringify(updated)
+        );
+    }catch(error){
+        console.error("Could not save recently viewed listing:", error);
     }
 }
 
