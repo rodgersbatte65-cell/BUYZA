@@ -59,6 +59,7 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .product-body{padding:16px}
 .product-name{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .price{color:#ff6500;font-size:20px;font-weight:900;margin:8px 0}
+.condition{color:#555;font-size:13px;font-weight:700;margin:-2px 0 9px}
 .seller-rating{color:#c85b00;font-size:12px;font-weight:700;margin:-3px 0 8px}
 .location{color:#777;font-size:13px;margin-bottom:10px}
 .description{color:#666;font-size:13px;line-height:1.4;height:37px;overflow:hidden}
@@ -102,7 +103,6 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 </style>
 </head>
 <body>
-
 <header>
 <div class="nav">
     <div class="logo">BUY<span>ZA</span></div>
@@ -272,7 +272,6 @@ function loadRecentlyViewed() {
                 viewProduct(button.dataset.productId);
             });
         });
-
     } catch (error) {
         console.error("Could not load recently viewed listings:", error);
         section.style.display = "none";
@@ -305,7 +304,6 @@ async function loadProducts() {
         await loadSellerRatingSummaries(allProducts);
         document.getElementById("productCount").textContent = allProducts.length;
         displayProducts(allProducts);
-
     } catch (error) {
         console.error(error);
         container.innerHTML = `
@@ -409,6 +407,9 @@ function displayProducts(products) {
         );
         const safeLocation = escapeHTML(product.location || "Uganda");
         const safeCategory = escapeHTML(product.category || "Other");
+        const safeCondition = escapeHTML(
+            product.condition || "Not specified"
+        );
 
         return `
             <div class="product">
@@ -426,6 +427,7 @@ function displayProducts(products) {
                 <div class="product-body">
                     <div class="product-name">${safeName}</div>
                     <div class="price">UGX ${formatPrice(product.price)}</div>
+                    <div class="condition">Condition: ${safeCondition}</div>
                     ${getSellerRatingMarkup(product)}
                     <div class="location">📍 ${safeLocation}</div>
                     <div class="description">${safeDescription}</div>
