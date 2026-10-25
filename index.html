@@ -168,6 +168,12 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
             <option value="price-high">Highest price</option>
             <option value="top-rated">Top rated</option>
         </select>
+        <label class="sort-label" for="conditionFilter">Condition</label>
+        <select id="conditionFilter" class="sort-select" onchange="filterProducts()">
+            <option value="all">Any condition</option>
+            <option value="new">New</option>
+            <option value="used">Used</option>
+        </select>
         <label class="sort-label" for="ratingFilter">Rating</label>
         <select id="ratingFilter" class="sort-select" onchange="filterProducts()">
             <option value="all">Any rating</option>
@@ -452,6 +458,11 @@ function filterProducts() {
         .toLowerCase()
         .trim();
 
+    const selectedCondition = document
+        .getElementById("conditionFilter")
+        .value
+        .toLowerCase();
+
     const minValue = document.getElementById("minPriceFilter").value;
     const maxValue = document.getElementById("maxPriceFilter").value;
     const locationFilter = document
@@ -484,6 +495,12 @@ function filterProducts() {
                 .toLowerCase()
                 .includes(locationFilter);
 
+        const matchesCondition =
+            selectedCondition === "all" ||
+            String(product.condition || "")
+                .trim()
+                .toLowerCase() === selectedCondition;
+
         const price = Number(product.price);
         const matchesMinPrice =
             minPrice === null ||
@@ -495,6 +512,7 @@ function filterProducts() {
         return matchesSearch &&
             matchesCategory &&
             matchesLocation &&
+            matchesCondition &&
             matchesMinPrice &&
             matchesMaxPrice;
     });
@@ -579,6 +597,7 @@ function showAll() {
     document.getElementById("locationFilter").value = "";
     document.getElementById("minPriceFilter").value = "";
     document.getElementById("maxPriceFilter").value = "";
+    document.getElementById("conditionFilter").value = "all";
     document.getElementById("ratingFilter").value = "all";
     document.getElementById("sortOrder").value = "newest";
     filterProducts();
