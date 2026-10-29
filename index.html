@@ -73,6 +73,11 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .deal p{color:#bbb}
 .deal button{background:#ff6500;color:white;border:0;padding:14px 24px;border-radius:10px;font-weight:800}
 .loading{grid-column:1/-1;text-align:center;padding:60px 20px;color:#777}
+.load-more-wrap{text-align:center;margin:22px 0 5px}
+.load-more-button{border:0;border-radius:10px;background:#ff6500;color:white;padding:13px 24px;font-weight:800;font-size:15px}
+.load-more-button:hover{background:#e95700}
+.load-more-button[hidden],.load-more-wrap[hidden]{display:none}
+.results-count{color:#777;font-size:13px;margin-top:10px}
 .spinner{width:38px;height:38px;border:4px solid #eee;border-top-color:#ff6500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;padding:20px}
@@ -187,8 +192,16 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <button class="view-all" onclick="showAll()">View All →</button>
     </div>
 </div>
+
 <div id="products" class="products">
     <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
+</div>
+
+<div id="loadMoreWrap" class="load-more-wrap" hidden>
+    <button id="loadMoreButton" class="load-more-button" type="button" onclick="loadMoreProducts()">
+        Load More Listings
+    </button>
+    <div id="resultsCount" class="results-count"></div>
 </div>
 </section>
 
@@ -219,9 +232,12 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
+const PAGE_SIZE = 12;
+
 let allProducts = [];
 let sellerRatingSummaries = {};
 let selectedCategory = "";
+let visibleProductLimit = PAGE_SIZE;
 
 function loadRecentlyViewed() {
     const section = document.getElementById("recentlyViewedSection");
@@ -402,10 +418,13 @@ function displayProducts(products) {
                 <p>Try another search or category.</p>
             </div>
         `;
+        document.getElementById("loadMoreWrap").hidden = true;
         return;
     }
 
-    container.innerHTML = products.map(product => {
+    const visibleProducts = products.slice(0, visibleProductLimit);
+
+    container.innerHTML = visibleProducts.map(product => {
         const image = product.image_url;
         const safeName = escapeHTML(product.name || "Product");
         const safeDescription = escapeHTML(
@@ -449,9 +468,22 @@ function displayProducts(products) {
             </div>
         `;
     }).join("");
+
+    const loadMoreWrap = document.getElementById("loadMoreWrap");
+    const loadMoreButton = document.getElementById("loadMoreButton");
+    const resultsCount = document.getElementById("resultsCount");
+
+    loadMoreWrap.hidden = false;
+    loadMoreButton.hidden = visibleProducts.length >= products.length;
+    resultsCount.textContent =
+        "Showing " + visibleProducts.length + " of " + products.length + " listings";
 }
 
-function filterProducts() {
+function filterProducts(resetVisibleCount = true) {
+    if (resetVisibleCount) {
+        visibleProductLimit = PAGE_SIZE;
+    }
+
     const search = document
         .getElementById("searchInput")
         .value
@@ -536,6 +568,11 @@ function filterProducts() {
     });
 
     displayProducts(sortProducts(ratingFiltered));
+}
+
+function loadMoreProducts() {
+    visibleProductLimit += PAGE_SIZE;
+    filterProducts(false);
 }
 
 function sortProducts(products) {
