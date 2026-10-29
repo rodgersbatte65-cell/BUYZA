@@ -22,6 +22,14 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .card{background:white;border-radius:20px;box-shadow:0 5px 25px rgba(0,0,0,.06)}
 .image-card{padding:18px}
 .product-image{width:100%;height:560px;object-fit:contain;background:#f4f5f7;border-radius:16px}
+.gallery-main{position:relative}
+.gallery-main .product-image{display:block}
+.gallery-thumbnails{display:flex;gap:10px;overflow-x:auto;padding:12px 2px 2px}
+.gallery-thumb{width:76px;height:66px;flex:0 0 auto;padding:3px;border:2px solid transparent;border-radius:10px;background:#f2f3f5;cursor:pointer}
+.gallery-thumb.active{border-color:#ff6b00}
+.gallery-thumb img{width:100%;height:100%;object-fit:cover;border-radius:6px}
+.gallery-thumb:focus-visible{outline:3px solid #ff6b00;outline-offset:2px}
+.photo-help{display:block;margin-top:7px;color:#666;font-size:13px}
 .no-image{height:560px;display:flex;align-items:center;justify-content:center;background:#f1f2f4;color:#888;border-radius:16px;font-size:18px}
 .info-card{padding:30px}
 .category{display:inline-block;background:#fff1e8;color:#ff6b00;padding:7px 12px;border-radius:30px;font-size:13px;font-weight:800;margin-bottom:15px}
@@ -369,24 +377,93 @@ function displayProduct(product){
     document.getElementById("productDescription").textContent =
         product.description || "No description provided by the seller.";
 
-    const imageContainer = document.getElementById("imageContainer");
-
-    if(product.image_url){
-        imageContainer.innerHTML = `
-            <img class="product-image"
-                src="${escapeHtml(product.image_url)}"
-                alt="${escapeHtml(product.name || "BUYZA product")}"
-                onerror="this.style.display='none'; document.getElementById('imageFallback').style.display='flex';">
-            <div id="imageFallback" class="no-image" style="display:none;">
-                No image available
-            </div>
-        `;
-    }else{
-        imageContainer.innerHTML = `<div class="no-image">No image available</div>`;
-    }
+    renderProductGallery(product);
 
     document.getElementById("loading").style.display = "none";
     document.getElementById("productContent").style.display = "block";
+}
+
+function getProductImages(product){
+    let images = [];
+    if(Array.isArray(product.image_urls)){
+        images = product.image_urls;
+    }else if(typeof product.image_urls === "string"){
+        try{
+            const parsed = JSON.parse(product.image_urls);
+            if(Array.isArray(parsed)) images = parsed;
+        }catch(error){
+            images = [];
+        }
+    }
+
+    if(product.image_url) images.push(product.image_url);
+
+    return [...new Set(images)]
+        .filter(url => typeof url === "string" && /^https?:\/\//i.test(url))
+        .slice(0,5);
+}
+
+function renderProductGallery(product){
+    const container = document.getElementById("imageContainer");
+    const images = getProductImages(product);
+    container.innerHTML = "";
+
+    if(!images.length){
+        const fallback = document.createElement("div");
+        fallback.className = "no-image";
+        fallback.textContent = "No image available";
+        container.appendChild(fallback);
+        return;
+    }
+
+    const mainWrap = document.createElement("div");
+    mainWrap.className = "gallery-main";
+    const mainImage = document.createElement("img");
+    mainImage.className = "product-image";
+    mainImage.alt = (product.name || "BUYZA product") + " photo 1";
+    mainImage.src = images[0];
+    mainImage.onerror = () => {
+        mainImage.style.display = "none";
+        const fallback = document.createElement("div");
+        fallback.className = "no-image";
+        fallback.textContent = "No image available";
+        mainWrap.appendChild(fallback);
+    };
+    mainWrap.appendChild(mainImage);
+    container.appendChild(mainWrap);
+
+    if(images.length > 1){
+        const thumbnails = document.createElement("div");
+        thumbnails.className = "gallery-thumbnails";
+        thumbnails.setAttribute("aria-label","Product photos");
+
+        images.forEach((url,index) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "gallery-thumb" + (index === 0 ? " active" : "");
+            button.setAttribute("aria-label","Show photo " + (index + 1));
+            button.setAttribute("aria-pressed",index === 0 ? "true" : "false");
+
+            const thumbnail = document.createElement("img");
+            thumbnail.src = url;
+            thumbnail.alt = "";
+            button.appendChild(thumbnail);
+
+            button.addEventListener("click",() => {
+                mainImage.src = url;
+                mainImage.alt = (product.name || "BUYZA product") + " photo " + (index + 1);
+                mainImage.style.display = "block";
+                mainWrap.querySelectorAll(".no-image").forEach(node => node.remove());
+                thumbnails.querySelectorAll(".gallery-thumb").forEach((item,itemIndex) => {
+                    item.classList.toggle("active",itemIndex === index);
+                    item.setAttribute("aria-pressed",itemIndex === index ? "true" : "false");
+                });
+            });
+
+            thumbnails.appendChild(button);
+        });
+        container.appendChild(thumbnails);
+    }
 }
 
 async function loadSellerProfile(sellerId){
