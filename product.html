@@ -101,6 +101,14 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .submit-review-report{background:#ff6b00;color:white}
 .cancel-review-report{background:#eee;color:#333}
 .report-success{color:#387448;font-size:13px}
+.product-report{margin-top:12px;padding-top:12px;border-top:1px solid #eee}
+.product-report-form{display:grid;gap:9px;margin-top:10px}
+.product-report-form select,.product-report-form textarea{width:100%;padding:11px;border:1px solid #ddd;border-radius:9px;font:inherit}
+.product-report-form textarea{min-height:85px;resize:vertical}
+.product-report-form button{padding:10px 13px;border:0;border-radius:9px;cursor:pointer;font-weight:700}
+.product-report-submit{background:#b42318;color:white}
+.product-report-cancel{background:#eee;color:#333}
+.product-report-message{margin-top:9px;color:#387448;font-size:14px;line-height:1.5}
 .safety-card{margin-top:20px;padding:22px;background:#fffaf6;border:1px solid #ffe3d0;border-radius:20px}
 .safety-title{color:#ff6b00;font-size:18px;font-weight:800;margin-bottom:12px}
 .safety-card ul{padding-left:20px;color:#555;line-height:1.8}
@@ -170,6 +178,27 @@ footer p{margin-top:8px;color:#aaa}
 <button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
 <button class="action-btn message-btn" onclick="messageSeller()">✉️ Message Seller</button>
 <button class="action-btn share-btn" onclick="shareProduct()">📤 Share Product</button>
+<button class="action-btn" style="background:#fff1f1;color:#a11" type="button" onclick="toggleProductReport()">🚩 Report Listing</button>
+<div id="productReportBox" class="product-report" hidden>
+    <form id="productReportForm" class="product-report-form">
+        <label for="productReportReason"><strong>Why are you reporting this listing?</strong></label>
+        <select id="productReportReason" required>
+            <option value="">Choose a reason</option>
+            <option value="scam">Possible scam or fraud</option>
+            <option value="misleading">False or misleading information</option>
+            <option value="prohibited">Prohibited or unsafe item</option>
+            <option value="duplicate">Duplicate listing</option>
+            <option value="other">Other</option>
+        </select>
+        <label for="productReportDetails">More details (optional)</label>
+        <textarea id="productReportDetails" maxlength="1000" placeholder="Tell us what seems wrong"></textarea>
+        <div>
+            <button class="product-report-submit" type="submit">Submit report</button>
+            <button class="product-report-cancel" type="button" onclick="toggleProductReport(false)">Cancel</button>
+        </div>
+    </form>
+    <div id="productReportMessage" class="product-report-message" role="status"></div>
+</div>
 </div>
 </div>
 
@@ -993,6 +1022,108 @@ function messageSeller(){
     if(user && user.id===currentProduct.user_id){alert("You cannot message yourself about your own listing.");return;}
     window.location.href="messages.html?product_id="+encodeURIComponent(String(currentProduct.id))+"&seller_id="+encodeURIComponent(String(currentProduct.user_id));
 }
+
+function toggleProductReport(forceOpen){
+    const box = document.getElementById("productReportBox");
+    const userData = localStorage.getItem("buyza_user");
+    const token = localStorage.getItem("buyza_access_token");
+
+    if(forceOpen === false){
+        box.hidden = true;
+        return;
+    }
+    if(!token || !userData){
+        alert("Please log in to report a listing.");
+        window.location.href = "login.html";
+        return;
+    }
+    try{
+        const user = JSON.parse(userData);
+        if(currentProduct && user.id === currentProduct.user_id){
+            alert("You cannot report your own listing.");
+            return;
+        }
+    }catch(error){
+        alert("Please log in again to report a listing.");
+        return;
+    }
+    box.hidden = !box.hidden;
+}
+
+async function submitProductReport(event){
+    event.preventDefault();
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+    const message = document.getElementById("productReportMessage");
+    const submitButton = document.querySelector(".product-report-submit");
+
+    if(!token || !userData){
+        alert("Please log in to report a listing.");
+        window.location.href = "login.html";
+        return;
+    }
+    let user;
+    try{
+        user = JSON.parse(userData);
+    }catch(error){
+        alert("Please log in again to report a listing.");
+        return;
+    }
+    if(!currentProduct || !currentProduct.id){
+        alert("The listing is still loading. Please try again.");
+        return;
+    }
+    if(user.id === currentProduct.user_id){
+        alert("You cannot report your own listing.");
+        return;
+    }
+
+    const reason = document.getElementById("productReportReason").value;
+    const details = document.getElementById("productReportDetails").value.trim();
+    if(!reason){
+        alert("Please choose a reason.");
+        return;
+    }
+
+    submitButton.disabled = true;
+    message.textContent = "Submitting report...";
+    try{
+        const response = await fetch(SUPABASE_URL + "/rest/v1/product_reports",{
+            method:"POST",
+            headers:{
+                "apikey":SUPABASE_KEY,
+                "Authorization":"Bearer " + token,
+                "Content-Type":"application/json",
+                "Prefer":"return=minimal"
+            },
+            body:JSON.stringify({
+                product_id:Number(currentProduct.id),
+                product_name:currentProduct.name || "BUYZA listing",
+                reporter_id:user.id,
+                reason:reason,
+                details:details || null
+            })
+        });
+        if(response.status === 409){
+            message.textContent = "You have already reported this listing.";
+            return;
+        }
+        if(!response.ok){
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error("The report could not be submitted.");
+        }
+        document.getElementById("productReportForm").hidden = true;
+        message.textContent = "Thank you. Your report was sent to BUYZA for review.";
+    }catch(error){
+        console.error(error);
+        message.textContent = error.message || "Unable to submit report. Please try again.";
+    }finally{
+        submitButton.disabled = false;
+    }
+}
+
+document.getElementById("productReportForm").addEventListener("submit",submitProductReport);
 
 function callSeller(){
     if(!currentProduct || !currentProduct.phone){
