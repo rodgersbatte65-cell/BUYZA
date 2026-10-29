@@ -198,13 +198,16 @@
                 required
             ></textarea>
 
-            <label for="image">Product Image</label>
+            <label for="image">Product Photos (up to 5)</label>
             <input
                 type="file"
                 id="image"
                 accept="image/*"
+                multiple
                 required
             >
+            <small class="photo-help">Choose 1 to 5 photos. The first photo will be the main listing image. Each photo must be 5 MB or smaller.</small>
+            <div id="imageSelectionMessage" class="photo-help" aria-live="polite"></div>
 
             <button type="submit" id="submitButton">
                 🚀 Post Product
@@ -327,51 +330,50 @@ document.getElementById("sellForm").addEventListener(
             const description =
                 document.getElementById("description").value.trim();
 
-            const imageInput =
-                document.getElementById("image");
+            const imageInput = document.getElementById("image");
+            const imageFiles = Array.from(imageInput.files || []);
 
-            const imageFile =
-                imageInput.files[0];
-
-            if (!imageFile) {
-                throw new Error("Please choose a product image.");
+            if (imageFiles.length < 1 || imageFiles.length > 5) {
+                throw new Error("Please choose between 1 and 5 photos.");
+            }
+            if (imageFiles.some(file => !file.type.startsWith("image/"))) {
+                throw new Error("Please choose image files only.");
+            }
+            if (imageFiles.some(file => file.size > 5 * 1024 * 1024)) {
+                throw new Error("Each photo must be 5 MB or smaller.");
             }
 
-            const fileExtension =
-                imageFile.name.split(".").pop();
+            const imageUrls = [];
+            for (let index = 0; index < imageFiles.length; index++) {
+                const imageFile = imageFiles[index];
+                const extension = (imageFile.name.split(".").pop() || "jpg")
+                    .replace(/[^a-z0-9]/gi, "").toLowerCase() || "jpg";
+                const fileName = currentUser.id + "_" + Date.now() + "_" +
+                    index + "." + extension;
 
-            const fileName =
-                currentUser.id +
-                "_" +
-                Date.now() +
-                "." +
-                fileExtension;
+                const uploadResponse = await fetch(
+                    SUPABASE_URL + "/storage/v1/object/product-images/" + fileName,
+                    {
+                        method: "POST",
+                        headers: {
+                            "apikey": SUPABASE_KEY,
+                            "Authorization": "Bearer " + accessToken,
+                            "Content-Type": imageFile.type || "application/octet-stream"
+                        },
+                        body: imageFile
+                    }
+                );
 
-            const uploadResponse = await fetch(
-                SUPABASE_URL +
-                "/storage/v1/object/product-images/" +
-                fileName,
-                {
-                    method: "POST",
-                    headers: {
-                        "apikey": SUPABASE_KEY,
-                        "Authorization": "Bearer " + accessToken,
-                        "Content-Type":
-                            imageFile.type || "application/octet-stream"
-                    },
-                    body: imageFile
+                if (!uploadResponse.ok) {
+                    const error = await uploadResponse.text();
+                    throw new Error("Photo upload failed: " + error);
                 }
-            );
 
-            if (!uploadResponse.ok) {
-                const error = await uploadResponse.text();
-                throw new Error("Image upload failed: " + error);
+                imageUrls.push(
+                    SUPABASE_URL + "/storage/v1/object/public/product-images/" +
+                    fileName
+                );
             }
-
-            const imageUrl =
-                SUPABASE_URL +
-                "/storage/v1/object/public/product-images/" +
-                fileName;
 
             const productResponse = await fetch(
                 SUPABASE_URL + "/rest/v1/products",
@@ -391,7 +393,8 @@ document.getElementById("sellForm").addEventListener(
                         location: location,
                         phone: phone,
                         description: description,
-                        image_url: imageUrl,
+                        image_url: imageUrls[0],
+                        image_urls: imageUrls,
                         user_id: currentUser.id
                     })
                 }
@@ -423,6 +426,21 @@ document.getElementById("sellForm").addEventListener(
         }
     }
 );
+
+document.getElementById("image").addEventListener("change", function() {
+    const files = Array.from(this.files || []);
+    const message = document.getElementById("imageSelectionMessage");
+    if(files.length > 5){
+        message.style.color = "#d32f2f";
+        message.textContent = "Choose no more than 5 photos.";
+        this.value = "";
+        return;
+    }
+    message.style.color = "#666";
+    message.textContent = files.length
+        ? files.length + " photo" + (files.length === 1 ? "" : "s") + " selected."
+        : "";
+});
 
 function escapeHtml(value) {
     return String(value)
