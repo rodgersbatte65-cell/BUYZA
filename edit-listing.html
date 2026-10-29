@@ -77,6 +77,12 @@
             resize: vertical;
         }
 
+        .photo-help {
+            display:block;
+            margin-top:7px;
+            color:#666;
+            font-size:13px;
+        }
         .current-image {
             width: 100%;
             max-height: 300px;
@@ -207,15 +213,16 @@
                 alt="Current product image"
             >
 
-            <label>
-                Replace Image
-                <small>(optional)</small>
+            <label for="image">
+                Replace listing photos <small>(optional)</small>
             </label>
             <input
                 type="file"
                 id="image"
                 accept="image/*"
+                multiple
             >
+            <small class="photo-help">Choose 1 to 5 photos to replace the current set, or leave empty to keep the current photos. Each photo must be 5 MB or smaller.</small>
 
             <button
                 type="submit"
@@ -373,42 +380,58 @@ document.getElementById("editForm").addEventListener(
                 document.getElementById("description").value.trim();
 
             const imageInput = document.getElementById("image");
-            const newImage = imageInput.files[0];
-            let imageUrl = currentProduct.image_url;
+            const newImages = Array.from(imageInput.files || []);
+            let imageUrls = Array.isArray(currentProduct.image_urls)
+                ? currentProduct.image_urls.slice(0,5)
+                : [];
+            if(!imageUrls.length && currentProduct.image_url){
+                imageUrls = [currentProduct.image_url];
+            }
 
-            if (newImage) {
-                const extension = newImage.name.split(".").pop();
-                const fileName =
-                    currentUser.id + "_" + Date.now() + "." + extension;
+            if(newImages.length > 5){
+                throw new Error("Choose no more than 5 photos.");
+            }
+            if(newImages.some(file => !file.type.startsWith("image/"))){
+                throw new Error("Please choose image files only.");
+            }
+            if(newImages.some(file => file.size > 5 * 1024 * 1024)){
+                throw new Error("Each photo must be 5 MB or smaller.");
+            }
 
-                const uploadResponse = await fetch(
-                    SUPABASE_URL +
-                    "/storage/v1/object/product-images/" +
-                    fileName,
-                    {
-                        method: "POST",
-                        headers: {
-                            "apikey": SUPABASE_KEY,
-                            "Authorization": "Bearer " + accessToken,
-                            "Content-Type":
-                                newImage.type || "application/octet-stream"
-                        },
-                        body: newImage
+            if(newImages.length){
+                imageUrls = [];
+                for(let index = 0; index < newImages.length; index++){
+                    const imageFile = newImages[index];
+                    const extension = (imageFile.name.split(".").pop() || "jpg")
+                        .replace(/[^a-z0-9]/gi, "").toLowerCase() || "jpg";
+                    const fileName = currentUser.id + "_" + Date.now() + "_" +
+                        index + "." + extension;
+                    const uploadResponse = await fetch(
+                        SUPABASE_URL + "/storage/v1/object/product-images/" +
+                        fileName,
+                        {
+                            method:"POST",
+                            headers:{
+                                "apikey":SUPABASE_KEY,
+                                "Authorization":"Bearer " + accessToken,
+                                "Content-Type":imageFile.type || "application/octet-stream"
+                            },
+                            body:imageFile
+                        }
+                    );
+                    if(!uploadResponse.ok){
+                        throw new Error(
+                            "Photo upload failed: " + await uploadResponse.text()
+                        );
                     }
-                );
-
-                if (!uploadResponse.ok) {
-                    throw new Error(
-                        "Image upload failed: " +
-                        await uploadResponse.text()
+                    imageUrls.push(
+                        SUPABASE_URL +
+                        "/storage/v1/object/public/product-images/" +
+                        fileName
                     );
                 }
-
-                imageUrl =
-                    SUPABASE_URL +
-                    "/storage/v1/object/public/product-images/" +
-                    fileName;
             }
+            const imageUrl = imageUrls[0] || currentProduct.image_url || null;
 
             const updateResponse = await fetch(
                 SUPABASE_URL +
@@ -432,7 +455,8 @@ document.getElementById("editForm").addEventListener(
                         location: location,
                         phone: phone,
                         description: description,
-                        image_url: imageUrl
+                        image_url: imageUrl,
+                        image_urls: imageUrls
                     })
                 }
             );
