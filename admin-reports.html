@@ -59,6 +59,11 @@ h1{margin:0 0 8px}
     </div>
     <div id="message" class="message">Loading reports...</div>
     <section id="reportsList" aria-live="polite"></section>
+
+    <h1 style="margin-top:38px">Listing reports</h1>
+    <p class="intro">Reports buyers submitted about product listings.</p>
+    <div id="listingReportsMessage" class="message">Loading listing reports...</div>
+    <section id="listingReportsList" aria-live="polite"></section>
 </main>
 
 <script>
@@ -66,7 +71,10 @@ const reportsList = document.getElementById("reportsList");
 const messageBox = document.getElementById("message");
 const statusFilter = document.getElementById("statusFilter");
 const refreshButton = document.getElementById("refreshButton");
+const listingReportsList = document.getElementById("listingReportsList");
+const listingReportsMessage = document.getElementById("listingReportsMessage");
 let reports = [];
+let listingReports = [];
 
 function escapeHtml(value){
     return String(value ?? "")
@@ -124,6 +132,7 @@ async function loadReports(){
 
         reports = await response.json();
         renderReports();
+        await loadListingReports(token);
     }catch(error){
         console.error(error);
         reportsList.innerHTML = "";
@@ -131,6 +140,119 @@ async function loadReports(){
         messageBox.textContent = error.message || "Unable to load reports.";
     }finally{
         refreshButton.disabled = false;
+    }
+}
+
+async function loadListingReports(token){
+    listingReportsList.innerHTML = "";
+    listingReportsMessage.hidden = false;
+    listingReportsMessage.textContent = "Loading listing reports...";
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/admin_list_product_reports",
+            {
+                method:"POST",
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":"Bearer " + token,
+                    "Content-Type":"application/json"
+                },
+                body:"{}"
+            }
+        );
+        if(!response.ok){
+            const errorText = await response.text();
+            console.error(errorText);
+            throw new Error("Could not load listing reports (HTTP " + response.status + ").");
+        }
+        listingReports = await response.json();
+        renderListingReports();
+    }catch(error){
+        listingReportsMessage.hidden = false;
+        listingReportsMessage.textContent = error.message || "Unable to load listing reports.";
+    }
+}
+
+function renderListingReports(){
+    const selectedStatus = statusFilter.value;
+    const visible = listingReports.filter(report =>
+        selectedStatus === "all" || report.status === selectedStatus
+    );
+    listingReportsList.innerHTML = "";
+    if(!visible.length){
+        listingReportsMessage.hidden = false;
+        listingReportsMessage.textContent = "No listing reports match this filter.";
+        return;
+    }
+    listingReportsMessage.hidden = true;
+    visible.forEach(report => {
+        const link = report.product_id
+            ? ` <a href="product.html?id=${encodeURIComponent(report.product_id)}" target="_blank" rel="noopener">Open listing</a>`
+            : "";
+        const date = report.reported_at
+            ? new Date(report.reported_at).toLocaleString()
+            : "Date unavailable";
+        const card = document.createElement("article");
+        card.className = "report-card";
+        card.innerHTML = `
+            <div class="report-top">
+                <div>
+                    <div class="reason">${escapeHtml(report.reason || "Unspecified reason")}</div>
+                    <div class="meta">Report #${escapeHtml(report.report_id)} · ${escapeHtml(date)}${link}</div>
+                </div>
+                <span class="status ${escapeHtml(report.status)}">${escapeHtml(report.status)}</span>
+            </div>
+            <div class="review-text"><strong>Listing:</strong> ${escapeHtml(report.product_name || "Listing unavailable")}</div>
+            <div class="meta"><strong>Report details</strong></div>
+            <div class="report-details">${escapeHtml(report.details || "No additional details provided.")}</div>
+            <div class="report-actions">
+                <button type="button" class="mark-reviewed" data-report-id="${escapeHtml(report.report_id)}" data-status="reviewed">Mark reviewed</button>
+                <button type="button" class="mark-dismissed" data-report-id="${escapeHtml(report.report_id)}" data-status="dismissed">Dismiss report</button>
+                <button type="button" data-report-id="${escapeHtml(report.report_id)}" data-status="pending">Return to pending</button>
+            </div>
+        `;
+        listingReportsList.appendChild(card);
+    });
+    listingReportsList.querySelectorAll(".report-actions button").forEach(button => {
+        button.addEventListener("click", () =>
+            updateListingReportStatus(button.dataset.reportId,button.dataset.status,button)
+        );
+    });
+}
+
+async function updateListingReportStatus(reportId,status,button){
+    const token = await getAccessToken();
+    if(!token){
+        listingReportsMessage.hidden = false;
+        listingReportsMessage.textContent = "Please log in again to update a report.";
+        return;
+    }
+    button.disabled = true;
+    try{
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/rpc/admin_update_product_report",
+            {
+                method:"POST",
+                headers:{
+                    "apikey":SUPABASE_KEY,
+                    "Authorization":"Bearer " + token,
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({p_report_id:Number(reportId),p_status:status})
+            }
+        );
+        if(!response.ok){
+            const errorText=await response.text();
+            console.error(errorText);
+            throw new Error("Could not update the listing report.");
+        }
+        const report=listingReports.find(item => String(item.report_id)===String(reportId));
+        if(report) report.status=status;
+        renderListingReports();
+    }catch(error){
+        listingReportsMessage.hidden=false;
+        listingReportsMessage.textContent=error.message || "Unable to update the listing report.";
+        button.disabled=false;
     }
 }
 
@@ -319,7 +441,10 @@ async function updateReportStatus(reportId, status, button){
 }
 
 refreshButton.addEventListener("click", loadReports);
-statusFilter.addEventListener("change", renderReports);
+statusFilter.addEventListener("change", () => {
+    renderReports();
+    renderListingReports();
+});
 loadReports();
 </script>
 </body>
