@@ -153,7 +153,7 @@
             id="editForm"
             style="display:none;"
         >
-            <label>Product Name</label>
+            <label>Listing Title</label>
             <input
                 type="text"
                 id="name"
@@ -172,6 +172,7 @@
                 <option value="">Not specified</option>
                 <option value="New">New</option>
                 <option value="Used">Used</option>
+                <option value="Not applicable">Not applicable</option>
             </select>
 
             <label>Category</label>
@@ -183,6 +184,7 @@
                 <option value="Electronics">Electronics</option>
                 <option value="Home & Garden">Home & Garden</option>
                 <option value="Jobs">Jobs</option>
+                <option value="Services">Services</option>
                 <option value="Other">Other</option>
             </select>
 
@@ -251,6 +253,14 @@ const productId = params.get("id");
 
 let currentProduct = null;
 let currentUser = null;
+
+function syncEditServiceCondition(){
+    const isService = document.getElementById("category").value === "Services";
+    const condition = document.getElementById("condition");
+    if(isService) condition.value = "Not applicable";
+    condition.disabled = isService;
+}
+document.getElementById("category").addEventListener("change", syncEditServiceCondition);
 
 async function startEditPage() {
     const userData = localStorage.getItem("buyza_user");
@@ -324,6 +334,7 @@ async function loadProduct() {
 
         document.getElementById("category").value =
             currentProduct.category || "";
+        syncEditServiceCondition();
 
         document.getElementById("location").value =
             currentProduct.location || "";
@@ -494,3 +505,4 @@ startEditPage();
 
 </body>
 </html>
+
