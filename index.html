@@ -152,6 +152,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <div class="category" onclick="selectCategory('Electronics')"><div class="category-icon">💻</div><strong>Electronics</strong></div>
     <div class="category" onclick="selectCategory('Furniture')"><div class="category-icon">🛋️</div><strong>Home</strong></div>
     <div class="category" onclick="selectCategory('Jobs')"><div class="category-icon">💼</div><strong>Jobs</strong></div>
+    <div class="category" onclick="selectCategory('Services')"><div class="category-icon">🧹</div><strong>Services</strong></div>
 </div>
 </section>
 
@@ -451,7 +452,7 @@ function displayProducts(products) {
                 <div class="product-body">
                     <div class="product-name">${safeName}</div>
                     <div class="price">UGX ${formatPrice(product.price)}</div>
-                    <div class="condition">Condition: ${safeCondition}</div>
+                    <div class="condition" ${String(product.category || "").trim().toLowerCase() === "services" ? "hidden" : ""}>Condition: ${safeCondition}</div>
                     ${getSellerRatingMarkup(product)}
                     <div class="location">📍 ${safeLocation}</div>
                     <div class="description">${safeDescription}</div>
@@ -797,4 +798,5 @@ loadProducts();
 
 </body>
 </html>
+
 
