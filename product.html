@@ -76,6 +76,8 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .seller-box{display:flex;align-items:center;gap:15px}
 .seller-avatar{width:60px;height:60px;min-width:60px;border-radius:50%;background:#ff6b00;color:white;display:flex;align-items:center;justify-content:center;font-size:25px;font-weight:900}
 .seller-name{font-size:18px;font-weight:800;margin-bottom:6px}
+.seller-name-link{display:inline-block;color:#222;text-decoration:none}
+.seller-name-link:hover{color:#ff6b00;text-decoration:underline}
 .seller-status{color:#777;font-size:14px}
 .seller-details{margin-top:20px;border-top:1px solid #eee;padding-top:18px}
 .seller-detail{display:flex;gap:10px;margin-bottom:12px;color:#555;line-height:1.5}
@@ -235,7 +237,7 @@ footer p{margin-top:8px;color:#aaa}
 <div class="seller-box">
 <div id="sellerAvatar" class="seller-avatar">B</div>
 <div>
-<div id="sellerName" class="seller-name">BUYZA Seller</div>
+<a id="sellerName" class="seller-name seller-name-link">BUYZA Seller</a>
 <div id="sellerStatus" class="seller-status">Loading seller profile...</div>
 </div>
 </div>
@@ -608,7 +610,10 @@ function displaySellerProfile(profile){
     const location = profile.location || currentProduct.location || "Uganda";
     const phone = profile.phone || currentProduct.phone || "";
 
-    document.getElementById("sellerName").textContent = name;
+    const sellerName = document.getElementById("sellerName");
+    sellerName.textContent = name;
+    sellerName.href = "seller-store.html?id=" +
+        encodeURIComponent(String(currentProduct.user_id));
     document.getElementById("sellerStatus").textContent = "BUYZA Seller";
     document.getElementById("sellerAvatar").textContent =
         name.trim().charAt(0).toUpperCase() || "B";
@@ -640,7 +645,14 @@ function displaySellerProfile(profile){
 }
 
 function showDefaultSeller(){
-    document.getElementById("sellerName").textContent = "BUYZA Seller";
+    const sellerName = document.getElementById("sellerName");
+    sellerName.textContent = "BUYZA Seller";
+    if(currentProduct && currentProduct.user_id){
+        sellerName.href = "seller-store.html?id=" +
+            encodeURIComponent(String(currentProduct.user_id));
+    }else{
+        sellerName.removeAttribute("href");
+    }
     document.getElementById("sellerStatus").textContent =
         "Contact the seller directly about this listing.";
     document.getElementById("sellerDetails").innerHTML = `
