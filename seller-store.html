@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seller Store - BUYZA</title><script src="auth.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f7f9;color:#222;font-family:Arial,Helvetica,sans-serif}
+header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-index:1000}
+.header-inner{max-width:1100px;margin:auto;padding:15px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo{color:#ff6b00;font-weight:900;font-size:28px;text-decoration:none}.nav{display:flex;gap:8px}
+.nav a{text-decoration:none;color:#333;font-weight:700;padding:9px 12px;border-radius:9px}.nav a:hover{background:#fff1e8;color:#ff6b00}
+main{max-width:1100px;margin:28px auto;padding:0 18px}.card{background:white;border-radius:18px;padding:22px;box-shadow:0 4px 20px rgba(0,0,0,.06);margin-bottom:20px}
+.back{display:inline-block;margin-bottom:15px;color:#555;text-decoration:none;font-weight:700}.back:hover{color:#ff6b00}
+.profile{display:flex;align-items:center;gap:18px}.avatar{width:76px;height:76px;flex:0 0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#ff6b00;color:white;font-size:30px;font-weight:900}
+.name{margin:0 0 6px;font-size:27px}.muted{color:#777;line-height:1.55}.bio{margin-top:16px;line-height:1.65;color:#555;white-space:pre-wrap}
+.stats{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}.stat{background:#fff7f1;padding:11px 14px;border-radius:11px;color:#555}.stat strong{color:#ff6b00}
+.contact{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.contact a{display:inline-block;text-decoration:none;padding:10px 14px;border-radius:9px;background:#171717;color:white;font-weight:700}.contact a.whatsapp{background:#20c76a}
+.section-title{font-size:22px;margin:0 0 16px}.rating-summary{display:flex;align-items:center;gap:14px;background:#fff8f3;border-radius:12px;padding:15px}
+.rating-number{font-size:34px;color:#ff6b00;font-weight:900}.stars{color:#ff6b00;font-size:21px;letter-spacing:2px}
+.review{border-top:1px solid #eee;padding:15px 0 0;margin-top:15px}.review-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.review-date{font-size:12px;color:#999;margin-top:3px}.review-text{margin-top:8px;color:#555;line-height:1.55;white-space:pre-wrap}
+.seller-response{margin-top:10px;padding:11px;background:#fff8f3;border-left:3px solid #ff6b00;border-radius:7px;color:#555;line-height:1.5}
+.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.product-card{min-width:0;overflow:hidden;background:white;border:1px solid #eee;border-radius:14px;text-decoration:none;color:inherit;transition:transform .15s,box-shadow .15s}
+.product-card:hover{transform:translateY(-2px);box-shadow:0 5px 18px rgba(0,0,0,.09)}
+.product-image{width:100%;height:200px;display:block;object-fit:cover;background:#f0f1f3}.image-placeholder{width:100%;height:200px;display:flex;align-items:center;justify-content:center;background:#f0f1f3;color:#888}
+.product-info{padding:14px}.category{font-size:12px;color:#777;margin-bottom:7px}.product-name{font-size:16px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.price{margin-top:8px;color:#ff6b00;font-size:19px;font-weight:900}.product-location{margin-top:6px;color:#777;font-size:13px}
+.condition{display:inline-block;margin-top:9px;padding:5px 9px;background:#f1f2f4;border-radius:999px;color:#555;font-size:12px}
+.sold{display:inline-block;margin-left:6px;padding:5px 8px;background:#555;color:white;border-radius:999px;font-size:11px;font-weight:800}
+.empty,.loading,.error{padding:24px;text-align:center;background:white;border-radius:13px;color:#777}.error{color:#a11}
+footer{margin-top:50px;padding:30px 15px;background:#171717;color:white;text-align:center}footer strong{color:#ff6b00;font-size:22px}footer p{color:#aaa;margin:8px 0 0}
+@media(max-width:760px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.product-image,.image-placeholder{height:170px}}
+@media(max-width:520px){.header-inner{padding:12px}.logo{font-size:24px}.nav{gap:2px}.nav a{font-size:12px;padding:7px}.profile{align-items:flex-start}.avatar{width:60px;height:60px;font-size:24px}.name{font-size:22px}.card{padding:16px}.products{gap:10px}.product-info{padding:11px}.product-image,.image-placeholder{height:140px}}
+</style></head>
+<body>
+<header><div class="header-inner"><a class="logo" href="index.html">BUYZA</a><nav class="nav"><a href="index.html">Home</a><a href="account.html">Account</a><a href="sell.html">Sell</a></nav></div></header>
+<main>
+<a href="javascript:history.back()" class="back">← Back</a>
+<div id="loading" class="loading">Loading seller store...</div>
+<section id="storeContent" hidden>
+<section class="card">
+<div class="profile"><div id="sellerAvatar" class="avatar">B</div><div><h1 id="sellerName" class="name">BUYZA Seller</h1><div id="sellerLocation" class="muted">Uganda</div><div class="muted">BUYZA Seller</div></div></div>
+<div id="sellerBio" class="bio" hidden></div><div id="sellerContact" class="contact"></div>
+<div class="stats"><div class="stat">⭐ <strong id="sellerRating">0.0</strong> <span id="sellerReviewCount">No reviews yet</span></div><div class="stat">🛍️ <strong id="sellerProductCount">0</strong> listings</div></div>
+</section>
+<section class="card"><h2 class="section-title">Seller ratings &amp; reviews</h2>
+<div id="ratingSummary" class="rating-summary"><div class="rating-number">0.0</div><div><div class="stars">☆☆☆☆☆</div><div class="muted">Loading reviews...</div></div></div><div id="reviewsList"></div></section>
+<section class="card"><h2 class="section-title">Listings from this seller</h2><div id="productsList" class="products"></div></section>
+</section>
+<div id="errorBox" class="error" hidden></div>
+</main>
+<footer><strong>BUYZA</strong><p>Buy. Sell. Connect. © 2026 BUYZA.</p></footer>
+<script>
+const sellerId = new URLSearchParams(window.location.search).get("id");
+function escapeHtml(value){return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+function headers(){return {"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY};}
+function stars(value){const rating=Math.max(0,Math.min(5,Math.round(Number(value)||0)));return "★".repeat(rating)+"☆".repeat(5-rating);}
+async function getJson(path){const response=await fetch(SUPABASE_URL+path,{headers:headers()});if(!response.ok)throw new Error("Could not load seller information.");return response.json();}
+async function loadSellerStore(){
+ if(!sellerId){showError("Seller information is missing.");return;}
+ try{
+  const safeId=encodeURIComponent(sellerId);
+  const [profiles,products,reviews]=await Promise.all([
+   getJson("/rest/v1/seller_profiles?id=eq."+safeId+"&select=id,full_name,phone,location,bio"),
+   getJson("/rest/v1/products?user_id=eq."+safeId+"&select=id,name,price,category,location,condition,image_url,is_sold,created_at&order=created_at.desc"),
+   getJson("/rest/v1/seller_reviews?seller_id=eq."+safeId+"&is_hidden=eq.false&select=id,rating,review,created_at,seller_response&order=created_at.desc")
+  ]);
+  renderStore(profiles[0]||{},products,reviews);
+  document.getElementById("loading").hidden=true;
+  document.getElementById("storeContent").hidden=false;
+ }catch(error){console.error(error);showError(error.message||"Unable to load this seller store.");}
+}
+function renderStore(profile,products,reviews){
+ const name=profile.full_name||"BUYZA Seller";
+ document.title=name+" - BUYZA Seller Store";
+ document.getElementById("sellerName").textContent=name;
+ document.getElementById("sellerAvatar").textContent=name.trim().charAt(0).toUpperCase()||"B";
+ document.getElementById("sellerLocation").textContent="📍 "+(profile.location||"Uganda");
+ document.getElementById("sellerProductCount").textContent=String(products.length);
+ if(profile.bio){const bio=document.getElementById("sellerBio");bio.textContent=profile.bio;bio.hidden=false;}
+ const phone=String(profile.phone||"").trim();
+ if(phone){
+  const tel=phone.replace(/[^0-9+]/g,"");
+  let wa=phone.replace(/\D/g,"");if(wa.startsWith("0"))wa="256"+wa.slice(1);if(!wa.startsWith("256"))wa="256"+wa;
+  document.getElementById("sellerContact").innerHTML='<a href="tel:'+escapeHtml(tel)+'">📞 Call Seller</a><a class="whatsapp" href="https://wa.me/'+escapeHtml(wa)+'" target="_blank" rel="noopener">💬 WhatsApp Seller</a>';
+ }
+ renderReviews(reviews);renderProducts(products);
+}
+function renderReviews(reviews){
+ const summary=document.getElementById("ratingSummary"),list=document.getElementById("reviewsList");
+ if(!reviews.length){
+  document.getElementById("sellerRating").textContent="0.0";
+  document.getElementById("sellerReviewCount").textContent="No reviews yet";
+  summary.innerHTML='<div class="rating-number">0.0</div><div><div class="stars">☆☆☆☆☆</div><div class="muted">No seller reviews yet</div></div>';
+  list.innerHTML="";return;
+ }
+ const average=reviews.reduce((sum,item)=>sum+Number(item.rating||0),0)/reviews.length;
+ document.getElementById("sellerRating").textContent=average.toFixed(1);
+ document.getElementById("sellerReviewCount").textContent=reviews.length+(reviews.length===1?" review":" reviews");
+ summary.innerHTML='<div class="rating-number">'+average.toFixed(1)+'</div><div><div class="stars">'+stars(average)+'</div><div class="muted">'+reviews.length+(reviews.length===1?" review":" reviews")+'</div></div>';
+ list.innerHTML=reviews.slice(0,10).map(review=>{
+  const date=review.created_at?new Date(review.created_at).toLocaleDateString("en-GB"):"";
+  const reply=review.seller_response?'<div class="seller-response"><strong>Seller response:</strong> '+escapeHtml(review.seller_response)+'</div>':"";
+  return '<article class="review"><div class="review-top"><strong>BUYZA Buyer</strong><span class="stars">'+stars(review.rating)+'</span></div><div class="review-date">'+escapeHtml(date)+'</div>'+(review.review?'<div class="review-text">'+escapeHtml(review.review)+'</div>':"")+reply+"</article>";
+ }).join("");
+}
+function renderProducts(products){
+ const list=document.getElementById("productsList");
+ if(!products.length){list.className="empty";list.textContent="This seller has no listings yet.";return;}
+ list.innerHTML=products.map(product=>{
+  const image=product.image_url?'<img class="product-image" src="'+escapeHtml(product.image_url)+'" alt="'+escapeHtml(product.name||"Product")+'" loading="lazy">':'<div class="image-placeholder">No photo</div>';
+  const sold=product.is_sold?'<span class="sold">Sold</span>':"";
+  return '<a class="product-card" href="product.html?id='+encodeURIComponent(product.id)+'">'+image+'<div class="product-info"><div class="category">'+escapeHtml(product.category||"Other")+'</div><div class="product-name">'+escapeHtml(product.name||"Product")+'</div><div class="price">UGX '+Number(product.price||0).toLocaleString()+'</div><div class="product-location">📍 '+escapeHtml(product.location||"Uganda")+'</div><span class="condition">'+escapeHtml(product.condition||"Not specified")+'</span>'+sold+'</div></a>';
+ }).join("");
+ list.className="products";
+}
+function showError(message){document.getElementById("loading").hidden=true;const box=document.getElementById("errorBox");box.textContent=message;box.hidden=false;}
+loadSellerStore();
+</script></body></html>
