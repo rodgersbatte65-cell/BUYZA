@@ -140,11 +140,11 @@
         </div>
 
         <form id="sellForm">
-            <label for="name">Product Name</label>
+            <label for="name">Listing Title</label>
             <input
                 type="text"
                 id="name"
-                placeholder="e.g. iPhone 15"
+                placeholder="e.g. Home Cleaning, Manicure, Pedicure or Plumbing"
                 required
             >
 
@@ -161,6 +161,7 @@
                 <option value="">Select condition</option>
                 <option value="New">New</option>
                 <option value="Used">Used</option>
+                <option value="Not applicable">Not applicable (service)</option>
             </select>
 
             <label for="category">Category</label>
@@ -172,8 +173,10 @@
                 <option value="Electronics">Electronics</option>
                 <option value="Home & Garden">Home & Garden</option>
                 <option value="Jobs">Jobs</option>
+                <option value="Services">Services</option>
                 <option value="Other">Other</option>
             </select>
+            <small id="serviceCategoryHelp" style="display:none;color:#666;line-height:1.5">Choose Services for any service you offer. Put its name in Listing Title, for example home cleaning, manicure, pedicure, plumbing, or another service.</small>
 
             <label for="location">Location</label>
             <input
@@ -198,7 +201,7 @@
                 required
             ></textarea>
 
-            <label for="image">Product Photos (up to 5)</label>
+            <label for="image">Listing Photos or Work Samples (up to 5)</label>
             <input
                 type="file"
                 id="image"
@@ -206,7 +209,7 @@
                 multiple
                 required
             >
-            <small class="photo-help">Choose 1 to 5 photos. The first photo will be the main listing image. Each photo must be 5 MB or smaller.</small>
+            <small class="photo-help">Choose 1 to 5 photos of your product or examples of your service. The first photo will be the main listing image. Each photo must be 5 MB or smaller.</small>
             <div id="imageSelectionMessage" class="photo-help" aria-live="polite"></div>
 
             <button type="submit" id="submitButton">
@@ -232,6 +235,16 @@ const SUPABASE_KEY =
     "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
 let currentUser = null;
+
+function syncServiceCategory(){
+    const isService = document.getElementById("category").value === "Services";
+    const condition = document.getElementById("condition");
+    condition.value = isService ? "Not applicable" : "";
+    condition.disabled = isService;
+    document.getElementById("serviceCategoryHelp").style.display =
+        isService ? "block" : "none";
+}
+document.getElementById("category").addEventListener("change", syncServiceCategory);
 
 async function startSellPage() {
     const loginStatus =
@@ -456,3 +469,4 @@ startSellPage();
 
 </body>
 </html>
+
