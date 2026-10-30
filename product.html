@@ -410,8 +410,12 @@ function displayProduct(product){
     document.getElementById("productName").textContent = product.name || "Product";
     document.getElementById("productPrice").textContent =
         "UGX " + Number(product.price || 0).toLocaleString();
-    document.getElementById("productCondition").textContent =
-        "Condition: " + (product.condition || "Not specified");
+    const conditionLabel = document.getElementById("productCondition");
+    const isService = String(product.category || "").trim().toLowerCase() === "services";
+    conditionLabel.textContent = isService
+        ? "Service"
+        : "Condition: " + (product.condition || "Not specified");
+    conditionLabel.hidden = isService;
     document.getElementById("productLocation").textContent = product.location || "Uganda";
     document.getElementById("productDescription").textContent =
         product.description || "No description provided by the seller.";
@@ -1523,3 +1527,4 @@ loadProduct();
 </script>
 </body>
 </html>
+
