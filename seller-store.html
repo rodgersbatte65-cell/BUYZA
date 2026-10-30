@@ -110,6 +110,8 @@ function renderProducts(products){
  list.innerHTML=products.map(product=>{
   const image=product.image_url?'<img class="product-image" src="'+escapeHtml(product.image_url)+'" alt="'+escapeHtml(product.name||"Product")+'" loading="lazy">':'<div class="image-placeholder">No photo</div>';
   const sold=product.is_sold?'<span class="sold">Sold</span>':"";
+  const service=String(product.category||"").trim().toLowerCase()==="services";
+  const condition=service?'<span class="condition">Service</span>':'+condition+';
   return '<a class="product-card" href="product.html?id='+encodeURIComponent(product.id)+'">'+image+'<div class="product-info"><div class="category">'+escapeHtml(product.category||"Other")+'</div><div class="product-name">'+escapeHtml(product.name||"Product")+'</div><div class="price">UGX '+Number(product.price||0).toLocaleString()+'</div><div class="product-location">📍 '+escapeHtml(product.location||"Uganda")+'</div><span class="condition">'+escapeHtml(product.condition||"Not specified")+'</span>'+sold+'</div></a>';
  }).join("");
  list.className="products";
@@ -117,3 +119,4 @@ function renderProducts(products){
 function showError(message){document.getElementById("loading").hidden=true;const box=document.getElementById("errorBox");box.textContent=message;box.hidden=false;}
 loadSellerStore();
 </script></body></html>
+
