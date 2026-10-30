@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Boda Ride - BUYZA</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f5f6f8;color:#222;font-family:Arial,Helvetica,sans-serif}
+header{background:#111;color:white;padding:15px 20px}
+.nav{max-width:760px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{color:#ff6b00;font-size:25px;font-weight:900;text-decoration:none}
+.nav a:last-child{color:white;text-decoration:none;font-weight:700}
+main{max-width:700px;margin:28px auto;padding:0 16px}
+.card{background:white;padding:24px;border-radius:16px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
+.back{display:inline-block;margin-bottom:14px;color:#555;text-decoration:none;font-weight:700}
+h1{font-size:27px;margin:0 0 8px}
+.intro{color:#666;line-height:1.5;margin:0 0 20px}
+.driver{background:#fff5ed;border-radius:10px;padding:12px 14px;margin-bottom:20px;line-height:1.5}
+label{display:block;font-weight:700;margin:15px 0 7px}
+input,textarea{width:100%;padding:12px;border:1px solid #d8d8d8;border-radius:9px;font:inherit}
+textarea{min-height:85px;resize:vertical}
+.primary{width:100%;margin-top:20px;padding:14px;background:#087f5b;color:white;border:0;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer}
+.primary:hover{background:#066b4d}
+.status{margin-top:14px;color:#555;line-height:1.5}
+.status.error{color:#a11}
+.send-link{display:none;margin-top:12px;text-align:center;padding:13px;background:#fff1e8;color:#b84900;border-radius:9px;font-weight:800;text-decoration:none}
+.send-link.show{display:block}
+[hidden]{display:none!important}
+footer{text-align:center;color:#888;padding:24px;font-size:13px}
+@media(max-width:520px){.card{padding:18px}h1{font-size:23px}}
+</style>
+</head>
+<body>
+<header><div class="nav"><a class="logo" href="index.html">BUYZA</a><a href="index.html">Home</a></div></header>
+<main>
+<a id="backLink" class="back" href="index.html">← Back to listing</a>
+<section class="card">
+<h1>🏍️ Book a Boda Ride</h1>
+<p class="intro">Enter your trip details. BUYZA will open WhatsApp with your request for the driver. Review it and press Send to contact them.</p>
+<div id="driverInfo" class="driver">Loading driver details…</div>
+<form id="rideForm" hidden>
+<label for="pickup">Pickup location</label>
+<input id="pickup" type="text" placeholder="e.g. Kampala City Square" required maxlength="180">
+<label for="destination">Destination</label>
+<input id="destination" type="text" placeholder="Where should the driver take you?" required maxlength="180">
+<label for="rideTime">When do you need the ride? (optional)</label>
+<input id="rideTime" type="datetime-local">
+<label for="riderPhone">Your phone number</label>
+<input id="riderPhone" type="tel" placeholder="e.g. 0771234567" required maxlength="30">
+<label for="rideNote">Extra details (optional)</label>
+<textarea id="rideNote" maxlength="500" placeholder="Add a landmark or other useful information"></textarea>
+<button class="primary" type="submit">Send ride request on WhatsApp</button>
+</form>
+<div id="status" class="status" role="status"></div>
+<a id="sendLink" class="send-link" target="_blank" rel="noopener">Open WhatsApp to send your request</a>
+</section>
+</main>
+<footer>BUYZA · Buy. Sell. Connect. 🇺🇬</footer>
+<script>
+const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+const listingId = new URLSearchParams(location.search).get("id");
+let driverPhone = "";
+let listingName = "";
+let sellerName = "BUYZA Seller";
+
+function escapeHtml(value){
+ return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function requestHeaders(){return {"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY};}
+function setError(message){
+ const status=document.getElementById("status");status.className="status error";status.textContent=message;
+}
+async function loadRideListing(){
+ if(!listingId){setError("The ride listing is missing.");return;}
+ try{
+  const response=await fetch(SUPABASE_URL+"/rest/v1/products?id=eq."+encodeURIComponent(listingId)+"&select=id,name,category,phone,user_id,is_sold",{headers:requestHeaders()});
+  if(!response.ok)throw new Error("Unable to load this ride listing.");
+  const rows=await response.json();const product=rows[0];
+  if(!product)throw new Error("This ride listing could not be found.");
+  if(product.is_sold)throw new Error("This listing is unavailable.");
+  if(String(product.category||"").trim().toLowerCase()!=="services"||!/boda|ride|motorcycle|transport/i.test(String(product.name||""))){
+   throw new Error("This listing is not marked as a Boda Boda ride service.");
+  }
+  listingName=product.name||"Boda Boda Ride";
+  driverPhone=String(product.phone||"").trim();
+  if(product.user_id){
+   const profileResponse=await fetch(SUPABASE_URL+"/rest/v1/seller_profiles?id=eq."+encodeURIComponent(product.user_id)+"&select=full_name,phone",{headers:requestHeaders()});
+   if(profileResponse.ok){
+    const profiles=await profileResponse.json();
+    if(profiles[0]){
+     sellerName=profiles[0].full_name||sellerName;
+     driverPhone=String(profiles[0].phone||driverPhone).trim();
+    }
+   }
+  }
+  if(!driverPhone)throw new Error("This driver has no phone number on the listing. Please contact the seller from the product page.");
+  document.title=listingName+" · Book a Ride · BUYZA";
+  document.getElementById("backLink").href="product.html?id="+encodeURIComponent(product.id);
+  document.getElementById("driverInfo").innerHTML="<strong>"+escapeHtml(listingName)+"</strong><br>Driver: "+escapeHtml(sellerName);
+  document.getElementById("rideForm").hidden=false;
+ }catch(error){setError(error.message||"Could not load the ride listing.");}
+}
+document.getElementById("rideForm").addEventListener("submit",function(event){
+ event.preventDefault();
+ const phoneDigits=driverPhone.replace(/\D/g,"");
+ let whatsappNumber=phoneDigits;
+ if(whatsappNumber.startsWith("0"))whatsappNumber="256"+whatsappNumber.slice(1);
+ else if(!whatsappNumber.startsWith("256"))whatsappNumber="256"+whatsappNumber;
+ if(whatsappNumber.length<10){setError("The driver's phone number does not look valid for WhatsApp.");return;}
+ const riderPhone=document.getElementById("riderPhone").value.trim();
+ const rideTime=document.getElementById("rideTime").value;
+ const when=rideTime?new Date(rideTime).toLocaleString():"As soon as possible";
+ const note=document.getElementById("rideNote").value.trim();
+ const lines=[
+  "Hello "+sellerName+", I would like to book a Boda Boda ride through BUYZA.",
+  "Service: "+listingName,
+  "Pickup: "+document.getElementById("pickup").value.trim(),
+  "Destination: "+document.getElementById("destination").value.trim(),
+  "Requested time: "+when,
+  "My phone: "+riderPhone
+ ];
+ if(note)lines.push("Extra details: "+note);
+ lines.push("Ride listing: "+location.origin+location.pathname.replace(/book-ride\.html$/,"")+"product.html?id="+encodeURIComponent(listingId));
+ const link="https://wa.me/"+whatsappNumber+"?text="+encodeURIComponent(lines.join("\n"));
+ const fallback=document.getElementById("sendLink");fallback.href=link;fallback.classList.add("show");
+ document.getElementById("status").className="status";document.getElementById("status").textContent="Your request is ready. If WhatsApp did not open, tap the link below.";
+ const popup=window.open(link,"_blank","noopener");
+ if(!popup)fallback.textContent="Tap here to open WhatsApp and send your request";
+});
+loadRideListing();
+</script>
+</body>
+</html>
