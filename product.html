@@ -24,11 +24,31 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .product-image{width:100%;height:560px;object-fit:contain;background:#f4f5f7;border-radius:16px}
 .gallery-main{position:relative}
 .gallery-main .product-image{display:block}
+.gallery-open{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
 .gallery-thumbnails{display:flex;gap:10px;overflow-x:auto;padding:12px 2px 2px}
 .gallery-thumb{width:76px;height:66px;flex:0 0 auto;padding:3px;border:2px solid transparent;border-radius:10px;background:#f2f3f5;cursor:pointer}
 .gallery-thumb.active{border-color:#ff6b00}
 .gallery-thumb img{width:100%;height:100%;object-fit:cover;border-radius:6px}
-.gallery-thumb:focus-visible{outline:3px solid #ff6b00;outline-offset:2px}
+.gallery-thumb:focus-visible,.gallery-open:focus-visible{outline:3px solid #ff6b00;outline-offset:2px}
+.photo-lightbox[hidden]{display:none!important}
+.photo-lightbox{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:70px 68px 35px;background:rgba(0,0,0,.94)}
+.photo-lightbox figure{display:flex;flex-direction:column;align-items:center;max-width:100%;max-height:100%;margin:0}
+.photo-lightbox img{display:block;max-width:90vw;max-height:78vh;object-fit:contain;border-radius:8px}
+.photo-lightbox-caption{margin-top:12px;color:#fff;text-align:center;font-size:14px}
+.photo-lightbox button{position:absolute;border:0;border-radius:50%;background:rgba(255,255,255,.92);color:#111;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.photo-lightbox button[hidden]{display:none}
+.photo-lightbox-close{top:16px;right:18px;width:46px;height:46px;font-size:30px}
+.photo-lightbox-prev,.photo-lightbox-next{top:50%;width:48px;height:48px;font-size:28px;transform:translateY(-50%)}
+.photo-lightbox-prev{left:12px}
+.photo-lightbox-next{right:12px}
+.photo-lightbox button:focus-visible{outline:3px solid #ff6b00;outline-offset:3px}
+@media(max-width:600px){
+    .photo-lightbox{padding:66px 50px 25px}
+    .photo-lightbox img{max-width:100%;max-height:76vh}
+    .photo-lightbox-prev,.photo-lightbox-next{width:40px;height:40px;font-size:24px}
+    .photo-lightbox-prev{left:5px}
+    .photo-lightbox-next{right:5px}
+}
 .photo-help{display:block;margin-top:7px;color:#666;font-size:13px}
 .no-image{height:560px;display:flex;align-items:center;justify-content:center;background:#f1f2f4;color:#888;border-radius:16px;font-size:18px}
 .info-card{padding:30px}
@@ -254,6 +274,20 @@ footer p{margin-top:8px;color:#aaa}
 </div>
 </main>
 
+<div id="photoLightbox" class="photo-lightbox" role="dialog"
+     aria-modal="true" aria-label="Product photo viewer" hidden>
+    <button type="button" id="lightboxClose" class="photo-lightbox-close"
+            aria-label="Close photo viewer">×</button>
+    <button type="button" id="lightboxPrevious" class="photo-lightbox-prev"
+            aria-label="Previous photo">‹</button>
+    <figure>
+        <img id="lightboxImage" alt="">
+        <figcaption id="lightboxCaption" class="photo-lightbox-caption"></figcaption>
+    </figure>
+    <button type="button" id="lightboxNext" class="photo-lightbox-next"
+            aria-label="Next photo">›</button>
+</div>
+
 <footer>
 <strong>BUYZA</strong>
 <p>Buy. Sell. Connect.</p>
@@ -265,6 +299,9 @@ let currentProduct = null;
 let currentProductId = null;
 let currentSellerProfile = null;
 let selectedRating = 0;
+let productGalleryImages = [];
+let productGalleryIndex = 0;
+let previousPhotoFocus = null;
 
 const params = new URLSearchParams(window.location.search);
 currentProductId = params.get("id");
@@ -406,6 +443,8 @@ function getProductImages(product){
 function renderProductGallery(product){
     const container = document.getElementById("imageContainer");
     const images = getProductImages(product);
+    productGalleryImages = images;
+    productGalleryIndex = 0;
     container.innerHTML = "";
 
     if(!images.length){
@@ -418,18 +457,24 @@ function renderProductGallery(product){
 
     const mainWrap = document.createElement("div");
     mainWrap.className = "gallery-main";
+    const mainButton = document.createElement("button");
+    mainButton.type = "button";
+    mainButton.className = "gallery-open";
+    mainButton.setAttribute("aria-label","Open photo in full screen");
     const mainImage = document.createElement("img");
     mainImage.className = "product-image";
     mainImage.alt = (product.name || "BUYZA product") + " photo 1";
     mainImage.src = images[0];
     mainImage.onerror = () => {
-        mainImage.style.display = "none";
+        mainButton.style.display = "none";
         const fallback = document.createElement("div");
         fallback.className = "no-image";
         fallback.textContent = "No image available";
         mainWrap.appendChild(fallback);
     };
-    mainWrap.appendChild(mainImage);
+    mainButton.appendChild(mainImage);
+    mainButton.addEventListener("click",() => openPhotoLightbox(productGalleryIndex));
+    mainWrap.appendChild(mainButton);
     container.appendChild(mainWrap);
 
     if(images.length > 1){
@@ -450,14 +495,18 @@ function renderProductGallery(product){
             button.appendChild(thumbnail);
 
             button.addEventListener("click",() => {
+                productGalleryIndex = index;
                 mainImage.src = url;
                 mainImage.alt = (product.name || "BUYZA product") + " photo " + (index + 1);
-                mainImage.style.display = "block";
+                mainButton.style.display = "block";
                 mainWrap.querySelectorAll(".no-image").forEach(node => node.remove());
                 thumbnails.querySelectorAll(".gallery-thumb").forEach((item,itemIndex) => {
                     item.classList.toggle("active",itemIndex === index);
                     item.setAttribute("aria-pressed",itemIndex === index ? "true" : "false");
                 });
+                if(!document.getElementById("photoLightbox").hidden){
+                    updatePhotoLightbox();
+                }
             });
 
             thumbnails.appendChild(button);
@@ -465,6 +514,61 @@ function renderProductGallery(product){
         container.appendChild(thumbnails);
     }
 }
+
+function updatePhotoLightbox(){
+    if(!productGalleryImages.length) return;
+    const image = document.getElementById("lightboxImage");
+    image.src = productGalleryImages[productGalleryIndex];
+    image.alt = (currentProduct?.name || "BUYZA product") +
+        " photo " + (productGalleryIndex + 1);
+    document.getElementById("lightboxCaption").textContent =
+        (currentProduct?.name || "Product") + " · Photo " +
+        (productGalleryIndex + 1) + " of " + productGalleryImages.length;
+    const showNavigation = productGalleryImages.length > 1;
+    document.getElementById("lightboxPrevious").hidden = !showNavigation;
+    document.getElementById("lightboxNext").hidden = !showNavigation;
+}
+
+function openPhotoLightbox(index){
+    if(!productGalleryImages.length) return;
+    previousPhotoFocus = document.activeElement;
+    productGalleryIndex = (index + productGalleryImages.length) %
+        productGalleryImages.length;
+    updatePhotoLightbox();
+    document.getElementById("photoLightbox").hidden = false;
+    document.body.style.overflow = "hidden";
+    document.getElementById("lightboxClose").focus();
+}
+
+function closePhotoLightbox(){
+    const lightbox = document.getElementById("photoLightbox");
+    if(lightbox.hidden) return;
+    lightbox.hidden = true;
+    document.body.style.overflow = "";
+    if(previousPhotoFocus && typeof previousPhotoFocus.focus === "function"){
+        previousPhotoFocus.focus();
+    }
+}
+
+function movePhotoLightbox(direction){
+    if(productGalleryImages.length < 2) return;
+    productGalleryIndex = (productGalleryIndex + direction +
+        productGalleryImages.length) % productGalleryImages.length;
+    updatePhotoLightbox();
+}
+
+document.getElementById("lightboxClose").addEventListener("click",closePhotoLightbox);
+document.getElementById("lightboxPrevious").addEventListener("click",() => movePhotoLightbox(-1));
+document.getElementById("lightboxNext").addEventListener("click",() => movePhotoLightbox(1));
+document.getElementById("photoLightbox").addEventListener("click",event => {
+    if(event.target.id === "photoLightbox") closePhotoLightbox();
+});
+document.addEventListener("keydown",event => {
+    if(document.getElementById("photoLightbox").hidden) return;
+    if(event.key === "Escape") closePhotoLightbox();
+    if(event.key === "ArrowLeft") movePhotoLightbox(-1);
+    if(event.key === "ArrowRight") movePhotoLightbox(1);
+});
 
 async function loadSellerProfile(sellerId){
     try{
