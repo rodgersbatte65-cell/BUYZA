@@ -61,7 +61,8 @@ header{background:white;border-bottom:1px solid #eee;position:sticky;top:0;z-ind
 .description-title{font-size:18px;font-weight:800;margin-bottom:10px}
 .description{color:#555;line-height:1.7;white-space:pre-wrap}
 .actions{display:grid;gap:12px;margin-top:28px}
-.book-ride-btn{display:block;text-align:center;text-decoration:none;background:#087f5b;color:white}
+.book-ride-btn{display:block;text-align:center;text-decoration:none;background:#087f5b;color:white;font-size:18px;font-weight:900;padding:18px;border-radius:14px;box-shadow:0 5px 15px rgba(8,127,91,.2)}
+.book-ride-btn[aria-disabled=true]{background:#777;box-shadow:none;cursor:not-allowed;pointer-events:none}
 #bookRideBtn[hidden]{display:none!important}
 .action-btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer}
 .action-btn:hover{transform:translateY(-1px)}
@@ -206,7 +207,7 @@ footer p{margin-top:8px;color:#aaa}
 <div id="productDescription" class="description"></div>
 <div class="actions">
 <button id="favoriteBtn" class="action-btn favorite-btn" onclick="toggleFavorite()">♡ Save to Favorites</button>
-<a id="bookRideBtn" class="action-btn book-ride-btn" href="#" hidden>🏍️ Book this ride</a>
+<a id="bookRideBtn" class="action-btn book-ride-btn" href="#" hidden>🏍️ BOOK A RIDE</a>
 <button class="action-btn call-btn" onclick="callSeller()">📞 Call Seller</button>
 <button class="action-btn whatsapp-btn" onclick="whatsappSeller()">💬 WhatsApp Seller</button>
 <button class="action-btn message-btn" onclick="messageSeller()">✉️ Message Seller</button>
@@ -392,13 +393,52 @@ function saveRecentlyViewed(product){
     }
 }
 
+async function hasActiveBodaPlan(driverId){
+    if(!driverId) return false;
+    try{
+        const query = new URLSearchParams({
+            select:"user_id",
+            user_id:"eq."+driverId,
+            plan:"in.(standard,premium)",
+            status:"eq.active",
+            current_period_end:"gt."+new Date().toISOString(),
+            limit:"1"
+        });
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/boda_driver_subscriptions?" + query.toString(),
+            {headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY}}
+        );
+        if(!response.ok) return false;
+        const rows = await response.json();
+        return Array.isArray(rows) && rows.length > 0;
+    }catch(error){
+        console.error("Could not check driver ride subscription:",error);
+        return false;
+    }
+}
+
 function displayProduct(product){
     const isSold = Boolean(product.is_sold);
     const bookRideButton = document.getElementById("bookRideBtn");
     const isBodaRide = String(product.category || "").trim().toLowerCase() === "services" &&
         /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
-    bookRideButton.href = "book-ride.html?id=" + encodeURIComponent(String(product.id));
     bookRideButton.hidden = !isBodaRide || isSold;
+    bookRideButton.removeAttribute("aria-disabled");
+    if(isBodaRide && !isSold){
+        bookRideButton.textContent = "Checking ride plan...";
+        hasActiveBodaPlan(product.user_id).then(isActive => {
+            if(!currentProduct || String(currentProduct.id) !== String(product.id)) return;
+            if(isActive){
+                bookRideButton.href = "book-ride.html?id=" + encodeURIComponent(String(product.id));
+                bookRideButton.textContent = "🏍️ BOOK A RIDE";
+                bookRideButton.removeAttribute("aria-disabled");
+            }else{
+                bookRideButton.removeAttribute("href");
+                bookRideButton.setAttribute("aria-disabled","true");
+                bookRideButton.textContent = "Driver needs an active paid plan";
+            }
+        });
+    }
     const soldNotice = document.getElementById("soldNotice");
     soldNotice.hidden = !isSold;
 
@@ -1535,5 +1575,9 @@ loadProduct();
 </script>
 </body>
 </html>
+
+
+
+
 
 
