@@ -3,78 +3,162 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Seller Plans - BUYZA</title>
+<title>Book a Boda Ride - BUYZA</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f5f6f8;color:#222;font-family:Arial,Helvetica,sans-serif}
-header{background:#111;color:#fff;padding:16px 22px}
-.nav{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-size:27px;font-weight:900;color:#ff6b00;text-decoration:none}
-nav{display:flex;gap:18px;flex-wrap:wrap}
-nav a{color:#fff;text-decoration:none;font-weight:700}
-nav a:hover{color:#ff6b00}
-main{max-width:1100px;margin:40px auto;padding:0 20px}
-.intro{text-align:center;margin-bottom:30px}
-.intro h1{font-size:36px;margin:0 0 10px}
-.intro p{color:#666;line-height:1.5;margin:0}
-.plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:stretch}
-.plan{background:#fff;border:1px solid #e6e6e6;border-radius:18px;padding:25px;box-shadow:0 5px 20px rgba(0,0,0,.05);display:flex;flex-direction:column}
-.plan.featured{border:2px solid #ff6b00;position:relative}
-.badge{align-self:flex-start;padding:6px 10px;border-radius:999px;background:#fff1e8;color:#bf4b00;font-size:12px;font-weight:800;margin-bottom:12px}
-h2{font-size:23px;margin:0 0 8px}
-.description{color:#666;min-height:42px;line-height:1.45}
-.price{font-size:30px;font-weight:900;margin:19px 0 4px}
-.period{color:#777;font-size:14px}
-ul{padding-left:20px;line-height:1.9;color:#444;flex:1;margin:20px 0}
-.button{display:block;text-align:center;text-decoration:none;border:0;border-radius:10px;padding:13px 16px;font-size:15px;font-weight:800;cursor:pointer}
-.button.free{background:#171717;color:#fff}
-.button.paid{background:#ff6b00;color:#fff}
-.button:hover{filter:brightness(.94)}
-.note{text-align:center;color:#777;font-size:13px;line-height:1.5;margin:22px auto 0;max-width:700px}
-footer{text-align:center;padding:25px 16px;color:#888;font-size:13px}
-@media(max-width:760px){main{margin:28px auto}.plans{grid-template-columns:1fr}.intro h1{font-size:30px}.plan{padding:22px}.description{min-height:0}}
+header{background:#111;color:white;padding:15px 20px}
+.nav{max-width:760px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{color:#ff6b00;font-size:25px;font-weight:900;text-decoration:none}
+.nav a:last-child{color:white;text-decoration:none;font-weight:700}
+main{max-width:700px;margin:28px auto;padding:0 16px}
+.card{background:white;padding:24px;border-radius:16px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
+.back{display:inline-block;margin-bottom:14px;color:#555;text-decoration:none;font-weight:700}
+h1{font-size:27px;margin:0 0 8px}
+.intro{color:#666;line-height:1.5;margin:0 0 20px}
+.driver{background:#fff5ed;border-radius:10px;padding:12px 14px;margin-bottom:20px;line-height:1.5}
+label{display:block;font-weight:700;margin:15px 0 7px}
+input,textarea{width:100%;padding:12px;border:1px solid #d8d8d8;border-radius:9px;font:inherit}
+textarea{min-height:85px;resize:vertical}
+.primary{width:100%;margin-top:20px;padding:14px;background:#087f5b;color:white;border:0;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer}
+.primary:hover{background:#066b4d}
+.status{margin-top:14px;color:#555;line-height:1.5}
+.status.error{color:#a11}
+.send-link{display:none;margin-top:12px;text-align:center;padding:13px;background:#fff1e8;color:#b84900;border-radius:9px;font-weight:800;text-decoration:none}
+.send-link.show{display:block}
+[hidden]{display:none!important}
+footer{text-align:center;color:#888;padding:24px;font-size:13px}
+@media(max-width:520px){.card{padding:18px}h1{font-size:23px}}
 </style>
 </head>
 <body>
-<header><div class="nav"><a class="logo" href="index.html">BUYZA</a><nav><a href="index.html">Home</a><a href="account.html">Account</a><a href="sell.html">Sell</a></nav></div></header>
+<header><div class="nav"><a class="logo" href="index.html">BUYZA</a><a href="index.html">Home</a></div></header>
 <main>
-<section class="intro">
-<h1>Choose a seller plan</h1>
-<p>Start for free and upgrade when your business is ready.</p>
+<a id="backLink" class="back" href="index.html">← Back to listing</a>
+<section class="card">
+<h1>🏍️ Book a Boda Ride</h1>
+<p class="intro">Enter all required rider and trip details. The driver’s name, phone number, and service area must be on their BUYZA profile. BUYZA will open WhatsApp so you can send the request.</p>
+<div id="driverInfo" class="driver">Loading driver details…</div>
+<form id="rideForm" hidden>
+<label for="pickup">Pickup location</label>
+<input id="pickup" type="text" placeholder="e.g. Kampala City Square" required maxlength="180">
+<label for="destination">Destination</label>
+<input id="destination" type="text" placeholder="Where should the driver take you?" required maxlength="180">
+<label for="rideTime">When do you need the ride?</label>
+<input id="rideTime" type="datetime-local" required>
+<label for="riderName">Your full name</label>
+<input id="riderName" type="text" placeholder="Enter your full name" required maxlength="100">
+<label for="riderPhone">Your phone number</label>
+<input id="riderPhone" type="tel" placeholder="e.g. 0771234567" required maxlength="30">
+<label for="rideNote">Extra details (optional)</label>
+<textarea id="rideNote" maxlength="500" placeholder="Add a landmark or other useful information"></textarea>
+<button class="primary" type="submit">Send ride request on WhatsApp</button>
+</form>
+<div id="status" class="status" role="status"></div>
+<a id="sendLink" class="send-link" target="_blank" rel="noopener">Open WhatsApp to send your request</a>
 </section>
-<section class="plans" aria-label="Seller subscription plans">
-<article class="plan">
-<span class="badge">FREE</span>
-<h2>Free</h2>
-<p class="description">Try BUYZA and start listing your products.</p>
-<div class="price">UGX 0</div><div class="period">No monthly fee</div>
-<ul><li>Up to 3 active listings</li><li>Reach BUYZA buyers</li><li>Seller profile and reviews</li></ul>
-<a class="button free" href="sell.html">Start selling free</a>
-</article>
-<article class="plan">
-<span class="badge">STANDARD</span>
-<h2>Standard</h2>
-<p class="description">For sellers who have more products to offer.</p>
-<div class="price">UGX 10,000</div><div class="period">per month</div>
-<ul><li>Up to 20 active listings</li><li>Reach BUYZA buyers</li><li>Seller profile and reviews</li></ul>
-<button class="button paid" type="button" onclick="paymentNotReady()">Choose Standard</button>
-</article>
-<article class="plan featured">
-<span class="badge">PREMIUM</span>
-<h2>Premium</h2>
-<p class="description">For sellers ready to grow their store.</p>
-<div class="price">UGX 25,000</div><div class="period">per month</div>
-<ul><li>Unlimited active listings</li><li>Reach BUYZA buyers</li><li>Seller profile and reviews</li></ul>
-<button class="button paid" type="button" onclick="paymentNotReady()">Choose Premium</button>
-</article>
-</section>
-<p class="note">Paid plans are not active yet. We’ll connect secure payments before you can subscribe. You can start with the Free plan now.</p>
 </main>
 <footer>BUYZA · Buy. Sell. Connect. 🇺🇬</footer>
 <script>
-function paymentNotReady(){
-  alert("Online payments are not set up yet. You can start with the Free plan for now.");
+const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+const listingId = new URLSearchParams(location.search).get("id");
+let driverPhone = "";
+let listingName = "";
+let sellerName = "";
+let driverArea = "";
+
+function escapeHtml(value){
+ return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
+function requestHeaders(){return {"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY};}
+function setError(message){
+ const status=document.getElementById("status");status.className="status error";status.textContent=message;
+}
+async function hasActiveBodaPlan(driverId){
+ if(!driverId)return false;
+ try{
+  const query=new URLSearchParams({
+   select:"user_id",
+   user_id:"eq."+driverId,
+   plan:"in.(standard,premium)",
+   status:"eq.active",
+   current_period_end:"gt."+new Date().toISOString(),
+   limit:"1"
+  });
+  const response=await fetch(SUPABASE_URL+"/rest/v1/boda_driver_subscriptions?"+query.toString(),{headers:requestHeaders()});
+  if(!response.ok)return false;
+  const rows=await response.json();
+  return Array.isArray(rows)&&rows.length>0;
+ }catch(error){console.error("Could not check driver ride subscription:",error);return false;}
+}
+async function loadRideListing(){
+ if(!listingId){setError("The ride listing is missing.");return;}
+ try{
+  const response=await fetch(SUPABASE_URL+"/rest/v1/products?id=eq."+encodeURIComponent(listingId)+"&select=id,name,category,phone,location,user_id,is_sold",{headers:requestHeaders()});
+  if(!response.ok)throw new Error("Unable to load this ride listing.");
+  const rows=await response.json();const product=rows[0];
+  if(!product)throw new Error("This ride listing could not be found.");
+  if(product.is_sold)throw new Error("This listing is unavailable.");
+  if(String(product.category||"").trim().toLowerCase()!=="services"||!/boda|ride|motorcycle|transport/i.test(String(product.name||""))){
+   throw new Error("This listing is not marked as a Boda Boda ride service.");
+  }
+  listingName=product.name||"Boda Boda Ride";
+  driverPhone=String(product.phone||"").trim();
+  driverArea=String(product.location||"").trim();
+  if(product.user_id){
+   const profileResponse=await fetch(SUPABASE_URL+"/rest/v1/seller_profiles?id=eq."+encodeURIComponent(product.user_id)+"&select=full_name,phone,location",{headers:requestHeaders()});
+   if(profileResponse.ok){
+    const profiles=await profileResponse.json();
+    if(profiles[0]){
+     sellerName=String(profiles[0].full_name||"").trim();
+     driverPhone=String(profiles[0].phone||driverPhone).trim();
+     driverArea=String(profiles[0].location||"").trim();
+    }
+   }
+  }
+  if(!sellerName||!driverPhone||!driverArea)throw new Error("This driver must add their name, phone number, and service area to their BUYZA profile before passengers can book.");
+  if(!await hasActiveBodaPlan(product.user_id))throw new Error("This driver needs an active Standard or Premium plan before receiving ride requests.");
+  document.title=listingName+" · Book a Ride · BUYZA";
+  document.getElementById("backLink").href="product.html?id="+encodeURIComponent(product.id);
+  document.getElementById("driverInfo").innerHTML="<strong>"+escapeHtml(listingName)+"</strong><br>Driver: "+escapeHtml(sellerName)+"<br>Phone: "+escapeHtml(driverPhone)+"<br>Service area: "+escapeHtml(driverArea);
+  document.getElementById("rideForm").hidden=false;
+ }catch(error){setError(error.message||"Could not load the ride listing.");}
+}
+document.getElementById("rideForm").addEventListener("submit",function(event){
+ event.preventDefault();
+ const phoneDigits=driverPhone.replace(/\D/g,"");
+ let whatsappNumber=phoneDigits;
+ if(whatsappNumber.startsWith("0"))whatsappNumber="256"+whatsappNumber.slice(1);
+ else if(!whatsappNumber.startsWith("256"))whatsappNumber="256"+whatsappNumber;
+ if(whatsappNumber.length<10){setError("The driver's phone number does not look valid for WhatsApp.");return;}
+ const riderName=document.getElementById("riderName").value.trim();
+ const riderPhone=document.getElementById("riderPhone").value.trim();
+ const rideTime=document.getElementById("rideTime").value;
+ const when=new Date(rideTime).toLocaleString();
+ const note=document.getElementById("rideNote").value.trim();
+ const lines=[
+  "Hello "+sellerName+", I would like to book a Boda Boda ride through BUYZA.",
+  "Service: "+listingName,
+  "Rider: "+riderName,
+  "Pickup: "+document.getElementById("pickup").value.trim(),
+  "Destination: "+document.getElementById("destination").value.trim(),
+  "Requested time: "+when,
+  "My phone: "+riderPhone
+ ];
+ if(note)lines.push("Extra details: "+note);
+ lines.push("Ride listing: "+location.origin+location.pathname.replace(/book-ride\.html$/,"")+"product.html?id="+encodeURIComponent(listingId));
+ const link="https://wa.me/"+whatsappNumber+"?text="+encodeURIComponent(lines.join("\n"));
+ const fallback=document.getElementById("sendLink");fallback.href=link;fallback.classList.add("show");
+ document.getElementById("status").className="status";document.getElementById("status").textContent="Your request is ready. If WhatsApp did not open, tap the link below.";
+ const popup=window.open(link,"_blank","noopener");
+ if(!popup)fallback.textContent="Tap here to open WhatsApp and send your request";
+});
+loadRideListing();
 </script>
 </body>
 </html>
+
+
+
+
