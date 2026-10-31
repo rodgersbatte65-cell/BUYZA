@@ -25,6 +25,8 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .search-box{max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
 .search-box input{flex:1;border:0;outline:none;padding:17px;font-size:16px;min-width:0}
 .search-box button{border:0;background:#111;color:white;padding:0 28px;border-radius:11px;font-weight:800}
+.ride-cta{display:block;margin:18px auto 0;padding:15px 26px;border:0;border-radius:12px;background:#111;color:white;font-size:17px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.ride-cta:hover{background:#333;transform:translateY(-1px)}
 .stats{max-width:1050px;margin:-30px auto 35px;position:relative;padding:0 20px}
 .stats-box{background:white;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}
 .stat{padding:25px;text-align:center;border-right:1px solid #eee}
@@ -129,6 +131,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <input type="text" id="searchInput" placeholder="What are you looking for?" oninput="filterProducts()">
         <button onclick="filterProducts()">🔍 Search</button>
     </div>
+    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});">🏍️ Book a Ride</button>
 </div>
 </section>
 
@@ -798,5 +801,7 @@ loadProducts();
 
 </body>
 </html>
+
+
 
 
