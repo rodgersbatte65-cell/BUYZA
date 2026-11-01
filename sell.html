@@ -167,11 +167,11 @@
             <label for="category">Category</label>
             <select id="category" required>
                 <option value="">Select Category</option>
-                <option value="Phones & Tablets">Phones & Tablets</option>
+                <option value="Phones &amp; Tablets">Phones &amp; Tablets</option>
                 <option value="Cars">Cars</option>
                 <option value="Fashion">Fashion</option>
                 <option value="Electronics">Electronics</option>
-                <option value="Home & Garden">Home & Garden</option>
+                <option value="Home &amp; Garden">Home &amp; Garden</option>
                 <option value="Jobs">Jobs</option>
                 <option value="Services">Services</option>
                 <option value="Other">Other</option>
@@ -244,6 +244,7 @@ function syncServiceCategory(){
     document.getElementById("serviceCategoryHelp").style.display =
         isService ? "block" : "none";
 }
+
 document.getElementById("category").addEventListener("change", syncServiceCategory);
 
 async function startSellPage() {
@@ -301,7 +302,9 @@ document.getElementById("sellForm").addEventListener(
             sessionOK = await Promise.race([
                 checkBuyzaSession(),
                 new Promise(function(resolve) {
-                    setTimeout(function() { resolve(false); }, 15000);
+                    setTimeout(function() {
+                        resolve(false);
+                    }, 15000);
                 })
             ]);
         } catch (error) {
@@ -327,7 +330,8 @@ document.getElementById("sellForm").addEventListener(
             submitButton.disabled = false;
             submitButton.textContent = "🚀 Post Product";
             message.style.color = "#d32f2f";
-            message.textContent = "❌ Your login has expired. Please sign in again.";
+            message.textContent =
+                "❌ Your login has expired. Please sign in again.";
             window.location.href = "login.html";
             return;
         }
@@ -362,35 +366,49 @@ document.getElementById("sellForm").addEventListener(
             const description =
                 document.getElementById("description").value.trim();
 
-            const imageInput = document.getElementById("image");
-            const imageFiles = Array.from(imageInput.files || []);
+            const imageInput =
+                document.getElementById("image");
+
+            const imageFiles =
+                Array.from(imageInput.files || []);
 
             if (imageFiles.length < 1 || imageFiles.length > 5) {
                 throw new Error("Please choose between 1 and 5 photos.");
             }
+
             if (imageFiles.some(file => !file.type.startsWith("image/"))) {
                 throw new Error("Please choose image files only.");
             }
+
             if (imageFiles.some(file => file.size > 5 * 1024 * 1024)) {
                 throw new Error("Each photo must be 5 MB or smaller.");
             }
 
             const imageUrls = [];
+
             for (let index = 0; index < imageFiles.length; index++) {
                 const imageFile = imageFiles[index];
-                const extension = (imageFile.name.split(".").pop() || "jpg")
-                    .replace(/[^a-z0-9]/gi, "").toLowerCase() || "jpg";
-                const fileName = currentUser.id + "_" + Date.now() + "_" +
+
+                const extension =
+                    (imageFile.name.split(".").pop() || "jpg")
+                        .replace(/[^a-z0-9]/gi, "")
+                        .toLowerCase() || "jpg";
+
+                const fileName =
+                    currentUser.id + "_" + Date.now() + "_" +
                     index + "." + extension;
 
                 const uploadResponse = await fetch(
-                    SUPABASE_URL + "/storage/v1/object/product-images/" + fileName,
+                    SUPABASE_URL +
+                    "/storage/v1/object/product-images/" +
+                    fileName,
                     {
                         method: "POST",
                         headers: {
                             "apikey": SUPABASE_KEY,
                             "Authorization": "Bearer " + accessToken,
-                            "Content-Type": imageFile.type || "application/octet-stream"
+                            "Content-Type":
+                                imageFile.type || "application/octet-stream"
                         },
                         body: imageFile
                     }
@@ -402,7 +420,8 @@ document.getElementById("sellForm").addEventListener(
                 }
 
                 imageUrls.push(
-                    SUPABASE_URL + "/storage/v1/object/public/product-images/" +
+                    SUPABASE_URL +
+                    "/storage/v1/object/public/product-images/" +
                     fileName
                 );
             }
@@ -459,20 +478,26 @@ document.getElementById("sellForm").addEventListener(
     }
 );
 
-document.getElementById("image").addEventListener("change", function() {
-    const files = Array.from(this.files || []);
-    const message = document.getElementById("imageSelectionMessage");
-    if(files.length > 5){
-        message.style.color = "#d32f2f";
-        message.textContent = "Choose no more than 5 photos.";
-        this.value = "";
-        return;
+document.getElementById("image").addEventListener(
+    "change",
+    function() {
+        const files = Array.from(this.files || []);
+        const message =
+            document.getElementById("imageSelectionMessage");
+
+        if (files.length > 5) {
+            message.style.color = "#d32f2f";
+            message.textContent = "Choose no more than 5 photos.";
+            this.value = "";
+            return;
+        }
+
+        message.style.color = "#666";
+        message.textContent = files.length
+            ? files.length + " photo" + (files.length === 1 ? "" : "s") + " selected."
+            : "";
     }
-    message.style.color = "#666";
-    message.textContent = files.length
-        ? files.length + " photo" + (files.length === 1 ? "" : "s") + " selected."
-        : "";
-});
+);
 
 function escapeHtml(value) {
     return String(value)
@@ -488,4 +513,3 @@ startSellPage();
 
 </body>
 </html>
-
