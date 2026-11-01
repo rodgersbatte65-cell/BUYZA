@@ -23,6 +23,7 @@ textarea{min-height:85px;resize:vertical}
 .primary{width:100%;margin-top:20px;padding:14px;background:#087f5b;color:white;border:0;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer}
 .primary:hover{background:#066b4d}
 .status{margin-top:14px;color:#555;line-height:1.5}
+.privacy{background:#eef7f2;border-radius:9px;padding:12px 14px;color:#285b42;font-size:14px;line-height:1.5;margin:0 0 14px}
 .status.error{color:#a11}
 .send-link{display:none;margin-top:12px;text-align:center;padding:13px;background:#fff1e8;color:#b84900;border-radius:9px;font-weight:800;text-decoration:none}
 .send-link.show{display:block}
@@ -37,9 +38,10 @@ footer{text-align:center;color:#888;padding:24px;font-size:13px}
 <a id="backLink" class="back" href="index.html">← Back to listing</a>
 <section class="card">
 <h1>🏍️ Book a Boda Ride</h1>
-<p class="intro">Enter all required rider and trip details. The driver’s name, phone number, and service area must be on their BUYZA profile. BUYZA will open WhatsApp so you can send the request.</p>
+<p class="intro">Enter the required rider and trip details. The driver’s name, phone number, and service area must be on their BUYZA profile.</p>
 <div id="driverInfo" class="driver">Loading driver details…</div>
 <form id="rideForm" hidden>
+<p class="privacy">Your name, phone number, pickup point, destination, and ride time will be saved in BUYZA and visible to this driver.</p>
 <label for="pickup">Pickup location</label>
 <input id="pickup" type="text" placeholder="e.g. Kampala City Square" required maxlength="180">
 <label for="destination">Destination</label>
@@ -52,10 +54,10 @@ footer{text-align:center;color:#888;padding:24px;font-size:13px}
 <input id="riderPhone" type="tel" placeholder="e.g. 0771234567" required maxlength="30">
 <label for="rideNote">Extra details (optional)</label>
 <textarea id="rideNote" maxlength="500" placeholder="Add a landmark or other useful information"></textarea>
-<button class="primary" type="submit">Send ride request on WhatsApp</button>
+<button id="submitRideRequest" class="primary" type="submit">Save ride request</button>
 </form>
 <div id="status" class="status" role="status"></div>
-<a id="sendLink" class="send-link" target="_blank" rel="noopener">Open WhatsApp to send your request</a>
+<a id="sendLink" class="send-link" target="_blank" rel="noopener">Also message the driver on WhatsApp</a>
 </section>
 </main>
 <footer>BUYZA · Buy. Sell. Connect. 🇺🇬</footer>
@@ -67,6 +69,7 @@ let driverPhone = "";
 let listingName = "";
 let sellerName = "";
 let driverArea = "";
+let driverId = "";
 
 function escapeHtml(value){
  return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
@@ -104,6 +107,7 @@ async function loadRideListing(){
    throw new Error("This listing is not marked as a Boda Boda ride service.");
   }
   listingName=product.name||"Boda Boda Ride";
+  driverId=String(product.user_id||"");
   driverPhone=String(product.phone||"").trim();
   driverArea=String(product.location||"").trim();
   if(product.user_id){
@@ -125,7 +129,7 @@ async function loadRideListing(){
   document.getElementById("rideForm").hidden=false;
  }catch(error){setError(error.message||"Could not load the ride listing.");}
 }
-document.getElementById("rideForm").addEventListener("submit",function(event){
+document.getElementById("rideForm").addEventListener("submit",async function(event){
  event.preventDefault();
  const phoneDigits=driverPhone.replace(/\D/g,"");
  let whatsappNumber=phoneDigits;
@@ -135,24 +139,62 @@ document.getElementById("rideForm").addEventListener("submit",function(event){
  const riderName=document.getElementById("riderName").value.trim();
  const riderPhone=document.getElementById("riderPhone").value.trim();
  const rideTime=document.getElementById("rideTime").value;
+ const pickup=document.getElementById("pickup").value.trim();
+ const destination=document.getElementById("destination").value.trim();
  const when=new Date(rideTime).toLocaleString();
  const note=document.getElementById("rideNote").value.trim();
- const lines=[
-  "Hello "+sellerName+", I would like to book a Boda Boda ride through BUYZA.",
-  "Service: "+listingName,
-  "Rider: "+riderName,
-  "Pickup: "+document.getElementById("pickup").value.trim(),
-  "Destination: "+document.getElementById("destination").value.trim(),
-  "Requested time: "+when,
-  "My phone: "+riderPhone
- ];
- if(note)lines.push("Extra details: "+note);
- lines.push("Ride listing: "+location.origin+location.pathname.replace(/book-ride\.html$/,"")+"product.html?id="+encodeURIComponent(listingId));
- const link="https://wa.me/"+whatsappNumber+"?text="+encodeURIComponent(lines.join("\n"));
- const fallback=document.getElementById("sendLink");fallback.href=link;fallback.classList.add("show");
- document.getElementById("status").className="status";document.getElementById("status").textContent="Your request is ready. If WhatsApp did not open, tap the link below.";
- const popup=window.open(link,"_blank","noopener");
- if(!popup)fallback.textContent="Tap here to open WhatsApp and send your request";
+ const submitButton=document.getElementById("submitRideRequest");
+ const status=document.getElementById("status");
+ submitButton.disabled=true;
+ submitButton.textContent="Saving request...";
+ status.className="status";
+ status.textContent="Saving your ride request in BUYZA...";
+ const rideRequest={
+  listing_id:String(listingId),
+  driver_id:driverId,
+  service_name:listingName,
+  rider_name:riderName,
+  rider_phone:riderPhone,
+  pickup_location:pickup,
+  destination:destination,
+  ride_time:new Date(rideTime).toISOString(),
+  rider_note:note,
+  status:"pending"
+ };
+ try{
+  const saveResponse=await fetch(SUPABASE_URL+"/rest/v1/ride_requests",{
+   method:"POST",
+   headers:{...requestHeaders(),"Content-Type":"application/json","Prefer":"return=minimal"},
+   body:JSON.stringify(rideRequest)
+  });
+  if(!saveResponse.ok){
+   const errorText=await saveResponse.text();
+   throw new Error("Could not save the ride request: "+errorText);
+  }
+  const lines=[
+   "Hello "+sellerName+", I would like to book a Boda Boda ride through BUYZA.",
+   "Service: "+listingName,
+   "Rider: "+riderName,
+   "Pickup: "+pickup,
+   "Destination: "+destination,
+   "Requested time: "+when,
+   "My phone: "+riderPhone
+  ];
+  if(note)lines.push("Extra details: "+note);
+  lines.push("Ride listing: "+location.origin+location.pathname.replace(/book-ride\.html$/,"")+"product.html?id="+encodeURIComponent(listingId));
+  const link="https://wa.me/"+whatsappNumber+"?text="+encodeURIComponent(lines.join("\n"));
+  const whatsappLink=document.getElementById("sendLink");
+  whatsappLink.href=link;
+  whatsappLink.classList.add("show");
+  status.className="status";
+  status.textContent="✅ Ride request saved in BUYZA. You can also message the driver on WhatsApp using the link below.";
+  submitButton.textContent="Request saved";
+ }catch(error){
+  status.className="status error";
+  status.textContent=error.message||"Could not save your ride request. Please try again.";
+  submitButton.disabled=false;
+  submitButton.textContent="Save ride request";
+ }
 });
 loadRideListing();
 </script>
