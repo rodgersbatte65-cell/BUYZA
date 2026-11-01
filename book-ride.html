@@ -57,6 +57,7 @@ footer{text-align:center;color:#888;padding:24px;font-size:13px}
 <button id="submitRideRequest" class="primary" type="submit">Save ride request</button>
 </form>
 <div id="status" class="status" role="status"></div>
+<a id="trackLink" class="send-link">Track this ride request in BUYZA</a>
 <a id="sendLink" class="send-link" target="_blank" rel="noopener">Also message the driver on WhatsApp</a>
 </section>
 </main>
@@ -145,6 +146,7 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
  const note=document.getElementById("rideNote").value.trim();
  const submitButton=document.getElementById("submitRideRequest");
  const status=document.getElementById("status");
+ const trackingToken=crypto.randomUUID();
  submitButton.disabled=true;
  submitButton.textContent="Saving request...";
  status.className="status";
@@ -152,6 +154,7 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
  const rideRequest={
   listing_id:String(listingId),
   driver_id:driverId,
+  tracking_token:trackingToken,
   service_name:listingName,
   rider_name:riderName,
   rider_phone:riderPhone,
@@ -186,6 +189,9 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
   const whatsappLink=document.getElementById("sendLink");
   whatsappLink.href=link;
   whatsappLink.classList.add("show");
+  const trackLink=document.getElementById("trackLink");
+  trackLink.href="ride-status.html?token="+encodeURIComponent(trackingToken);
+  trackLink.classList.add("show");
   status.className="status";
   status.textContent="✅ Ride request saved in BUYZA. You can also message the driver on WhatsApp using the link below.";
   submitButton.textContent="Request saved";
