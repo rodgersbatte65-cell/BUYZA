@@ -139,7 +139,7 @@
             Checking your login...
         </div>
 
-        <form id="sellForm">
+        <form id="sellForm" onsubmit="event.preventDefault(); document.getElementById('message').textContent = 'Submitting your listing...'; return false;">
             <label for="name">Listing Title</label>
             <input
                 type="text"
