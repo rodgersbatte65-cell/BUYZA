@@ -291,13 +291,29 @@ document.getElementById("sellForm").addEventListener(
         const submitButton =
             document.getElementById("submitButton");
 
-        const sessionOK =
-            await checkBuyzaSession();
+        submitButton.disabled = true;
+        submitButton.textContent = "Checking login...";
+        message.style.color = "#333";
+        message.textContent = "Checking your BUYZA login...";
+
+        let sessionOK = false;
+        try {
+            sessionOK = await Promise.race([
+                checkBuyzaSession(),
+                new Promise(function(resolve) {
+                    setTimeout(function() { resolve(false); }, 15000);
+                })
+            ]);
+        } catch (error) {
+            sessionOK = false;
+        }
 
         if (!sessionOK) {
+            submitButton.disabled = false;
+            submitButton.textContent = "🚀 Post Product";
             message.style.color = "#d32f2f";
             message.textContent =
-                "❌ Your login session expired. Please login again.";
+                "❌ BUYZA could not confirm your login. Refresh the page, sign in again if asked, then retry.";
             return;
         }
 
@@ -308,13 +324,16 @@ document.getElementById("sellForm").addEventListener(
             localStorage.getItem("buyza_user");
 
         if (!userData || !accessToken) {
+            submitButton.disabled = false;
+            submitButton.textContent = "🚀 Post Product";
+            message.style.color = "#d32f2f";
+            message.textContent = "❌ Your login has expired. Please sign in again.";
             window.location.href = "login.html";
             return;
         }
 
         currentUser = JSON.parse(userData);
 
-        submitButton.disabled = true;
         submitButton.textContent = "Uploading...";
 
         message.style.color = "#333";
