@@ -90,15 +90,15 @@ button:disabled{opacity:.6;cursor:wait}
         actions='<button type="button" data-id="'+escapeHtml(item.id)+'" data-next="completed">Mark completed</button><button class="secondary" type="button" data-id="'+escapeHtml(item.id)+'" data-next="cancelled">Cancel</button>';
       }
       const contact=whatsappUrl(item.rider_phone);
-      if(contact)actions+='<a class="contact" target="_blank" rel="noopener" href="'+contact+'">WhatsApp rider</a>';
-      return '<article class="request"><div class="request-top"><div><h2>'+escapeHtml(item.service_name||"Boda Boda Ride")+'</h2><div>Requested '+escapeHtml(formatDate(item.created_at))+'</div></div><span class="badge '+escapeHtml(status)+'">'+escapeHtml(status)+'</span></div><div class="details"><p><strong>Rider:</strong> '+escapeHtml(item.rider_name)+'</p><p><strong>Phone:</strong> '+escapeHtml(item.rider_phone)+'</p><p><strong>Pickup:</strong> '+escapeHtml(item.pickup_location)+'</p><p><strong>Destination:</strong> '+escapeHtml(item.destination)+'</p><p><strong>Ride time:</strong> '+escapeHtml(formatDate(item.ride_time))+'</p><p><strong>Extra details:</strong> '+escapeHtml(item.rider_note||"None")+'</p></div><div class="actions">'+actions+'</div></article>';
+      if(contact)actions+='<a class="contact" target="_blank" rel="noopener" href="'+contact+'">WhatsApp booking customer</a>';
+      return '<article class="request"><div class="request-top"><div><h2>'+escapeHtml(item.service_name||"Boda Boda Ride")+'</h2><div>Requested '+escapeHtml(formatDate(item.created_at))+'</div></div><span class="badge '+escapeHtml(status)+'">'+escapeHtml(status)+'</span></div><div class="details"><p><strong>Customer booking:</strong> '+escapeHtml(item.customer_name||"Not provided")+'</p><p><strong>Rider/passenger:</strong> '+escapeHtml(item.rider_name)+'</p><p><strong>Booking contact phone:</strong> '+escapeHtml(item.rider_phone)+'</p><p><strong>Pickup:</strong> '+escapeHtml(item.pickup_location)+'</p><p><strong>Destination:</strong> '+escapeHtml(item.destination)+'</p><p><strong>Ride time:</strong> '+escapeHtml(formatDate(item.ride_time))+'</p><p><strong>Extra details:</strong> '+escapeHtml(item.rider_note||"None")+'</p></div><div class="actions">'+actions+'</div></article>';
     }).join("");
   }
   async function loadRequests(){
     statusBox.textContent="Loading ride requests…";
     try{
       const query=new URLSearchParams({
-        select:"id,listing_id,service_name,rider_name,rider_phone,pickup_location,destination,ride_time,rider_note,status,created_at",
+        select:"id,listing_id,service_name,customer_name,rider_name,rider_phone,pickup_location,destination,ride_time,rider_note,status,created_at",
         driver_id:"eq."+driverAccountId,
         order:"created_at.desc"
       });
