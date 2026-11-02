@@ -38,19 +38,21 @@ footer{text-align:center;color:#888;padding:24px;font-size:13px}
 <a id="backLink" class="back" href="index.html">← Back to listing</a>
 <section class="card">
 <h1>🏍️ Book a Boda Ride</h1>
-<p class="intro">Enter the required rider and trip details. The driver’s name, phone number, and service area must be on their BUYZA profile.</p>
+<p class="intro">Enter the person booking the ride and the passenger taking it. The driver’s name, phone number, and service area must be on their BUYZA profile.</p>
 <div id="driverInfo" class="driver">Loading driver details…</div>
 <form id="rideForm" hidden>
-<p class="privacy">Your name, phone number, pickup point, destination, and ride time will be saved in BUYZA and visible to this driver.</p>
+<p class="privacy">The booking customer's name, passenger's name, contact phone, pickup point, destination, and ride time will be saved in BUYZA and visible to this driver.</p>
 <label for="pickup">Pickup location</label>
 <input id="pickup" type="text" placeholder="e.g. Kampala City Square" required maxlength="180">
 <label for="destination">Destination</label>
 <input id="destination" type="text" placeholder="Where should the driver take you?" required maxlength="180">
 <label for="rideTime">When do you need the ride?</label>
 <input id="rideTime" type="datetime-local" required>
-<label for="riderName">Your full name</label>
-<input id="riderName" type="text" placeholder="Enter your full name" required maxlength="100">
-<label for="riderPhone">Your phone number</label>
+<label for="customerName">Your full name (person booking)</label>
+<input id="customerName" type="text" placeholder="Enter the booking customer's full name" required maxlength="100">
+<label for="riderName">Rider full name (person taking the ride)</label>
+<input id="riderName" type="text" placeholder="Enter the passenger's full name" required maxlength="100">
+<label for="riderPhone">Your contact phone (person booking)</label>
 <input id="riderPhone" type="tel" placeholder="e.g. 0771234567" required maxlength="30">
 <label for="rideNote">Extra details (optional)</label>
 <textarea id="rideNote" maxlength="500" placeholder="Add a landmark or other useful information"></textarea>
@@ -137,6 +139,7 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
  if(whatsappNumber.startsWith("0"))whatsappNumber="256"+whatsappNumber.slice(1);
  else if(!whatsappNumber.startsWith("256"))whatsappNumber="256"+whatsappNumber;
  if(whatsappNumber.length<10){setError("The driver's phone number does not look valid for WhatsApp.");return;}
+ const customerName=document.getElementById("customerName").value.trim();
  const riderName=document.getElementById("riderName").value.trim();
  const riderPhone=document.getElementById("riderPhone").value.trim();
  const rideTime=document.getElementById("rideTime").value;
@@ -156,6 +159,7 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
   driver_id:driverId,
   tracking_token:trackingToken,
   service_name:listingName,
+  customer_name:customerName,
   rider_name:riderName,
   rider_phone:riderPhone,
   pickup_location:pickup,
@@ -177,11 +181,12 @@ document.getElementById("rideForm").addEventListener("submit",async function(eve
   const lines=[
    "Hello "+sellerName+", I would like to book a Boda Boda ride through BUYZA.",
    "Service: "+listingName,
-   "Rider: "+riderName,
+   "Customer booking: "+customerName,
+   "Rider/passenger: "+riderName,
    "Pickup: "+pickup,
    "Destination: "+destination,
    "Requested time: "+when,
-   "My phone: "+riderPhone
+   "Booking contact phone: "+riderPhone
   ];
   if(note)lines.push("Extra details: "+note);
   lines.push("Ride listing: "+location.origin+location.pathname.replace(/book-ride\.html$/,"")+"product.html?id="+encodeURIComponent(listingId));
