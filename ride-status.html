@@ -1,113 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Track Ride Request - BUYZA</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;background:#f5f6f8;color:#222;font-family:Arial,Helvetica,sans-serif}
-header{background:#111;color:white;padding:15px 20px}
-.nav{max-width:760px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{color:#ff6b00;font-size:25px;font-weight:900;text-decoration:none}
-.nav a:last-child{color:white;text-decoration:none;font-weight:700}
-main{max-width:700px;margin:28px auto;padding:0 16px}
-.card{background:white;padding:24px;border-radius:16px;box-shadow:0 5px 20px rgba(0,0,0,.06)}
-h1{font-size:26px;margin:0 0 10px}
-.intro{color:#666;line-height:1.5;margin:0 0 18px}
-.privacy{background:#fff7e8;color:#76510d;padding:12px 14px;border-radius:9px;font-size:14px;line-height:1.5;margin:18px 0}
-.state{border-radius:12px;padding:16px;background:#fff0df;color:#8a4200;font-size:20px;font-weight:900}
-.state.accepted{background:#e3f4ff;color:#075985}
-.state.completed{background:#e5f6e8;color:#176b2c}
-.state.cancelled{background:#eee;color:#555}
-.details{line-height:1.7;margin-top:18px}
-.details p{margin:5px 0;overflow-wrap:anywhere}
-.refresh{margin-top:20px;padding:12px 16px;border:0;border-radius:9px;background:#111;color:white;font-size:15px;font-weight:800;cursor:pointer}
-.status{margin-top:14px;color:#666;line-height:1.5}
-.status.error{color:#a11}
-[hidden]{display:none!important}
-@media(max-width:520px){.card{padding:18px}h1{font-size:23px}}
-</style>
-</head>
-<body>
-<header><div class="nav"><a class="logo" href="index.html">BUYZA</a><a href="index.html">Home</a></div></header>
-<main>
-<section class="card">
-<h1>Ride Request Status</h1>
-<p class="intro">Check the latest status from your driver. This page refreshes automatically every 30 seconds.</p>
-<div id="requestState" class="state" hidden></div>
-<div id="requestDetails" class="details" hidden></div>
-<p class="privacy">This private link can show the trip summary and status for this request. Keep it to yourself.</p>
-<button id="refreshButton" class="refresh" type="button">Refresh status</button>
-<div id="statusMessage" class="status" role="status">Loading your ride request…</div>
-</section>
-</main>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Track Ride - BUYZA</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#f5f6f8;color:#222;font-family:Arial,sans-serif}header{background:#111;padding:15px 20px}header a{color:#ff6b00;font-weight:900;font-size:24px;text-decoration:none}main{max-width:700px;margin:28px auto;padding:0 16px}.card{background:#fff;padding:22px;border-radius:15px;box-shadow:0 4px 18px #0001}h1{margin-top:0}.state{padding:14px;border-radius:10px;background:#fff0df;font-weight:800}.state.accepted{background:#e3f4ff}.state.completed{background:#e5f6e8}.details{line-height:1.6}.location{background:#f2f7fb;padding:14px;border-radius:10px;margin:12px 0}.location a{display:inline-block;margin:6px 8px 0 0;color:#075985;font-weight:700}.btn{padding:12px 15px;border:0;border-radius:8px;background:#087f5b;color:white;font-weight:800;font-size:15px;margin:5px 6px 5px 0;cursor:pointer}.stop{background:#555}.status{color:#555;line-height:1.5}.privacy{color:#76510d;background:#fff7e8;padding:12px;border-radius:9px;line-height:1.5}[hidden]{display:none!important}</style></head>
+<body><header><a href="index.html">BUYZA</a></header><main><section class="card"><h1>Ride Request Status</h1><p>Ride status and shared locations update automatically while the ride is accepted.</p><div id="state" class="state" hidden></div><div id="details" class="details" hidden></div><div id="locations" hidden></div><div id="shareControls" hidden><button id="shareBtn" class="btn">Share my location with driver</button><button id="stopBtn" class="btn stop" hidden>Stop sharing</button></div><p class="privacy">Location sharing is optional. Your location is shared with the other person only while the ride is accepted. You can stop sharing at any time.</p><button id="refresh" class="btn" style="background:#111">Refresh now</button><p id="message" class="status">Loading ride…</p></section></main>
 <script>
 (function(){
-  const SUPABASE_URL="https://xbjmdsdgisusnxdmlrxh.supabase.co";
-  const SUPABASE_KEY="sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
-  const token=new URLSearchParams(location.search).get("token")||"";
-  const stateBox=document.getElementById("requestState");
-  const detailsBox=document.getElementById("requestDetails");
-  const statusMessage=document.getElementById("statusMessage");
-  const refreshButton=document.getElementById("refreshButton");
-  let isLoading=false;
-  function escapeHtml(value){
-    return String(value??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;");
-  }
-  function formatDate(value){
-    const date=new Date(value);
-    return Number.isNaN(date.getTime())?"Not available":date.toLocaleString();
-  }
-  async function loadStatus(){
-    if(isLoading)return;
-    if(token.length<36){
-      statusMessage.className="status error";
-      statusMessage.textContent="This tracking link is missing or invalid.";
-      refreshButton.disabled=true;
-      return;
-    }
-    isLoading=true;
-    refreshButton.disabled=true;
-    refreshButton.textContent="Refreshing…";
-    try{
-      const response=await fetch(SUPABASE_URL+"/rest/v1/rpc/get_ride_request_status",{
-        method:"POST",
-        headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+SUPABASE_KEY,"Content-Type":"application/json"},
-        body:JSON.stringify({p_tracking_token:token})
-      });
-      if(!response.ok)throw new Error(await response.text());
-      const rows=await response.json();
-      const request=Array.isArray(rows)?rows[0]:rows;
-      if(!request){
-        stateBox.hidden=true;
-        detailsBox.hidden=true;
-        statusMessage.className="status error";
-        statusMessage.textContent="We couldn’t find this request. Check that you opened the full tracking link.";
-        return;
-      }
-      const label={pending:"Pending — waiting for driver",accepted:"Accepted by driver",completed:"Ride completed",cancelled:"Request cancelled"}[request.status]||request.status;
-      stateBox.className="state "+String(request.status||"");
-      stateBox.textContent=label;
-      stateBox.hidden=false;
-      detailsBox.innerHTML="<p><strong>Service:</strong> "+escapeHtml(request.service_name)+"</p><p><strong>Pickup:</strong> "+escapeHtml(request.pickup_location)+"</p><p><strong>Destination:</strong> "+escapeHtml(request.destination)+"</p><p><strong>Requested ride time:</strong> "+escapeHtml(formatDate(request.ride_time))+"</p><p><strong>Updated:</strong> "+escapeHtml(formatDate(request.updated_at))+"</p>";
-      detailsBox.hidden=false;
-      statusMessage.className="status";
-      statusMessage.textContent="Status checked just now.";
-    }catch(error){
-      console.error("Could not load ride status:",error);
-      statusMessage.className="status error";
-      statusMessage.textContent="Could not load this request status. Please try Refresh status again.";
-    }finally{
-      isLoading=false;
-      refreshButton.disabled=false;
-      refreshButton.textContent="Refresh status";
-    }
-  }
-  refreshButton.addEventListener("click",loadStatus);
-  loadStatus();
-  window.setInterval(loadStatus,30000);
+ const URL='https://xbjmdsdgisusnxdmlrxh.supabase.co', KEY='sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J', token=new URLSearchParams(location.search).get('token')||'';
+ const state=document.getElementById('state'),details=document.getElementById('details'),locations=document.getElementById('locations'),message=document.getElementById('message');let watch=null,busy=false,active=false;
+ const headers={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json'};
+ function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+ function mapLink(lat,lng,label){return '<a target="_blank" rel="noopener" href="https://www.google.com/maps?q='+encodeURIComponent(lat+','+lng)+'">Open '+label+' location in Maps</a>';}
+ async function load(){if(busy||token.length<36)return;busy=true;try{const r=await fetch(URL+'/rest/v1/rpc/get_ride_request_status',{method:'POST',headers,body:JSON.stringify({p_tracking_token:token})});if(!r.ok)throw Error();const rows=await r.json(),x=Array.isArray(rows)?rows[0]:rows;if(!x)throw Error();active=x.status==='accepted';state.textContent=({pending:'Pending — waiting for driver',accepted:'Ride accepted — sharing available',completed:'Ride completed',cancelled:'Request cancelled'})[x.status]||x.status;state.className='state '+x.status;state.hidden=false;details.innerHTML='<p><b>Service:</b> '+esc(x.service_name)+'</p><p><b>Pickup:</b> '+esc(x.pickup_location)+'</p><p><b>Destination:</b> '+esc(x.destination)+'</p><p><b>Ride time:</b> '+esc(new Date(x.ride_time).toLocaleString())+'</p>';details.hidden=false;document.getElementById('shareControls').hidden=!active;
+ let html='';if(active&&x.driver_latitude!=null){html+='<div class="location"><b>Driver live location</b><br>Updated '+esc(x.driver_location_at?new Date(x.driver_location_at).toLocaleTimeString():'just now')+'<br>'+mapLink(x.driver_latitude,x.driver_longitude,'driver')+'</div>';}else if(active)html+='<div class="location">Driver has not shared a location yet.</div>';
+ if(active&&x.customer_latitude!=null){html+='<div class="location"><b>Your shared location</b><br>Updated '+esc(x.customer_location_at?new Date(x.customer_location_at).toLocaleTimeString():'just now')+'<br>'+mapLink(x.customer_latitude,x.customer_longitude,'your')+'</div>';}
+ locations.innerHTML=html;locations.hidden=!html;document.getElementById('shareBtn').hidden=!!watch;document.getElementById('stopBtn').hidden=!watch;message.textContent='Updated '+new Date().toLocaleTimeString()+'.';
+ if(!active&&watch)stopShare(false);
+ }catch(e){message.textContent='Could not load ride details. Check the full tracking link and try Refresh now.';}finally{busy=false;}}
+ async function sendLocation(pos){const r=await fetch(URL+'/rest/v1/rpc/update_customer_ride_location',{method:'POST',headers,body:JSON.stringify({p_tracking_token:token,p_latitude:pos.coords.latitude,p_longitude:pos.coords.longitude})});if(!r.ok)throw Error();}
+ function startShare(){if(!active){message.textContent='Location sharing becomes available after the driver accepts the ride.';return;}if(!navigator.geolocation){message.textContent='This browser does not support location sharing.';return;}if(!window.isSecureContext){message.textContent='Open the BUYZA website over HTTPS to share location.';return;}message.textContent='Allow location access when your browser asks.';watch=navigator.geolocation.watchPosition(async p=>{try{await sendLocation(p);message.textContent='Your location is being shared with the driver.';document.getElementById('shareBtn').hidden=true;document.getElementById('stopBtn').hidden=false;}catch(e){message.textContent='Could not send your location. Refresh and try again.';}},e=>{message.textContent=e.code===1?'Location permission was not allowed. You can enable it in browser site settings.':'Could not get your location. Check GPS and try again.';watch=null;},{enableHighAccuracy:true,maximumAge:5000,timeout:20000});}
+ async function stopShare(clear=true){if(watch!==null){navigator.geolocation.clearWatch(watch);watch=null;}if(clear){try{await fetch(URL+'/rest/v1/rpc/clear_customer_ride_location',{method:'POST',headers,body:JSON.stringify({p_tracking_token:token})});message.textContent='Location sharing stopped.';}catch(e){message.textContent='Sharing stopped on this device, but location could not be cleared from the ride.';}}document.getElementById('shareBtn').hidden=!active;document.getElementById('stopBtn').hidden=true;load();}
+ document.getElementById('shareBtn').onclick=startShare;document.getElementById('stopBtn').onclick=()=>stopShare();document.getElementById('refresh').onclick=load;load();setInterval(load,12000);
 })();
-</script>
-</body>
-</html>
+</script></body></html>
