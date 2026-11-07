@@ -228,6 +228,29 @@ textarea{
 }
 
 </style>
+<style>
+body{background:linear-gradient(180deg,#fff7f0 0,#f5f6f8 250px);min-height:100vh}
+header{position:sticky;top:0;z-index:5;padding:15px max(20px,calc((100% - 1080px)/2));box-shadow:0 4px 18px #0002}
+.container{max-width:1080px;margin:32px auto;padding:0 20px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:22px;align-items:start}
+.card{border:1px solid #eceef1;border-radius:20px;padding:26px;box-shadow:0 10px 32px rgba(22,28,36,.07);transition:transform .18s ease,box-shadow .18s ease}
+.card:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(22,28,36,.1)}
+.profile-header{text-align:left;position:relative;padding:4px 0 19px 78px;margin-bottom:18px;border-bottom:1px solid #eee}
+.avatar{position:absolute;left:0;top:0;width:62px;height:62px;margin:0;font-size:27px;background:linear-gradient(135deg,#ff8a00,#ff5b00);box-shadow:0 6px 15px #ff6b0040}
+.profile-header h2{margin:3px 0 7px;font-size:23px}.profile-header p{margin:0;color:#737980;line-height:1.45}
+.email{background:#f7f8fa;border:1px solid #eef0f2;padding:13px 15px;border-radius:12px;overflow-wrap:anywhere}
+label{color:#343a40}input,textarea{border-color:#d9dde2;background:#fcfcfd;transition:border-color .15s,box-shadow .15s}
+input:focus,textarea:focus{border-color:#ff6b00;box-shadow:0 0 0 3px #ff6b0022}
+.save-btn{background:linear-gradient(135deg,#ff7b00,#f45d00);box-shadow:0 5px 14px #ff6b0030;transition:transform .15s,box-shadow .15s}
+.save-btn:hover{background:#e85f00;transform:translateY(-1px);box-shadow:0 8px 18px #ff6b0040}
+.section-title{font-size:22px;padding-bottom:15px;border-bottom:1px solid #eee}
+.button{display:flex;align-items:center;justify-content:flex-start;gap:10px;min-height:54px;padding:14px 16px;margin-top:10px;border-radius:12px;background:#202329;transition:transform .15s,background .15s,box-shadow .15s}
+.button:hover{opacity:1;transform:translateY(-1px);background:#333944;box-shadow:0 5px 14px #0002}
+.favorite-button{background:#e91e63}.favorite-button:hover{background:#d81b60}
+.logout{justify-content:center;margin-top:20px;background:#fff1ef;color:#b42318;border:1px solid #ffd7d2}
+.logout:hover{background:#ffe5e1}
+.unread-count{margin-left:auto}
+@media(max-width:760px){.container{grid-template-columns:1fr;gap:16px;margin:20px auto;padding:0 14px}header{padding:14px 16px}.card{padding:20px}}
+</style>
 
 </head>
 
