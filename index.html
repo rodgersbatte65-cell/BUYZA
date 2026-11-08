@@ -37,9 +37,11 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .ride-cta{display:block;position:relative;isolation:isolate;overflow:hidden;margin:18px auto 0;padding:34px 28px 11px;border:0;border-radius:13px;background:linear-gradient(145deg,#16a879,#056342);color:white;font-size:17px;font-weight:900;letter-spacing:.2px;box-shadow:0 6px 0 #034b32,0 13px 24px rgba(0,91,60,.28);transform-style:preserve-3d;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;animation:rideButtonGlow 2s ease-in-out infinite}
 .ride-cta::after,.book-ride-card-btn::after{content:"";position:absolute;z-index:0;top:-40%;left:-60%;width:42%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-22deg);animation:rideButtonShine 4.2s ease-in-out infinite;pointer-events:none}
 .ride-button-label{position:relative;z-index:1}
-.ride-bike{position:absolute;z-index:2;top:4px;left:8px;font-size:20px;line-height:1;animation:bikeTravel 3s ease-in-out infinite;pointer-events:none}
+.ride-bike{position:absolute;z-index:2;top:3px;left:8px;width:34px;height:24px;line-height:1;animation:bikeTravel 2.4s ease-in-out infinite alternate;pointer-events:none}
+.ride-bike svg{display:block;width:34px;height:24px;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
 .ride-road{position:absolute;z-index:1;top:27px;left:10px;right:10px;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.9) 0 9px,transparent 9px 17px);background-size:34px 2px;animation:roadFlow .45s linear infinite;pointer-events:none}
-.book-ride-card-btn .ride-bike{top:4px;font-size:17px}
+.book-ride-card-btn .ride-bike{top:3px;width:30px;height:22px}
+.book-ride-card-btn .ride-bike svg{width:30px;height:22px}
 .book-ride-card-btn .ride-road{top:26px;left:7px;right:7px}
 .ride-cta:hover,.book-ride-card-btn:hover{animation:none;filter:brightness(1.08);transform:perspective(700px) rotateX(0deg) translateY(-4px) scale(1.045);box-shadow:0 9px 0 #034b32,0 17px 29px rgba(0,91,60,.34)}
 .ride-cta:active,.book-ride-card-btn:active{animation:none;transform:perspective(700px) rotateX(0deg) translateY(3px) scale(.99);box-shadow:0 2px 0 #034b32,0 6px 12px rgba(0,91,60,.24)}
@@ -94,9 +96,9 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .deal button{background:#ff6500;color:white;border:0;padding:14px 24px;border-radius:10px;font-weight:800}
 @keyframes rideButtonShine{0%,72%,100%{left:-60%}38%{left:125%}}
 @keyframes rideButtonGlow{0%,100%{box-shadow:0 6px 0 #034b32,0 13px 24px rgba(0,91,60,.24)}50%{box-shadow:0 6px 0 #034b32,0 16px 29px rgba(0,140,90,.36)}}
-@keyframes bikeTravel{0%{left:8px;opacity:0;transform:translateY(2px) rotate(-5deg)}8%{opacity:1}45%{left:calc(100% - 32px);opacity:1;transform:translateY(-2px) rotate(4deg)}55%{left:calc(100% - 32px);opacity:1;transform:translateY(0) rotateY(180deg)}88%{left:8px;opacity:1;transform:translateY(-1px) rotateY(180deg) rotate(-3deg)}96%,100%{left:8px;opacity:0;transform:translateY(2px) rotateY(180deg)}}
+@keyframes bikeTravel{0%{left:8px;transform:translateY(0)}50%{transform:translateY(-3px)}100%{left:calc(100% - 38px);transform:translateY(0)}}
 @keyframes roadFlow{to{background-position:-34px 0}}
-@media(prefers-reduced-motion:reduce){.ride-cta,.book-ride-card-btn{animation:none;transition:none;transform:none}.ride-cta::after,.book-ride-card-btn::after,.ride-bike,.ride-road{animation:none;display:none}}
+@media(prefers-reduced-motion:reduce){.ride-cta,.book-ride-card-btn{animation:none;transition:none;transform:none}.ride-cta::after,.book-ride-card-btn::after,.ride-bike,.ride-road{animation:none}.ride-bike{display:block;left:8px;opacity:1}}
 .loading{grid-column:1/-1;text-align:center;padding:60px 20px;color:#777}
 .load-more-wrap{text-align:center;margin:22px 0 5px}
 .load-more-button{border:0;border-radius:10px;background:#ff6500;color:white;padding:13px 24px;font-weight:800;font-size:15px}
@@ -154,7 +156,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <input type="text" id="searchInput" placeholder="What are you looking for?" oninput="filterProducts()">
         <button onclick="filterProducts()">🔍 Search</button>
     </div>
-    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});"><span class="ride-bike" aria-hidden="true">🏍️</span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book a Ride</span></button>
+    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});"><span class="ride-bike" aria-hidden="true"><svg viewBox="0 0 64 40" role="img"><circle cx="13" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><circle cx="51" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><path d="M13 28h13l8-13h10l7 13M25 28l8-7 11 7M32 15h-7m18 0 4-5h7m-12 5 5-6" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 14h9l5 5H31z" fill="#ffd166" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book a Ride</span></button>
 </div>
 </section>
 
@@ -471,7 +473,7 @@ function displayProducts(products) {
             String(product.category || "").trim().toLowerCase() === "services" &&
             /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
         const bookRideButton = isBodaRide
-            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}"><span class="ride-bike" aria-hidden="true">🏍️</span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book</span></a>`
+            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}"><span class="ride-bike" aria-hidden="true"><svg viewBox="0 0 64 40" role="img"><circle cx="13" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><circle cx="51" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><path d="M13 28h13l8-13h10l7 13M25 28l8-7 11 7M32 15h-7m18 0 4-5h7m-12 5 5-6" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 14h9l5 5H31z" fill="#ffd166" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book</span></a>`
             : "";
 
         return `
