@@ -6,7 +6,7 @@
 <title>BUYZA - Buy & Sell in Uganda</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#f6f7f9;color:#17202a}
+body{font-family:Arial,Helvetica,sans-serif;background:#f6f7f9;color:#17202a;padding-bottom:88px}
 button,input,select{font-family:inherit}
 button{cursor:pointer}
 header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px solid #eee;box-shadow:0 2px 15px rgba(0,0,0,.05)}
@@ -19,6 +19,15 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .notification-btn{position:relative;min-width:44px;font-size:18px}
 .notification-badge{position:absolute;top:1px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#e53935;color:white;font-size:10px;line-height:17px;text-align:center;font-weight:800}
 .notification-badge[hidden]{display:none}
+.bottom-taskbar-wrap{position:fixed;left:0;right:0;bottom:0;z-index:1800;padding:8px 12px max(8px,env(safe-area-inset-bottom));background:rgba(255,255,255,.97);border-top:1px solid #e7e9ec;box-shadow:0 -5px 22px rgba(0,0,0,.08);backdrop-filter:blur(12px)}
+.bottom-taskbar{max-width:1120px;margin:auto;display:flex;align-items:stretch;justify-content:space-between;gap:4px;overflow-x:auto;scrollbar-width:none}
+.bottom-taskbar::-webkit-scrollbar{display:none}
+.taskbar-link,.taskbar-action{position:relative;flex:1 0 82px;min-width:70px;min-height:58px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 7px;border:0;border-radius:11px;background:transparent;color:#454b53;text-decoration:none;font-size:11px;font-weight:700;white-space:nowrap}
+.taskbar-link:hover,.taskbar-action:hover{background:#fff1e8;color:#e85f00}
+.taskbar-icon{font-size:19px;line-height:1}
+.taskbar-badge{position:absolute;top:1px;left:calc(50% + 5px);min-width:16px;height:16px;padding:0 4px;border-radius:20px;background:#e53935;color:#fff;text-align:center;font-size:10px;line-height:16px;font-weight:800}
+.taskbar-badge[hidden]{display:none}
+.taskbar-action[hidden]{display:none}
 .sell-btn{background:#ff6500;color:white;padding:12px 20px;border-radius:10px;border:0;font-weight:800}
 .sell-btn:hover{background:#e95700}
 .hero{background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(135deg,#ff6500,#ff8a00);color:white;padding:65px 20px 80px}
@@ -238,6 +247,20 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <div class="footer-links"><div>Buy with confidence</div><div>Sell with ease</div><div>© 2026 BUYZA. All rights reserved.</div></div>
 </div>
 </footer>
+
+<div class="bottom-taskbar-wrap">
+  <nav class="bottom-taskbar" aria-label="BUYZA quick navigation">
+    <a class="taskbar-link" href="index.html"><span class="taskbar-icon">🏠</span><span>Home</span></a>
+    <a class="taskbar-link" href="my-listings.html"><span class="taskbar-icon">📋</span><span>Listings</span></a>
+    <a class="taskbar-link" href="favorites.html"><span class="taskbar-icon">❤️</span><span>Saved</span></a>
+    <a class="taskbar-link" href="messages.html"><span class="taskbar-icon">✉️</span><span>Messages</span></a>
+    <a class="taskbar-link" href="ride-requests.html"><span class="taskbar-icon">🏍️</span><span>Ride requests</span></a>
+    <a class="taskbar-link" href="notifications.html"><span class="taskbar-icon">🔔</span><span>Alerts</span><span class="taskbar-badge" id="taskbarNotificationsBadge" hidden>0</span></a>
+    <a class="taskbar-link" href="sell.html"><span class="taskbar-icon">＋</span><span>Sell</span></a>
+    <a class="taskbar-link" id="taskbarAccountLink" href="login.html"><span class="taskbar-icon">👤</span><span>Login</span></a>
+    <button class="taskbar-action" id="taskbarLogout" type="button" onclick="logoutFromTaskbar()" hidden><span class="taskbar-icon">↪</span><span>Sign out</span></button>
+  </nav>
+</div>
 
 <script>
 const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
@@ -840,6 +863,9 @@ async function loadNotificationBadge() {
         const total = countFrom(messagesResponse) + countFrom(ridesResponse);
         badge.textContent = total > 99 ? "99+" : String(total);
         badge.hidden = total === 0;
+        const taskbarBadge = document.getElementById("taskbarNotificationsBadge");
+        taskbarBadge.textContent = total > 99 ? "99+" : String(total);
+        taskbarBadge.hidden = total === 0;
     } catch (error) {
         console.error("Notification badge could not be loaded:", error);
     }
@@ -847,8 +873,22 @@ async function loadNotificationBadge() {
 
 function updateAccountButton() {
     const token = localStorage.getItem("buyza_access_token");
+    const user = localStorage.getItem("buyza_user");
     const button = document.getElementById("accountBtn");
-    button.textContent = token ? "Account" : "Login";
+    const accountLink = document.getElementById("taskbarAccountLink");
+    const logoutButton = document.getElementById("taskbarLogout");
+    const loggedIn = Boolean(token && user);
+    button.textContent = loggedIn ? "Account" : "Login";
+    accountLink.href = loggedIn ? "account.html" : "login.html";
+    accountLink.querySelector("span:last-child").textContent = loggedIn ? "Account" : "Login";
+    logoutButton.hidden = !loggedIn;
+}
+
+function logoutFromTaskbar() {
+    if (!confirm("Sign out of your BUYZA account?")) return;
+    localStorage.removeItem("buyza_user");
+    localStorage.removeItem("buyza_access_token");
+    window.location.href = "index.html";
 }
 
 function formatPrice(price) {
