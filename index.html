@@ -16,6 +16,9 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .nav-links{display:flex;align-items:center;gap:10px}
 .nav-btn{border:0;background:transparent;padding:11px 15px;border-radius:10px;font-weight:700;color:#333}
 .nav-btn:hover{background:#fff1e8;color:#ff6500}
+.notification-btn{position:relative;min-width:44px;font-size:18px}
+.notification-badge{position:absolute;top:1px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:999px;background:#e53935;color:white;font-size:10px;line-height:17px;text-align:center;font-weight:800}
+.notification-badge[hidden]{display:none}
 .sell-btn{background:#ff6500;color:white;padding:12px 20px;border-radius:10px;border:0;font-weight:800}
 .sell-btn:hover{background:#e95700}
 .hero{background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(135deg,#ff6500,#ff8a00);color:white;padding:65px 20px 80px}
@@ -118,7 +121,8 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <div class="logo">BUY<span>ZA</span></div>
     <div class="nav-links">
         <button class="nav-btn" onclick="location.href='index.html'">Home</button>
-        <button class="nav-btn" onclick="location.href='favorites.html'">❤️</button>
+        <button class="nav-btn" onclick="location.href='favorites.html'" aria-label="Saved listings" title="Saved listings">❤️</button>
+        <button class="nav-btn notification-btn" id="notificationsBtn" onclick="openNotifications()" aria-label="Notifications" title="Notifications">🔔<span class="notification-badge" id="notificationsBadge" hidden>0</span></button>
         <button class="nav-btn" id="accountBtn" onclick="openAccount()">Account</button>
         <button class="sell-btn" onclick="location.href='sell.html'">+ Sell</button>
     </div>
@@ -781,6 +785,66 @@ function openAccount() {
         token && user ? "account.html" : "login.html";
 }
 
+function openNotifications() {
+    const token = localStorage.getItem("buyza_access_token");
+    const user = localStorage.getItem("buyza_user");
+    window.location.href = token && user ? "notifications.html" : "login.html";
+}
+
+async function loadNotificationBadge() {
+    const token = localStorage.getItem("buyza_access_token");
+    const badge = document.getElementById("notificationsBadge");
+    let user;
+    try {
+        user = JSON.parse(localStorage.getItem("buyza_user") || "null");
+    } catch (error) {
+        user = null;
+    }
+    if (!token || !user || !user.id) return;
+
+    const headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + token,
+        "Prefer": "count=exact",
+        "Range": "0-0"
+    };
+    const messageQuery = new URLSearchParams({
+        select: "id",
+        recipient_id: "eq." + user.id,
+        read_at: "is.null"
+    });
+    const rideQuery = new URLSearchParams({
+        select: "id",
+        driver_id: "eq." + user.id,
+        status: "eq.pending"
+    });
+
+    try {
+        const [messagesResponse, ridesResponse] = await Promise.all([
+            fetch(SUPABASE_URL + "/rest/v1/buyer_messages?" + messageQuery.toString(), {
+                method: "HEAD", headers
+            }),
+            fetch(SUPABASE_URL + "/rest/v1/ride_requests?" + rideQuery.toString(), {
+                method: "HEAD", headers
+            })
+        ]);
+        if (!messagesResponse.ok || !ridesResponse.ok) {
+            console.error("Could not load notification count.");
+            return;
+        }
+
+        const countFrom = response => {
+            const contentRange = response.headers.get("content-range") || "";
+            return Number(contentRange.split("/").pop()) || 0;
+        };
+        const total = countFrom(messagesResponse) + countFrom(ridesResponse);
+        badge.textContent = total > 99 ? "99+" : String(total);
+        badge.hidden = total === 0;
+    } catch (error) {
+        console.error("Notification badge could not be loaded:", error);
+    }
+}
+
 function updateAccountButton() {
     const token = localStorage.getItem("buyza_access_token");
     const button = document.getElementById("accountBtn");
@@ -805,8 +869,14 @@ function escapeHTML(value) {
 
 loadRecentlyViewed();
 updateAccountButton();
+loadNotificationBadge();
+setInterval(loadNotificationBadge, 30000);
 loadProducts();
 </script>
 
 </body>
 </html>
+
+
+
+
