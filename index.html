@@ -25,8 +25,6 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .search-box{max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
 .search-box input{flex:1;border:0;outline:none;padding:17px;font-size:16px;min-width:0}
 .search-box button{border:0;background:#111;color:white;padding:0 28px;border-radius:11px;font-weight:800}
-.ride-cta{display:block;margin:18px auto 0;padding:15px 26px;border:0;border-radius:12px;background:#111;color:white;font-size:17px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.18)}
-.ride-cta:hover{background:#333;transform:translateY(-1px)}
 .stats{max-width:1050px;margin:-30px auto 35px;position:relative;padding:0 20px}
 .stats-box{background:white;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}
 .stat{padding:25px;text-align:center;border-right:1px solid #eee}
@@ -53,7 +51,6 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .product:hover{transform:translateY(-5px);box-shadow:0 15px 35px rgba(0,0,0,.1)}
 .product-image{height:210px;background:#f0f1f3;position:relative;overflow:hidden}
 .product-image img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s}
-.product-image-open{display:block;width:100%;height:100%;padding:0;border:0;background:transparent;text-align:inherit;cursor:pointer}
 .product:hover .product-image img{transform:scale(1.05)}
 .no-image{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:45px}
 .favorite{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;border:0;background:white;box-shadow:0 3px 12px rgba(0,0,0,.15);font-size:20px;z-index:2}
@@ -69,20 +66,13 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .product-actions{display:flex;gap:8px;margin-top:15px}
 .view-btn{flex:1;background:#111;color:white;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
 .contact-btn{flex:1;background:#fff1e8;color:#ff6500;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
-.book-ride-card-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:#087f5b;color:white;text-decoration:none;text-align:center;border-radius:9px;padding:11px 5px;font-weight:800}
 .view-btn:hover{background:#333}
 .contact-btn:hover{background:#ffe1cf}
-.book-ride-card-btn:hover{background:#066b4d}
 .deal{margin-top:45px;background:linear-gradient(135deg,#111,#292929);color:white;border-radius:22px;padding:35px;display:flex;justify-content:space-between;align-items:center;gap:20px}
 .deal h2{font-size:30px;margin-bottom:8px}
 .deal p{color:#bbb}
 .deal button{background:#ff6500;color:white;border:0;padding:14px 24px;border-radius:10px;font-weight:800}
 .loading{grid-column:1/-1;text-align:center;padding:60px 20px;color:#777}
-.load-more-wrap{text-align:center;margin:22px 0 5px}
-.load-more-button{border:0;border-radius:10px;background:#ff6500;color:white;padding:13px 24px;font-weight:800;font-size:15px}
-.load-more-button:hover{background:#e95700}
-.load-more-button[hidden],.load-more-wrap[hidden]{display:none}
-.results-count{color:#777;font-size:13px;margin-top:10px}
 .spinner{width:38px;height:38px;border:4px solid #eee;border-top-color:#ff6500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
 @keyframes spin{to{transform:rotate(360deg)}}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;padding:20px}
@@ -111,6 +101,27 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 @media(max-width:600px){.section-head{align-items:flex-start;flex-direction:column;gap:12px}.listing-controls{width:100%;justify-content:flex-end}}
 @media(max-width:400px){.categories{grid-template-columns:repeat(2,1fr)}.hero h1{font-size:36px}}
 </style>
+<style>
+:root{--buyza-orange:#ff6b00;--buyza-ink:#151a23;--buyza-muted:#68717d;--buyza-line:#e8ebef;--buyza-paper:#f7f8fa}
+body{background:var(--buyza-paper);color:var(--buyza-ink);letter-spacing:.005em}
+header{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid rgba(18,24,32,.08);box-shadow:0 5px 24px rgba(18,24,32,.05)}
+.nav{height:76px}.logo{font-size:32px;letter-spacing:-1.8px}.nav-btn,.sell-btn{transition:transform .18s ease,background .18s ease,box-shadow .18s ease}.nav-btn:hover{transform:translateY(-1px)}.sell-btn{box-shadow:0 7px 18px rgba(255,107,0,.22)}.sell-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,107,0,.28)}
+.hero{position:relative;overflow:hidden;background:radial-gradient(ellipse at 92% 12%,rgba(255,107,0,.35),transparent 27%),radial-gradient(ellipse at 8% 100%,rgba(255,138,0,.16),transparent 32%),linear-gradient(120deg,#111923 0%,#1b2430 62%,#262d36 100%);padding:76px 24px 92px;color:white}
+.hero:after{content:"";position:absolute;width:310px;height:310px;border:1px solid rgba(255,255,255,.08);border-radius:50%;right:8%;top:5%;box-shadow:0 0 0 35px rgba(255,255,255,.025),0 0 0 70px rgba(255,255,255,.018);pointer-events:none}
+.hero-inner{position:relative;z-index:1;max-width:1100px;text-align:left}.hero-inner:before{content:"UGANDA’S MARKETPLACE";display:inline-block;margin-bottom:22px;padding:8px 12px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#ffe0c5;font-size:11px;font-weight:900;letter-spacing:1.4px;background:rgba(255,255,255,.06)}
+.hero h1{max-width:760px;font-size:clamp(42px,7vw,78px);line-height:.99;letter-spacing:-3px;margin-bottom:18px}.hero p{max-width:600px;color:#d4dae1;font-size:19px;line-height:1.55;margin-bottom:28px}
+.search-box{max-width:800px;margin:0;background:#fff;padding:7px;border-radius:15px;box-shadow:0 18px 50px rgba(0,0,0,.26);border:1px solid rgba(255,255,255,.35)}.search-box input{padding:17px 18px;color:#222}.search-box input::placeholder{color:#89919b}.search-box button{background:var(--buyza-orange);padding:0 25px;transition:background .15s,transform .15s}.search-box button:hover{background:#e85f00;transform:scale(.98)}
+.stats{max-width:1100px;margin:-30px auto 30px}.stats-box{border:1px solid var(--buyza-line);border-radius:17px;box-shadow:0 14px 36px rgba(20,28,38,.09)}.stat{padding:21px}.stat strong{font-size:26px}.stat span{display:block;margin-top:4px;color:var(--buyza-muted)}
+.container{max-width:1280px;padding-bottom:70px}.section{margin-top:43px}.section-head{gap:20px;align-items:flex-start}.section-head h2{font-size:26px;letter-spacing:-.7px}.section-head p{color:var(--buyza-muted);font-size:14px}
+.categories{gap:13px}.category{border:1px solid var(--buyza-line);border-radius:16px;padding:20px 10px;background:linear-gradient(180deg,#fff,#fdfdfd);box-shadow:0 4px 14px rgba(20,28,38,.025);transition:transform .2s,box-shadow .2s,border-color .2s}.category:hover{transform:translateY(-4px);box-shadow:0 13px 28px rgba(20,28,38,.09);border-color:#ffc08e}.category-icon{background:#fff2e8;color:var(--buyza-orange)}
+.listing-controls{padding:10px 12px;background:#fff;border:1px solid var(--buyza-line);border-radius:13px;box-shadow:0 5px 18px rgba(20,28,38,.04)}.sort-select,.filter-input{border-color:#dfe3e8;border-radius:9px;padding:10px 11px;font-size:13px}.sort-select:focus,.filter-input:focus{outline:3px solid rgba(255,107,0,.15);border-color:var(--buyza-orange)}.sort-label{color:#67717e}.view-all{padding:8px 5px;white-space:nowrap}
+.products{gap:17px}.product{border:1px solid var(--buyza-line);border-radius:16px;box-shadow:0 5px 16px rgba(20,28,38,.04);transition:transform .2s,box-shadow .2s,border-color .2s}.product:hover{transform:translateY(-4px);box-shadow:0 15px 32px rgba(20,28,38,.11);border-color:#ffd2b2}.product-image{background:#eef0f3}.product-body{padding:16px}.product-name{color:#202833;font-size:15px}.price{font-size:19px}.condition{display:inline-block;background:#f1f3f5;padding:5px 8px;border-radius:6px;margin:0 0 9px}.seller-rating{color:#9c4b00}.location{color:#717b87}.description{color:#69727c}.product-actions{margin-top:13px}.view-btn,.contact-btn{border-radius:9px;transition:transform .15s,background .15s}.view-btn:hover,.contact-btn:hover{transform:translateY(-1px)}
+.deal{position:relative;overflow:hidden;margin-top:52px;background:radial-gradient(circle at 90% 10%,rgba(255,107,0,.25),transparent 27%),linear-gradient(120deg,#161c25,#252c36);border:1px solid rgba(255,255,255,.08);box-shadow:0 16px 36px rgba(18,24,32,.16)}.deal h2{letter-spacing:-.8px}.deal button{background:var(--buyza-orange);box-shadow:0 7px 18px rgba(255,107,0,.22);transition:transform .15s,background .15s}.deal button:hover{background:#e85f00;transform:translateY(-2px)}
+footer{background:#111820;border-top:3px solid var(--buyza-orange)}.footer-logo{letter-spacing:-1px}.footer-links{color:#c0c6ce}
+button:focus-visible,a:focus-visible{outline:3px solid rgba(255,107,0,.55);outline-offset:3px}
+@media(max-width:700px){.hero{padding:51px 17px 68px}.hero:after{width:190px;height:190px;right:-65px;top:20px}.hero h1{font-size:clamp(39px,11vw,54px);letter-spacing:-2px}.hero p{font-size:16px;max-width:420px}.stats{margin-top:-22px}.stats-box{grid-template-columns:repeat(3,1fr)}.stat{padding:13px 5px;border-bottom:0;border-right:1px solid var(--buyza-line)}.stat strong{font-size:20px}.stat span{font-size:11px}.section-head{width:100%}.listing-controls{width:100%;justify-content:flex-start;gap:8px}.sort-select,.filter-input{max-width:calc(50% - 8px);flex:1}.sort-label{width:auto}.products{gap:10px}.product{border-radius:12px}.product-image{height:170px}}
+@media(max-width:420px){.nav{padding:0 12px}.nav-links{gap:1px}.nav-btn{padding:8px 6px}.sell-btn{padding:9px}.stats-box{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid var(--buyza-line)}.stat:last-child{border-bottom:0}.search-box button{padding:0 12px;font-size:12px}.categories{gap:8px}.section-head h2{font-size:22px}}
+</style>
 </head>
 <body>
 <header>
@@ -133,7 +144,6 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <input type="text" id="searchInput" placeholder="What are you looking for?" oninput="filterProducts()">
         <button onclick="filterProducts()">🔍 Search</button>
     </div>
-    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});">🏍️ Book a Ride</button>
 </div>
 </section>
 
@@ -157,7 +167,6 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <div class="category" onclick="selectCategory('Electronics')"><div class="category-icon">💻</div><strong>Electronics</strong></div>
     <div class="category" onclick="selectCategory('Furniture')"><div class="category-icon">🛋️</div><strong>Home</strong></div>
     <div class="category" onclick="selectCategory('Jobs')"><div class="category-icon">💼</div><strong>Jobs</strong></div>
-    <div class="category" onclick="selectCategory('Services')"><div class="category-icon">🧹</div><strong>Services</strong></div>
 </div>
 </section>
 
@@ -199,16 +208,8 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
         <button class="view-all" onclick="showAll()">View All →</button>
     </div>
 </div>
-
 <div id="products" class="products">
     <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
-</div>
-
-<div id="loadMoreWrap" class="load-more-wrap" hidden>
-    <button id="loadMoreButton" class="load-more-button" type="button" onclick="loadMoreProducts()">
-        Load More Listings
-    </button>
-    <div id="resultsCount" class="results-count"></div>
 </div>
 </section>
 
@@ -239,12 +240,9 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
 
-const PAGE_SIZE = 12;
-
 let allProducts = [];
 let sellerRatingSummaries = {};
 let selectedCategory = "";
-let visibleProductLimit = PAGE_SIZE;
 
 function loadRecentlyViewed() {
     const section = document.getElementById("recentlyViewedSection");
@@ -280,11 +278,17 @@ function loadRecentlyViewed() {
 
             return `
                 <div class="product">
-                    <div class="product-image"><button type="button" class="product-image-open recent-view-button" data-product-id="${escapeHTML(item.id)}" aria-label="Open ${name}">${image}</button></div>
+                    <div class="product-image">${image}</div>
                     <div class="product-body">
                         <div class="product-name">${name}</div>
                         <div class="price">UGX ${formatPrice(item.price)}</div>
                         <div class="location">📍 ${location}</div>
+                        <div class="product-actions">
+                            <button class="view-btn recent-view-button"
+                                data-product-id="${escapeHTML(item.id)}">
+                                View Again
+                            </button>
+                        </div>
                     </div>
                 </div>
             `;
@@ -419,13 +423,10 @@ function displayProducts(products) {
                 <p>Try another search or category.</p>
             </div>
         `;
-        document.getElementById("loadMoreWrap").hidden = true;
         return;
     }
 
-    const visibleProducts = products.slice(0, visibleProductLimit);
-
-    container.innerHTML = visibleProducts.map(product => {
+    container.innerHTML = products.map(product => {
         const image = product.image_url;
         const safeName = escapeHTML(product.name || "Product");
         const safeDescription = escapeHTML(
@@ -436,25 +437,15 @@ function displayProducts(products) {
         const safeCondition = escapeHTML(
             product.condition || "Not specified"
         );
-        const isBodaRide =
-            String(product.category || "").trim().toLowerCase() === "services" &&
-            /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
-        const bookRideButton = isBodaRide
-            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}">🏍️ Book</a>`
-            : "";
 
         return `
             <div class="product">
                 <div class="product-image">
-                    <button type="button" class="product-image-open"
-                        onclick="viewProduct(${product.id})"
-                        aria-label="Open ${safeName}">
-                        ${
-                            image
-                                ? `<img src="${image}" alt="${safeName}" loading="lazy">`
-                                : `<div class="no-image">📦</div>`
-                        }
-                    </button>
+                    ${
+                        image
+                            ? `<img src="${image}" alt="${safeName}" loading="lazy">`
+                            : `<div class="no-image">📦</div>`
+                    }
                     <button class="favorite"
                         onclick="toggleFavorite(event, ${product.id})"
                         title="Save product">❤️</button>
@@ -463,38 +454,25 @@ function displayProducts(products) {
                 <div class="product-body">
                     <div class="product-name">${safeName}</div>
                     <div class="price">UGX ${formatPrice(product.price)}</div>
-                    <div class="condition" ${String(product.category || "").trim().toLowerCase() === "services" ? "hidden" : ""}>Condition: ${safeCondition}</div>
+                    <div class="condition">Condition: ${safeCondition}</div>
                     ${getSellerRatingMarkup(product)}
                     <div class="location">📍 ${safeLocation}</div>
                     <div class="description">${safeDescription}</div>
                     <div class="product-actions">
+                        <button class="view-btn" onclick="viewProduct(${product.id})">View</button>
                         <button class="contact-btn"
                             onclick='openContact(
                                 ${JSON.stringify(product.name || "Product")},
                                 ${JSON.stringify(product.phone || "")}
                             )'>Contact</button>
-                        ${bookRideButton}
                     </div>
                 </div>
             </div>
         `;
     }).join("");
-
-    const loadMoreWrap = document.getElementById("loadMoreWrap");
-    const loadMoreButton = document.getElementById("loadMoreButton");
-    const resultsCount = document.getElementById("resultsCount");
-
-    loadMoreWrap.hidden = false;
-    loadMoreButton.hidden = visibleProducts.length >= products.length;
-    resultsCount.textContent =
-        "Showing " + visibleProducts.length + " of " + products.length + " listings";
 }
 
-function filterProducts(resetVisibleCount = true) {
-    if (resetVisibleCount) {
-        visibleProductLimit = PAGE_SIZE;
-    }
-
+function filterProducts() {
     const search = document
         .getElementById("searchInput")
         .value
@@ -579,11 +557,6 @@ function filterProducts(resetVisibleCount = true) {
     });
 
     displayProducts(sortProducts(ratingFiltered));
-}
-
-function loadMoreProducts() {
-    visibleProductLimit += PAGE_SIZE;
-    filterProducts(false);
 }
 
 function sortProducts(products) {
