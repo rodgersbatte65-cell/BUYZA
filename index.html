@@ -30,6 +30,10 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .hero{position:relative;z-index:20;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(135deg,#ff6500,#ff8a00);color:white;padding:65px 20px 80px}
 .hero-inner{max-width:1100px;margin:auto;text-align:center}
 .hero h1{font-size:clamp(38px,6vw,68px);line-height:1;font-weight:900;letter-spacing:-2px;margin-bottom:20px}
+.hero-title-line{display:inline-block;animation:heroTitleMotion 2.4s ease-in-out infinite;will-change:transform,text-shadow}
+.hero-title-line:nth-of-type(2){animation-delay:.3s}
+@keyframes heroTitleMotion{0%,100%{transform:translateY(0);text-shadow:0 0 0 rgba(255,255,255,0)}50%{transform:translateY(-5px);text-shadow:0 8px 24px rgba(255,225,165,.55)}}
+@media(prefers-reduced-motion:reduce){.hero-title-line{animation:none;will-change:auto}}
 .hero p{font-size:19px;opacity:.95;margin-bottom:30px}
 .search-box{position:relative;max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
 .search-box input{flex:1;border:0;outline:none;padding:17px;font-size:16px;min-width:0}
@@ -186,7 +190,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 
 <section class="hero">
 <div class="hero-inner">
-    <h1>Buy Better.<br>Sell Smarter.</h1>
+    <h1><span class="hero-title-line">Buy Better.</span><br><span class="hero-title-line">Sell Smarter.</span></h1>
     <p>Uganda's modern marketplace for buying and selling anything.</p>
     <div class="search-box">
         <input type="search" id="searchInput" placeholder="What are you looking for?" autocomplete="off" aria-label="Search BUYZA products" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
