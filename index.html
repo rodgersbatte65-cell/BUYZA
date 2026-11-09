@@ -89,12 +89,40 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .seller-rating{color:#c85b00;font-size:12px;font-weight:700;margin:-3px 0 8px}
 .location{color:#777;font-size:13px;margin-bottom:10px}
 .description{color:#666;font-size:13px;line-height:1.4;height:37px;overflow:hidden}
+.compare-toggle{width:100%;margin-top:11px;padding:9px 10px;border:1px solid #e3e6e9;border-radius:9px;background:#fff;color:#343a40;font-weight:700;text-align:center;transition:.18s}
+.compare-toggle:hover{border-color:#ff6b00;color:#e85f00;background:#fff8f3}
+.compare-toggle.selected{border-color:#ff6b00;background:#fff1e8;color:#c84d00}
+.compare-toggle:disabled{opacity:.52;cursor:not-allowed}
 .product-actions{display:flex;gap:8px;margin-top:15px}
 .view-btn{flex:1;background:#111;color:white;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
 .contact-btn{flex:1;background:#fff1e8;color:#ff6500;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
 .book-ride-card-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#11a978,#056342);color:white;text-decoration:none;text-align:center;border-radius:9px;padding:11px 5px;font-weight:800;box-shadow:0 4px 0 #034b32,0 7px 14px rgba(0,91,60,.2);animation:rideCardPulse 2s ease-in-out infinite}
 .view-btn:hover{background:#333}
 .contact-btn:hover{background:#ffe1cf}
+.compare-tray{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:1850;width:min(760px,calc(100% - 24px));display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#171a1f;color:#fff;border:1px solid #3a4048;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.compare-tray[hidden]{display:none}
+.compare-tray-copy{font-size:14px;font-weight:800}.compare-tray-copy small{display:block;margin-top:3px;color:#c4c8ce;font-size:12px;font-weight:400}
+.compare-tray-actions{display:flex;gap:8px;flex:0 0 auto}
+.compare-tray button{border:0;border-radius:8px;padding:10px 12px;font-weight:800}
+.compare-open{background:#ff6b00;color:white}.compare-open:disabled{background:#777;cursor:not-allowed}.compare-clear{background:#343a40;color:white}
+.compare-modal{display:none;position:fixed;inset:0;z-index:2600;align-items:center;justify-content:center;padding:16px;background:rgba(10,14,20,.68)}
+.compare-modal.open{display:flex}
+.compare-dialog{width:min(1050px,100%);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;background:white;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.compare-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 20px;border-bottom:1px solid #eceef0}
+.compare-dialog-head h2{font-size:21px}.compare-close{width:38px;height:38px;border:0;border-radius:50%;background:#f0f1f3;font-size:22px}
+.compare-table-wrap{overflow:auto;padding:8px 16px 20px}
+.compare-table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
+.compare-table th,.compare-table td{padding:13px 14px;border-bottom:1px solid #eceef0;vertical-align:top}
+.compare-table thead th{width:28%;color:#fff;background:#23272e}
+.compare-table thead th:first-child{width:16%;border-radius:10px 0 0 0}
+.compare-table tbody th{position:sticky;left:0;background:#f7f8fa;color:#4c535c;min-width:120px}
+.compare-product-head{display:flex;flex-direction:column;gap:8px;min-width:145px}
+.compare-product-head img,.compare-product-placeholder{width:100%;height:105px;object-fit:cover;border-radius:8px;background:#f0f1f3}
+.compare-product-name{font-size:14px;line-height:1.35;font-weight:800}
+.compare-product-actions{display:flex;gap:10px;align-items:center;font-size:12px}
+.compare-product-actions a{color:#ff6500;text-decoration:none;font-weight:800}
+.compare-product-actions button{border:0;background:none;color:#a22;font-weight:700;padding:0;cursor:pointer}
+.compare-price{color:#e85f00;font-weight:900;font-size:17px}
 .book-ride-card-btn:hover{filter:brightness(1.1);animation-play-state:paused;transform:translateY(-2px)}
 .deal{margin-top:45px;background:linear-gradient(135deg,#111,#292929);color:white;border-radius:22px;padding:35px;display:flex;justify-content:space-between;align-items:center;gap:20px}
 .deal h2{font-size:30px;margin-bottom:8px}
@@ -135,6 +163,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 .stats{margin-top:-25px}.stats-box{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid #eee;padding:15px}.stat:last-child{border-bottom:0}
 .categories{grid-template-columns:repeat(3,1fr);gap:8px}.category{padding:15px 5px}.category-icon{width:45px;height:45px;font-size:22px}
 .products{grid-template-columns:repeat(2,1fr);gap:10px}.product-image{height:170px}.product-body{padding:11px}.product-name{font-size:14px}.price{font-size:17px}.product-actions{flex-direction:column}
+.compare-tray{bottom:86px;padding:10px}.compare-tray-copy{font-size:12px}.compare-tray button{padding:9px 10px;font-size:12px}.compare-modal{padding:8px}.compare-dialog{max-height:92vh}.compare-dialog-head{padding:14px}.compare-table-wrap{padding:4px 8px 12px}
 .deal{flex-direction:column;align-items:flex-start;padding:25px}.footer-inner{flex-direction:column}.footer-links{text-align:left}
 }
 @media(max-width:600px){.section-head{align-items:flex-start;flex-direction:column;gap:12px}.listing-controls{width:100%;justify-content:flex-end}}
@@ -276,6 +305,21 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
   </nav>
 </div>
 
+<div class="compare-tray" id="compareTray" hidden>
+  <div class="compare-tray-copy"><span id="compareSelectionCount">0 selected</span><small>Select 2 or 3 listings to compare.</small></div>
+  <div class="compare-tray-actions">
+    <button class="compare-clear" type="button" id="clearCompareButton">Clear</button>
+    <button class="compare-open" type="button" id="openCompareButton" disabled>Compare</button>
+  </div>
+</div>
+
+<div class="compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+  <div class="compare-dialog">
+    <div class="compare-dialog-head"><h2 id="compareTitle">Compare listings</h2><button class="compare-close" id="closeCompareButton" type="button" aria-label="Close comparison">×</button></div>
+    <div class="compare-table-wrap" id="compareTableWrap"></div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
@@ -285,6 +329,7 @@ const PAGE_SIZE = 12;
 let allProducts = [];
 let sellerRatingSummaries = {};
 let selectedCategory = "";
+let selectedCompareIds = [];
 let visibleProductLimit = PAGE_SIZE;
 
 function loadRecentlyViewed() {
@@ -480,6 +525,7 @@ function displayProducts(products) {
         const safeCondition = escapeHTML(
             product.condition || "Not specified"
         );
+        const safeProductId = escapeHTML(product.id);
         const isBodaRide =
             String(product.category || "").trim().toLowerCase() === "services" &&
             /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
@@ -511,6 +557,7 @@ function displayProducts(products) {
                     ${getSellerRatingMarkup(product)}
                     <div class="location">📍 ${safeLocation}</div>
                     <div class="description">${safeDescription}</div>
+                    <button class="compare-toggle" type="button" data-compare-id="${safeProductId}" aria-pressed="false">＋ Compare</button>
                     <div class="product-actions">
                         <button class="contact-btn"
                             onclick='openContact(
@@ -532,7 +579,112 @@ function displayProducts(products) {
     loadMoreButton.hidden = visibleProducts.length >= products.length;
     resultsCount.textContent =
         "Showing " + visibleProducts.length + " of " + products.length + " listings";
+    updateCompareButtons();
 }
+
+function toggleCompare(productId) {
+    const id = String(productId);
+    if (selectedCompareIds.includes(id)) {
+        selectedCompareIds = selectedCompareIds.filter(selectedId => selectedId !== id);
+    } else {
+        if (selectedCompareIds.length >= 3) {
+            alert("You can compare up to 3 listings at a time. Remove one to add another.");
+            return;
+        }
+        selectedCompareIds.push(id);
+    }
+    updateCompareButtons();
+    updateCompareTray();
+}
+
+function updateCompareButtons() {
+    document.querySelectorAll("[data-compare-id]").forEach(button => {
+        const selected = selectedCompareIds.includes(String(button.dataset.compareId));
+        button.classList.toggle("selected", selected);
+        button.setAttribute("aria-pressed", String(selected));
+        button.textContent = selected ? "✓ Added to compare" : "＋ Compare";
+        button.disabled = !selected && selectedCompareIds.length >= 3;
+        button.title = button.disabled ? "Remove a listing from comparison first" : "";
+    });
+}
+
+function updateCompareTray() {
+    const tray = document.getElementById("compareTray");
+    const count = selectedCompareIds.length;
+    tray.hidden = count === 0;
+    document.getElementById("compareSelectionCount").textContent = count + " selected";
+    const openButton = document.getElementById("openCompareButton");
+    openButton.disabled = count < 2;
+    openButton.textContent = count < 2 ? "Select one more" : "Compare " + count;
+}
+
+function renderComparison() {
+    const products = selectedCompareIds
+        .map(id => allProducts.find(product => String(product.id) === id))
+        .filter(Boolean);
+    if (products.length < 2) {
+        closeComparison();
+        return;
+    }
+
+    const headCells = products.map(product => {
+        const name = escapeHTML(product.name || "Product");
+        const image = product.image_url
+            ? `<img src="${escapeHTML(product.image_url)}" alt="${name}" loading="lazy">`
+            : `<div class="compare-product-placeholder">📦</div>`;
+        return `<th><div class="compare-product-head">${image}<span class="compare-product-name">${name}</span><div class="compare-product-actions"><a href="product.html?id=${encodeURIComponent(String(product.id))}">Open listing</a><button type="button" data-remove-compare="${escapeHTML(product.id)}">Remove</button></div></div></th>`;
+    }).join("");
+
+    const rows = [
+        ["Price", product => product.price === null || product.price === undefined || product.price === "" ? "Contact seller" : "UGX " + formatPrice(product.price), "compare-price"],
+        ["Category", product => product.category || "Other"],
+        ["Condition", product => product.condition || "Not specified"],
+        ["Location", product => product.location || "Not specified"],
+        ["Seller rating", product => {
+            const summary = product.user_id ? sellerRatingSummaries[product.user_id] : null;
+            return summary && summary.count ? "★ " + summary.average.toFixed(1) + " · " + summary.count + (summary.count === 1 ? " review" : " reviews") : "No ratings yet";
+        }],
+        ["Description", product => product.description || "No description provided"]
+    ];
+
+    const bodyRows = rows.map(([label, getValue, className]) =>
+        `<tr><th scope="row">${escapeHTML(label)}</th>${products.map(product => `<td${className ? ` class="${className}"` : ""}>${escapeHTML(getValue(product))}</td>`).join("")}</tr>`
+    ).join("");
+
+    document.getElementById("compareTableWrap").innerHTML =
+        `<table class="compare-table"><thead><tr><th>Compare</th>${headCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+    document.getElementById("compareModal").classList.add("open");
+    document.getElementById("closeCompareButton").focus();
+}
+
+function closeComparison() {
+    document.getElementById("compareModal").classList.remove("open");
+}
+
+document.getElementById("products").addEventListener("click", event => {
+    const button = event.target.closest("button[data-compare-id]");
+    if (button) toggleCompare(button.dataset.compareId);
+});
+document.getElementById("openCompareButton").addEventListener("click", renderComparison);
+document.getElementById("clearCompareButton").addEventListener("click", () => {
+    selectedCompareIds = [];
+    updateCompareButtons();
+    updateCompareTray();
+    closeComparison();
+});
+document.getElementById("closeCompareButton").addEventListener("click", closeComparison);
+document.getElementById("compareModal").addEventListener("click", event => {
+    if (event.target.id === "compareModal") closeComparison();
+    const removeButton = event.target.closest("[data-remove-compare]");
+    if (removeButton) {
+        toggleCompare(removeButton.dataset.removeCompare);
+        if (selectedCompareIds.length >= 2) renderComparison();
+        else closeComparison();
+    }
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeComparison();
+});
 
 function handleSearchInput() {
     const input = document.getElementById("searchInput");
