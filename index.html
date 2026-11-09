@@ -11,8 +11,10 @@ button,input,select{font-family:inherit}
 button{cursor:pointer}
 header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px solid #eee;box-shadow:0 2px 15px rgba(0,0,0,.05)}
 .nav{max-width:1250px;margin:auto;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 20px}
-.logo{font-size:30px;font-weight:900;color:#ff6500;letter-spacing:-1px}
+.logo{font-size:30px;font-weight:900;color:#ff6500;letter-spacing:-1px;animation:buyzaLogoSlideIn .85s cubic-bezier(.2,.8,.2,1) both}
 .logo span{color:#111}
+@keyframes buyzaLogoSlideIn{from{opacity:0;transform:translateX(-70px) rotateY(-18deg)}to{opacity:1;transform:translateX(0) rotateY(0)}}
+@media(prefers-reduced-motion:reduce){.logo{animation:none}}
 .nav-links{display:flex;align-items:center;gap:10px}
 .nav-btn{border:0;background:transparent;padding:11px 15px;border-radius:10px;font-weight:700;color:#333}
 .nav-btn:hover{background:#fff1e8;color:#ff6500}
