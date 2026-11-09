@@ -27,24 +27,29 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .taskbar-icon{font-size:19px;line-height:1}
 .sell-btn{background:#ff6500;color:white;padding:12px 20px;border-radius:10px;border:0;font-weight:800}
 .sell-btn:hover{background:#e95700}
-.hero{background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(135deg,#ff6500,#ff8a00);color:white;padding:65px 20px 80px}
+.hero{position:relative;z-index:20;background:radial-gradient(circle at 85% 20%,rgba(255,255,255,.18),transparent 25%),linear-gradient(135deg,#ff6500,#ff8a00);color:white;padding:65px 20px 80px}
 .hero-inner{max-width:1100px;margin:auto;text-align:center}
 .hero h1{font-size:clamp(38px,6vw,68px);line-height:1;font-weight:900;letter-spacing:-2px;margin-bottom:20px}
 .hero p{font-size:19px;opacity:.95;margin-bottom:30px}
-.search-box{max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
+.search-box{position:relative;max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
 .search-box input{flex:1;border:0;outline:none;padding:17px;font-size:16px;min-width:0}
 .search-box button{border:0;background:#111;color:white;padding:0 28px;border-radius:11px;font-weight:800}
-.ride-cta{display:block;position:relative;isolation:isolate;overflow:hidden;margin:18px auto 0;padding:34px 28px 11px;border:0;border-radius:13px;background:linear-gradient(145deg,#16a879,#056342);color:white;font-size:17px;font-weight:900;letter-spacing:.2px;box-shadow:0 6px 0 #034b32,0 13px 24px rgba(0,91,60,.28);transform-style:preserve-3d;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease;animation:rideButtonGlow 2s ease-in-out infinite}
-.ride-cta::after,.book-ride-card-btn::after{content:"";position:absolute;z-index:0;top:-40%;left:-60%;width:42%;height:180%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);transform:skewX(-22deg);animation:rideButtonShine 4.2s ease-in-out infinite;pointer-events:none}
-.ride-button-label{position:relative;z-index:1}
-.ride-bike{position:absolute;z-index:2;top:3px;left:8px;width:34px;height:24px;line-height:1;animation:bikeTravel 2.4s ease-in-out infinite alternate;pointer-events:none}
-.ride-bike svg{display:block;width:34px;height:24px;overflow:visible;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
-.ride-road{position:absolute;z-index:1;top:27px;left:10px;right:10px;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.9) 0 9px,transparent 9px 17px);background-size:34px 2px;animation:roadFlow .45s linear infinite;pointer-events:none}
-.book-ride-card-btn .ride-bike{top:3px;width:30px;height:22px}
-.book-ride-card-btn .ride-bike svg{width:30px;height:22px}
-.book-ride-card-btn .ride-road{top:26px;left:7px;right:7px}
-.ride-cta:hover,.book-ride-card-btn:hover{animation:none;filter:brightness(1.08);transform:perspective(700px) rotateX(0deg) translateY(-4px) scale(1.045);box-shadow:0 9px 0 #034b32,0 17px 29px rgba(0,91,60,.34)}
-.ride-cta:active,.book-ride-card-btn:active{animation:none;transform:perspective(700px) rotateX(0deg) translateY(3px) scale(.99);box-shadow:0 2px 0 #034b32,0 6px 12px rgba(0,91,60,.24)}
+.search-suggestions{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:50;max-height:min(60vh,440px);overflow:auto;background:#fff;color:#202329;border:1px solid #e7e9ed;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.22);text-align:left}
+.search-suggestions[hidden]{display:none}
+.suggestion-heading{padding:12px 15px 8px;color:#777;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.search-suggestion{width:100%;display:flex;align-items:center;gap:12px;padding:10px 14px;border:0;border-top:1px solid #f0f1f2;background:white;text-align:left;color:#202329}
+.search-suggestion:hover,.search-suggestion:focus{background:#fff5ee;outline:none}
+.suggestion-image{width:48px;height:48px;flex:0 0 48px;overflow:hidden;border-radius:9px;background:#f1f2f4;display:grid;place-items:center;color:#999;font-size:20px}
+.suggestion-image img{width:100%;height:100%;object-fit:cover}
+.suggestion-info{min-width:0;flex:1}
+.suggestion-name{display:block;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.suggestion-meta{display:block;margin-top:4px;color:#777;font-size:12px}
+.suggestion-price{color:#e85f00;font-weight:800;white-space:nowrap}
+.search-suggestion.all-results{justify-content:center;color:#e85f00;font-weight:800;padding:13px}
+.ride-cta{display:block;position:relative;isolation:isolate;margin:20px auto 0;padding:16px 30px;border:0;border-radius:14px;background:linear-gradient(135deg,#11a978,#056342,#11a978);background-size:200% 200%;color:white;font-size:18px;font-weight:900;letter-spacing:.2px;box-shadow:0 7px 0 #034b32,0 12px 24px rgba(0,91,60,.3);transform-style:preserve-3d;animation:rideCtaMove 1.35s ease-in-out infinite,rideCtaGlow 1.35s ease-in-out infinite,rideCtaColor 3s linear infinite}
+.ride-cta::before{content:"";position:absolute;z-index:0;inset:-7px;border:2px solid rgba(12,151,102,.65);border-radius:18px;pointer-events:none;animation:rideCtaRing 1.6s ease-out infinite}
+.ride-cta span{position:relative;z-index:1}
+.ride-cta:hover{filter:brightness(1.1);animation-play-state:paused;transform:perspective(700px) translateY(-2px) scale(1.05)}
 .stats{max-width:1050px;margin:-30px auto 35px;position:relative;padding:0 20px}
 .stats-box{background:white;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}
 .stat{padding:25px;text-align:center;border-right:1px solid #eee}
@@ -87,22 +92,24 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .product-actions{display:flex;gap:8px;margin-top:15px}
 .view-btn{flex:1;background:#111;color:white;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
 .contact-btn{flex:1;background:#fff1e8;color:#ff6500;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
-.book-ride-card-btn{position:relative;isolation:isolate;overflow:hidden;flex:1;min-height:58px;display:inline-flex;align-items:flex-end;justify-content:center;background:linear-gradient(145deg,#16a879,#056342);color:white;text-decoration:none;text-align:center;border-radius:9px;padding:0 5px 7px;font-weight:800;box-shadow:0 4px 0 #034b32,0 8px 14px rgba(0,91,60,.2);transform-style:preserve-3d;transition:transform .18s ease,box-shadow .18s ease,filter .18s ease}
+.book-ride-card-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#11a978,#056342);color:white;text-decoration:none;text-align:center;border-radius:9px;padding:11px 5px;font-weight:800;box-shadow:0 4px 0 #034b32,0 7px 14px rgba(0,91,60,.2);animation:rideCardPulse 2s ease-in-out infinite}
 .view-btn:hover{background:#333}
 .contact-btn:hover{background:#ffe1cf}
+.book-ride-card-btn:hover{filter:brightness(1.1);animation-play-state:paused;transform:translateY(-2px)}
 .deal{margin-top:45px;background:linear-gradient(135deg,#111,#292929);color:white;border-radius:22px;padding:35px;display:flex;justify-content:space-between;align-items:center;gap:20px}
 .deal h2{font-size:30px;margin-bottom:8px}
 .deal p{color:#bbb}
 .deal button{background:#ff6500;color:white;border:0;padding:14px 24px;border-radius:10px;font-weight:800}
-@keyframes rideButtonShine{0%,72%,100%{left:-60%}38%{left:125%}}
-@keyframes rideButtonGlow{0%,100%{box-shadow:0 6px 0 #034b32,0 13px 24px rgba(0,91,60,.24)}50%{box-shadow:0 6px 0 #034b32,0 16px 29px rgba(0,140,90,.36)}}
-@keyframes bikeTravel{0%{left:8px;transform:translateY(0)}50%{transform:translateY(-3px)}100%{left:calc(100% - 38px);transform:translateY(0)}}
-@keyframes roadFlow{to{background-position:-34px 0}}
-@media(prefers-reduced-motion:reduce){.ride-cta,.book-ride-card-btn{animation:none;transition:none;transform:none}.ride-cta::after,.book-ride-card-btn::after,.ride-bike,.ride-road{animation:none}.ride-bike{display:block;left:8px;opacity:1}}
 .loading{grid-column:1/-1;text-align:center;padding:60px 20px;color:#777}
 .load-more-wrap{text-align:center;margin:22px 0 5px}
 .load-more-button{border:0;border-radius:10px;background:#ff6500;color:white;padding:13px 24px;font-weight:800;font-size:15px}
 .load-more-button:hover{background:#e95700}
+@keyframes rideCtaMove{0%,100%{transform:perspective(700px) translateY(0) rotateX(0deg) scale(1)}25%{transform:perspective(700px) translateY(-7px) rotateX(7deg) scale(1.045)}50%{transform:perspective(700px) translateY(0) rotateX(0deg) scale(1)}75%{transform:perspective(700px) translateY(-4px) rotateX(4deg) scale(1.025)}}
+@keyframes rideCtaGlow{0%,100%{box-shadow:0 7px 0 #034b32,0 12px 24px rgba(0,91,60,.26)}50%{box-shadow:0 8px 0 #034b32,0 18px 36px rgba(0,160,105,.5)}}
+@keyframes rideCtaColor{to{background-position:200% 50%}}
+@keyframes rideCtaRing{0%{transform:scale(.96);opacity:.8}75%,100%{transform:scale(1.13);opacity:0}}
+@keyframes rideCardPulse{0%,100%{transform:translateY(0) scale(1);box-shadow:0 4px 0 #034b32,0 7px 14px rgba(0,91,60,.18)}50%{transform:translateY(-3px) scale(1.025);box-shadow:0 6px 0 #034b32,0 11px 18px rgba(0,140,90,.35)}}
+@media(prefers-reduced-motion:reduce){.ride-cta,.ride-cta::before,.book-ride-card-btn{animation:none;transform:none;transition:none}.ride-cta{box-shadow:0 5px 0 #034b32,0 8px 15px rgba(0,91,60,.25)}}
 .load-more-button[hidden],.load-more-wrap[hidden]{display:none}
 .results-count{color:#777;font-size:13px;margin-top:10px}
 .spinner{width:38px;height:38px;border:4px solid #eee;border-top-color:#ff6500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
@@ -153,10 +160,11 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <h1>Buy Better.<br>Sell Smarter.</h1>
     <p>Uganda's modern marketplace for buying and selling anything.</p>
     <div class="search-box">
-        <input type="text" id="searchInput" placeholder="What are you looking for?" oninput="filterProducts()">
-        <button onclick="filterProducts()">🔍 Search</button>
+        <input type="search" id="searchInput" placeholder="What are you looking for?" autocomplete="off" aria-label="Search BUYZA products" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+        <button type="button" onclick="submitProductSearch()">🔍 Search</button>
+        <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Product suggestions" hidden></div>
     </div>
-    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});"><span class="ride-bike" aria-hidden="true"><svg viewBox="0 0 64 40" role="img"><circle cx="13" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><circle cx="51" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><path d="M13 28h13l8-13h10l7 13M25 28l8-7 11 7M32 15h-7m18 0 4-5h7m-12 5 5-6" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 14h9l5 5H31z" fill="#ffd166" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book a Ride</span></button>
+    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});">🏍️ Book a Ride</button>
 </div>
 </section>
 
@@ -360,6 +368,9 @@ async function loadProducts() {
         await loadSellerRatingSummaries(allProducts);
         document.getElementById("productCount").textContent = allProducts.length;
         displayProducts(allProducts);
+        if (document.getElementById("searchInput").value.trim()) {
+            showProductSuggestions(document.getElementById("searchInput").value);
+        }
     } catch (error) {
         console.error(error);
         container.innerHTML = `
@@ -473,7 +484,7 @@ function displayProducts(products) {
             String(product.category || "").trim().toLowerCase() === "services" &&
             /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
         const bookRideButton = isBodaRide
-            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}"><span class="ride-bike" aria-hidden="true"><svg viewBox="0 0 64 40" role="img"><circle cx="13" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><circle cx="51" cy="28" r="8" fill="none" stroke="white" stroke-width="3.5"/><path d="M13 28h13l8-13h10l7 13M25 28l8-7 11 7M32 15h-7m18 0 4-5h7m-12 5 5-6" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M30 14h9l5 5H31z" fill="#ffd166" stroke="white" stroke-width="2" stroke-linejoin="round"/></svg></span><span class="ride-road" aria-hidden="true"></span><span class="ride-button-label">Book</span></a>`
+            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}">🏍️ Book</a>`
             : "";
 
         return `
@@ -522,6 +533,97 @@ function displayProducts(products) {
     resultsCount.textContent =
         "Showing " + visibleProducts.length + " of " + products.length + " listings";
 }
+
+function handleSearchInput() {
+    const input = document.getElementById("searchInput");
+    filterProducts();
+    showProductSuggestions(input.value);
+}
+
+function showProductSuggestions(query) {
+    const box = document.getElementById("searchSuggestions");
+    const normalized = String(query || "").trim().toLowerCase();
+
+    if (normalized.length < 2 || allProducts.length === 0) {
+        hideProductSuggestions();
+        return;
+    }
+
+    const matches = allProducts
+        .filter(product => String(product.name || "").toLowerCase().includes(normalized))
+        .sort((a, b) => {
+            const aStarts = String(a.name || "").toLowerCase().startsWith(normalized);
+            const bStarts = String(b.name || "").toLowerCase().startsWith(normalized);
+            return Number(bStarts) - Number(aStarts);
+        })
+        .slice(0, 6);
+
+    const rows = matches.map(product => {
+        const name = escapeHTML(product.name || "Product");
+        const category = escapeHTML(product.category || "Other");
+        const price = product.price === null || product.price === undefined || product.price === ""
+            ? "Contact seller"
+            : "UGX " + formatPrice(product.price);
+        const image = product.image_url
+            ? `<img src="${escapeHTML(product.image_url)}" alt="" loading="lazy">`
+            : "📦";
+        return `<button type="button" class="search-suggestion" role="option" data-suggestion-id="${escapeHTML(product.id)}">
+            <span class="suggestion-image">${image}</span>
+            <span class="suggestion-info"><span class="suggestion-name">${name}</span><span class="suggestion-meta">${category}</span></span>
+            <span class="suggestion-price">${escapeHTML(price)}</span>
+        </button>`;
+    }).join("");
+
+    const noMatches = `<div class="search-suggestion"><span class="suggestion-info">No matching product names yet.</span></div>`;
+    const viewAll = `<button type="button" class="search-suggestion all-results" data-all-results="true">See all results for “${escapeHTML(query.trim())}”</button>`;
+    box.innerHTML = `<div class="suggestion-heading">Product suggestions</div>${rows || noMatches}${viewAll}`;
+    box.hidden = false;
+    document.getElementById("searchInput").setAttribute("aria-expanded", "true");
+}
+
+function hideProductSuggestions() {
+    const box = document.getElementById("searchSuggestions");
+    if (!box) return;
+    box.hidden = true;
+    document.getElementById("searchInput").setAttribute("aria-expanded", "false");
+}
+
+function submitProductSearch() {
+    filterProducts();
+    hideProductSuggestions();
+    document.getElementById("products").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+function handleSearchKeydown(event) {
+    if (event.key === "Escape") {
+        hideProductSuggestions();
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        submitProductSearch();
+    } else if (event.key === "ArrowDown") {
+        const first = document.querySelector("#searchSuggestions [data-suggestion-id]");
+        if (first) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+}
+
+document.getElementById("searchSuggestions").addEventListener("click", event => {
+    const suggestion = event.target.closest("[data-suggestion-id]");
+    if (suggestion) {
+        hideProductSuggestions();
+        viewProduct(suggestion.dataset.suggestionId);
+        return;
+    }
+    if (event.target.closest("[data-all-results]")) {
+        submitProductSearch();
+    }
+});
+
+document.addEventListener("click", event => {
+    if (!event.target.closest(".search-box")) hideProductSuggestions();
+});
 
 function filterProducts(resetVisibleCount = true) {
     if (resetVisibleCount) {
@@ -664,6 +766,7 @@ function sortProducts(products) {
 function selectCategory(category) {
     selectedCategory = category;
     document.getElementById("searchInput").value = "";
+    hideProductSuggestions();
     filterProducts();
 
     window.scrollTo({
@@ -675,6 +778,7 @@ function selectCategory(category) {
 function showAll() {
     selectedCategory = "";
     document.getElementById("searchInput").value = "";
+    hideProductSuggestions();
     document.getElementById("locationFilter").value = "";
     document.getElementById("minPriceFilter").value = "";
     document.getElementById("maxPriceFilter").value = "";
