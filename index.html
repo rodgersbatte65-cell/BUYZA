@@ -330,6 +330,7 @@ let allProducts = [];
 let sellerRatingSummaries = {};
 let selectedCategory = "";
 let selectedCompareIds = [];
+let searchPlaceholderTimer = null;
 let visibleProductLimit = PAGE_SIZE;
 
 function loadRecentlyViewed() {
@@ -410,6 +411,7 @@ async function loadProducts() {
         if (!response.ok) throw new Error("Could not load products");
 
         allProducts = await response.json();
+        startSearchPlaceholderRotation();
         await loadSellerRatingSummaries(allProducts);
         document.getElementById("productCount").textContent = allProducts.length;
         displayProducts(allProducts);
@@ -690,6 +692,31 @@ function handleSearchInput() {
     const input = document.getElementById("searchInput");
     filterProducts();
     showProductSuggestions(input.value);
+}
+
+function startSearchPlaceholderRotation() {
+    const input = document.getElementById("searchInput");
+    if (!input) return;
+    if (searchPlaceholderTimer) clearInterval(searchPlaceholderTimer);
+
+    const names = [...new Set(allProducts
+        .map(product => String(product.name || "").trim().replace(/\s+/g, " "))
+        .filter(Boolean))].slice(0, 8);
+
+    if (names.length === 0) {
+        input.placeholder = "What are you looking for?";
+        return;
+    }
+
+    let index = 0;
+    const rotate = () => {
+        if (input.value || document.activeElement === input) return;
+        input.placeholder = "Try: " + names[index];
+        index = (index + 1) % names.length;
+    };
+
+    rotate();
+    searchPlaceholderTimer = setInterval(rotate, 2500);
 }
 
 function showProductSuggestions(query) {
