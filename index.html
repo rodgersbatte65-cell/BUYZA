@@ -71,9 +71,10 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .recent-carousel-controls{display:flex;align-items:center;gap:8px}
 .recent-carousel-arrow{width:36px;height:36px;border:1px solid #e1e4e8;border-radius:50%;background:#fff;color:#333;font-size:22px;line-height:1}
 .recent-carousel-arrow:hover{border-color:#ff6500;color:#ff6500;background:#fff7f1}
-#recentlyViewedProducts.products{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;padding:6px 4px 16px;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+#recentlyViewedProducts.products{display:block;overflow-x:auto;overflow-y:hidden;padding:6px 4px 16px;scrollbar-width:none;overscroll-behavior-x:contain;scroll-behavior:auto}
 #recentlyViewedProducts.products::-webkit-scrollbar{display:none}
-#recentlyViewedProducts.products>.product{flex:0 0 250px;scroll-snap-align:start}
+#recentlyViewedTrack{display:flex;gap:14px;width:max-content}
+#recentlyViewedTrack>.product{flex:0 0 250px;width:250px}
 @media(prefers-reduced-motion:reduce){#recentlyViewedProducts.products{scroll-behavior:auto}}
 .listing-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .sort-label{color:#777;font-size:13px;font-weight:700}
@@ -176,7 +177,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 .stats{margin-top:-25px}.stats-box{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid #eee;padding:15px}.stat:last-child{border-bottom:0}
 .categories{grid-template-columns:repeat(3,1fr);gap:8px}.category{padding:15px 5px}.category-icon{width:45px;height:45px;font-size:22px}
 .products{grid-template-columns:repeat(2,1fr);gap:10px}.product-image{height:170px}.product-body{padding:11px}.product-name{font-size:14px}.price{font-size:17px}.product-actions{flex-direction:column}
-#recentlyViewedProducts.products>.product{flex-basis:min(74vw,250px)}
+#recentlyViewedTrack>.product{flex-basis:min(74vw,250px);width:min(74vw,250px)}
 .compare-tray{bottom:86px;padding:10px}.compare-tray-copy{font-size:12px}.compare-tray button{padding:9px 10px;font-size:12px}.compare-modal{padding:8px}.compare-dialog{max-height:92vh}.compare-dialog-head{padding:14px}.compare-table-wrap{padding:4px 8px 12px}
 .deal{flex-direction:column;align-items:flex-start;padding:25px}.footer-inner{flex-direction:column}.footer-links{text-align:left}
 }
@@ -349,8 +350,9 @@ let sellerRatingSummaries = {};
 let selectedCategory = "";
 let selectedCompareIds = [];
 let searchPlaceholderTimer = null;
-let recentlyViewedTimer = null;
+let recentlyViewedAnimationFrame = null;
 let recentlyViewedPauseUntil = 0;
+let recentlyViewedSetWidth = 0;
 let visibleProductLimit = PAGE_SIZE;
 
 function loadRecentlyViewed() {
@@ -378,7 +380,7 @@ function loadRecentlyViewed() {
 
         section.style.display = "block";
 
-        container.innerHTML = validItems.map(item => {
+        const cardMarkup = validItems.map(item => {
             const name = escapeHTML(item.name || "Product");
             const location = escapeHTML(item.location || "Uganda");
             const image = item.image_url
@@ -397,14 +399,32 @@ function loadRecentlyViewed() {
             `;
         }).join("");
 
-        container.querySelectorAll(".recent-view-button").forEach(button => {
-            button.addEventListener("click", () => {
-                viewProduct(button.dataset.productId);
-            });
+        container.innerHTML = `<div id="recentlyViewedTrack">${cardMarkup}</div>`;
+        const track = document.getElementById("recentlyViewedTrack");
+        recentlyViewedSetWidth = track.scrollWidth + 14;
+
+        if (validItems.length > 1 && recentlyViewedSetWidth > 0) {
+            const copies = Math.max(2, Math.ceil(
+                (container.clientWidth + recentlyViewedSetWidth) / recentlyViewedSetWidth
+            ));
+            const originals = [...track.children];
+            for (let copyIndex = 1; copyIndex < copies; copyIndex++) {
+                originals.forEach(card => {
+                    const duplicate = card.cloneNode(true);
+                    duplicate.setAttribute("aria-hidden", "true");
+                    duplicate.querySelectorAll("button").forEach(button => button.tabIndex = -1);
+                    track.appendChild(duplicate);
+                });
+            }
+        }
+
+        container.addEventListener("click", event => {
+            const button = event.target.closest(".recent-view-button");
+            if (button) viewProduct(button.dataset.productId);
         });
         startRecentlyViewedCarousel();
         container.addEventListener("pointerdown", () => {
-            recentlyViewedPauseUntil = Date.now() + 7000;
+            recentlyViewedPauseUntil = Date.now() + 5000;
         });
     } catch (error) {
         console.error("Could not load recently viewed listings:", error);
@@ -415,16 +435,16 @@ function loadRecentlyViewed() {
 function clearRecentlyViewed() {
     localStorage.removeItem("buyza_recently_viewed");
     document.getElementById("recentlyViewedSection").style.display = "none";
-    if (recentlyViewedTimer) clearInterval(recentlyViewedTimer);
-    recentlyViewedTimer = null;
+    if (recentlyViewedAnimationFrame) cancelAnimationFrame(recentlyViewedAnimationFrame);
+    recentlyViewedAnimationFrame = null;
 }
 
 function moveRecentlyViewed(direction, automatic = false) {
     const container = document.getElementById("recentlyViewedProducts");
-    const card = container.querySelector(".product");
+    const card = document.querySelector("#recentlyViewedTrack > .product");
     if (!card) return;
 
-    if (!automatic) recentlyViewedPauseUntil = Date.now() + 7000;
+    if (!automatic) recentlyViewedPauseUntil = Date.now() + 5000;
     const distance = card.getBoundingClientRect().width + 14;
     const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
     let nextPosition = container.scrollLeft + direction * distance;
@@ -435,14 +455,26 @@ function moveRecentlyViewed(direction, automatic = false) {
 
 function startRecentlyViewedCarousel() {
     const container = document.getElementById("recentlyViewedProducts");
-    if (recentlyViewedTimer) clearInterval(recentlyViewedTimer);
-    if (container.querySelectorAll(".product").length < 2 ||
+    const track = document.getElementById("recentlyViewedTrack");
+    if (recentlyViewedAnimationFrame) cancelAnimationFrame(recentlyViewedAnimationFrame);
+    if (!track || track.children.length < 2 || recentlyViewedSetWidth <= 0 ||
         window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    recentlyViewedTimer = setInterval(() => {
-        if (document.hidden || Date.now() < recentlyViewedPauseUntil || container.matches(":hover")) return;
-        moveRecentlyViewed(1, true);
-    }, 3200);
+    let lastFrame = 0;
+    const slide = timestamp => {
+        if (lastFrame) {
+            const elapsed = Math.min(timestamp - lastFrame, 50);
+            if (!document.hidden && Date.now() >= recentlyViewedPauseUntil) {
+                container.scrollLeft += elapsed * 0.03;
+                if (container.scrollLeft >= recentlyViewedSetWidth) {
+                    container.scrollLeft -= recentlyViewedSetWidth;
+                }
+            }
+        }
+        lastFrame = timestamp;
+        recentlyViewedAnimationFrame = requestAnimationFrame(slide);
+    };
+    recentlyViewedAnimationFrame = requestAnimationFrame(slide);
 }
 
 async function loadProducts() {
@@ -1051,45 +1083,57 @@ async function toggleFavorite(event, productId) {
     }
 
     try {
+        const headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + token
+        };
         const url = SUPABASE_URL +
             "/rest/v1/favorites?user_id=eq." +
             encodeURIComponent(user.id) +
             "&product_id=eq." +
             encodeURIComponent(productId);
 
-        const checkResponse = await fetch(url, {
-            headers: {
-                "apikey": SUPABASE_KEY,
-                "Authorization": "Bearer " + token
-            }
-        });
-
+        const checkResponse = await fetch(url, { headers });
+        if (!checkResponse.ok) throw new Error("Could not check saved listings.");
         const existing = await checkResponse.json();
 
         if (existing.length > 0) {
-            await fetch(url, {
-                method: "DELETE",
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + token
-                }
-            });
-            alert("Removed from Favorites ❤️");
+            const removeResponse = await fetch(url, { method: "DELETE", headers });
+            if (!removeResponse.ok) throw new Error("Could not remove this saved listing.");
+            alert("Removed from Saved Listings ❤️");
         } else {
-            await fetch(SUPABASE_URL + "/rest/v1/favorites", {
+            const listResponse = await fetch(
+                SUPABASE_URL + "/rest/v1/favorite_lists?user_id=eq." +
+                encodeURIComponent(user.id) + "&is_default=eq.true&select=id&limit=1",
+                { headers }
+            );
+            if (!listResponse.ok) throw new Error("Could not find your default saved list. Run the saved lists SQL setup first.");
+            let defaultLists = await listResponse.json();
+            if (!defaultLists.length) {
+                const createListResponse = await fetch(SUPABASE_URL + "/rest/v1/favorite_lists", {
+                    method: "POST",
+                    headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=representation" },
+                    body: JSON.stringify({ user_id: user.id, name: "My Saved", is_default: true })
+                });
+                if (!createListResponse.ok) throw new Error("Could not create your default saved list.");
+                defaultLists = await createListResponse.json();
+            }
+
+            const saveResponse = await fetch(SUPABASE_URL + "/rest/v1/favorites", {
                 method: "POST",
                 headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization": "Bearer " + token,
+                    ...headers,
                     "Content-Type": "application/json",
                     "Prefer": "return=minimal"
                 },
                 body: JSON.stringify({
                     user_id: user.id,
-                    product_id: productId
+                    product_id: productId,
+                    list_id: defaultLists[0].id
                 })
             });
-            alert("Saved to Favorites ❤️");
+            if (!saveResponse.ok) throw new Error("Could not save this listing. Please try again.");
+            alert("Saved to My Saved ❤️");
         }
     } catch (error) {
         console.error(error);
