@@ -5,188 +5,45 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Saved Listings | BUYZA</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#f6f7f9;color:#17202a}
-button{font:inherit;cursor:pointer}
-header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #eee;box-shadow:0 2px 15px rgba(0,0,0,.05)}
-.nav{max-width:1200px;height:70px;margin:auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-size:28px;font-weight:900;color:#ff6500;text-decoration:none;letter-spacing:-1px}.logo span{color:#111}
-.nav-links{display:flex;align-items:center;gap:8px}.nav-links a{padding:10px 13px;border-radius:9px;color:#333;text-decoration:none;font-weight:700}.nav-links a:hover{background:#fff1e8;color:#ff6500}.nav-links .sell{background:#ff6500;color:white}
-main{max-width:1200px;margin:38px auto;padding:0 20px 60px}
-.heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}.heading h1{font-size:clamp(28px,5vw,38px);margin-bottom:7px}.heading p{color:#68717d;line-height:1.5}
-.count{color:#777;font-size:14px;white-space:nowrap}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
-.card{background:white;border:1px solid #e9ebef;border-radius:16px;overflow:hidden;box-shadow:0 4px 14px rgba(20,30,40,.04)}
-.image{height:205px;background:#f0f1f3;position:relative}.image img{width:100%;height:100%;object-fit:cover;display:block}.no-image{height:100%;display:grid;place-items:center;font-size:42px;color:#aab0b8}
-.status{position:absolute;left:10px;top:10px;background:#20252b;color:white;padding:6px 9px;border-radius:20px;font-size:12px;font-weight:700}.status.sold{background:#b42318}
-.body{padding:15px}.body h2{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.price{color:#f26500;font-weight:900;font-size:19px;margin:9px 0}.meta{color:#707780;font-size:13px;line-height:1.7;min-height:22px}.actions{display:flex;gap:8px;margin-top:14px}.actions a,.actions button{flex:1;text-align:center;text-decoration:none;border:0;border-radius:9px;padding:11px 8px;font-weight:700}.view{background:#181b20;color:#fff}.remove{background:#fff0e8;color:#db5700}.remove:hover{background:#ffe1cf}
-.state{background:white;border:1px solid #eceef1;border-radius:16px;padding:38px 22px;text-align:center;color:#69717a;line-height:1.6;grid-column:1/-1}.state h2{color:#17202a;margin-bottom:8px}.state a{display:inline-block;margin-top:16px;background:#ff6500;color:white;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:9px}.error{color:#9d2525}.loading{grid-column:1/-1;text-align:center;padding:55px 20px;color:#737b85}
-@media(max-width:950px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:680px){.nav{height:62px;padding:0 12px}.logo{font-size:24px}.nav-links{gap:2px}.nav-links a{padding:9px 8px;font-size:13px}.nav-links .sell{padding:9px 10px}main{margin-top:25px;padding:0 13px 40px}.heading{align-items:flex-start;flex-direction:column}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.image{height:160px}.body{padding:11px}.body h2{font-size:14px}.price{font-size:17px}.actions{flex-direction:column}}
-@media(max-width:380px){.nav-links a{font-size:12px;padding:8px 6px}.grid{grid-template-columns:1fr}.image{height:210px}}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,Helvetica,sans-serif;background:#f6f7f9;color:#17202a}button,input,select{font:inherit}button{cursor:pointer}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #eee;box-shadow:0 2px 15px #0000000d}.nav{max-width:1200px;height:68px;margin:auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}.logo{font-size:27px;font-weight:900;color:#ff6500;text-decoration:none;letter-spacing:-1px}.logo span{color:#111}.nav-links{display:flex;align-items:center;gap:8px}.nav-links a{padding:10px 12px;border-radius:9px;color:#333;text-decoration:none;font-weight:700}.nav-links a:hover{background:#fff1e8;color:#ff6500}.nav-links .sell{background:#ff6500;color:#fff}main{max-width:1200px;margin:34px auto;padding:0 20px 60px}.heading{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px}.heading h1{font-size:clamp(27px,5vw,38px);margin-bottom:7px}.heading p{color:#68717d;line-height:1.5}.count{color:#737b85;font-size:14px;white-space:nowrap}.manager{background:#fff;border:1px solid #e9ebef;border-radius:16px;padding:18px;margin-bottom:20px;box-shadow:0 4px 14px #141e2808}.manager-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.manager select,.manager input{min-height:44px;border:1px solid #d9dde3;border-radius:9px;background:#fff;padding:0 12px;color:#222}.manager select{min-width:200px;flex:1}.manager input{flex:1;min-width:170px}.btn{border:0;border-radius:9px;padding:12px 15px;font-weight:800;min-height:44px}.primary{background:#ff6500;color:#fff}.soft{background:#fff0e8;color:#d65300}.dark{background:#20252b;color:#fff}.muted{color:#6c737d;font-size:13px;line-height:1.5;margin-top:10px}.list-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}.hidden{display:none!important}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:17px}.card{background:#fff;border:1px solid #e9ebef;border-radius:15px;overflow:hidden;box-shadow:0 4px 14px #141e2808}.image{height:195px;background:#f0f1f3;position:relative}.image img{width:100%;height:100%;object-fit:cover;display:block}.no-image{height:100%;display:grid;place-items:center;font-size:42px;color:#aab0b8}.status{position:absolute;left:10px;top:10px;background:#20252b;color:#fff;padding:6px 9px;border-radius:20px;font-size:12px;font-weight:700}.status.sold{background:#b42318}.body{padding:14px}.body h2{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.price{color:#f26500;font-weight:900;font-size:19px;margin:9px 0}.meta{color:#707780;font-size:13px;line-height:1.65;min-height:22px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}.actions a,.actions button{text-align:center;text-decoration:none;border:0;border-radius:9px;padding:11px 8px;font-weight:800}.view{background:#181b20;color:#fff}.remove{background:#fff0e8;color:#db5700}.move-row{display:flex;gap:7px;margin-top:9px}.move-row select{min-width:0;flex:1;border:1px solid #d9dde3;border-radius:8px;padding:8px;background:#fff}.move-row button{border:0;border-radius:8px;background:#f0f2f4;padding:8px 10px;font-weight:700}.state{background:#fff;border:1px solid #eceef1;border-radius:16px;padding:38px 22px;text-align:center;color:#69717a;line-height:1.6;grid-column:1/-1}.state h2{color:#17202a;margin-bottom:8px}.state a{display:inline-block;margin-top:16px;background:#ff6500;color:white;text-decoration:none;font-weight:800;padding:12px 18px;border-radius:9px}.error{color:#9d2525}.loading{grid-column:1/-1;text-align:center;padding:55px 20px;color:#737b85}.notice{margin:0 0 14px;padding:12px 14px;border-radius:10px;background:#effaf1;color:#236333;display:none}.notice.error{display:block;background:#fff0ef;color:#a32920}.share-note{font-size:13px;color:#737b85;margin-top:10px}@media(max-width:950px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:680px){.nav{height:60px;padding:0 12px}.logo{font-size:24px}.nav-links{gap:2px}.nav-links a{padding:9px 7px;font-size:13px}main{margin-top:24px;padding:0 13px 45px}.heading{align-items:flex-start;flex-direction:column}.manager{padding:13px}.manager-row{align-items:stretch}.manager select,.manager input{min-width:100%}.manager-row .btn{flex:1}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.image{height:150px}.body{padding:10px}.body h2{font-size:14px}.price{font-size:16px}.actions{grid-template-columns:1fr}.move-row{flex-direction:column}.move-row button{min-height:38px}}@media(max-width:380px){.nav-links a{font-size:12px;padding:8px 5px}.grid{grid-template-columns:1fr}.image{height:205px}}
 </style>
 </head>
 <body>
-<header>
-  <nav class="nav" aria-label="Main navigation">
-    <a class="logo" href="index.html">BUY<span>ZA</span></a>
-    <div class="nav-links">
-      <a href="index.html">Home</a>
-      <a href="favorites.html" aria-current="page">❤️ Saved</a>
-      <a id="accountLink" href="login.html">Login</a>
-      <a class="sell" href="sell.html">+ Sell</a>
-    </div>
-  </nav>
-</header>
-
+<header><nav class="nav" aria-label="Main navigation"><a class="logo" href="index.html">BUY<span>ZA</span></a><div class="nav-links"><a href="index.html">Home</a><a href="favorites.html" aria-current="page">❤️ Saved</a><a id="accountLink" href="login.html">Login</a><a class="sell" href="sell.html">+ Sell</a></div></nav></header>
 <main>
-  <div class="heading">
-    <div><h1>❤️ Saved Listings</h1><p>Your favorite BUYZA listings, all in one place.</p></div>
-    <div id="savedCount" class="count"></div>
-  </div>
-  <section id="savedListings" class="grid" aria-live="polite">
-    <div class="loading">Loading your saved listings…</div>
+  <div class="heading"><div><h1>❤️ Saved Listings</h1><p>Keep favorites in named lists and share a list with someone.</p></div><div id="savedCount" class="count"></div></div>
+  <div id="notice" class="notice" role="status" aria-live="polite"></div>
+  <section class="manager" aria-label="Manage saved lists">
+    <div class="manager-row"><select id="listSelect" aria-label="Choose a saved list" disabled><option>Loading lists…</option></select><button id="shareButton" class="btn dark" type="button" disabled>Share on WhatsApp</button></div>
+    <div class="list-actions"><input id="newListName" type="text" maxlength="50" placeholder="New list name (e.g. Cars)"><button id="createListButton" class="btn primary" type="button">＋ Create list</button><button id="renameListButton" class="btn soft" type="button" disabled>Rename list</button><button id="deleteListButton" class="btn soft" type="button" disabled>Delete list</button></div>
+    <p class="muted">Your lists are private. WhatsApp sharing sends listing links and names, not your account information.</p>
+    <p class="share-note">Deleting a list moves its saved listings into “My Saved”, so nothing gets removed.</p>
   </section>
+  <section id="savedListings" class="grid" aria-live="polite"><div class="loading">Loading your saved listings…</div></section>
 </main>
-
 <script>
-const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
-const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
-const list = document.getElementById("savedListings");
-const count = document.getElementById("savedCount");
-
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, character => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"
-  })[character]);
-}
-
-function showMessage(title, message, actionLabel = "Browse listings", actionHref = "index.html", isError = false) {
-  list.innerHTML = `<div class="state${isError ? " error" : ""}"><h2>${escapeHTML(title)}</h2><p>${escapeHTML(message)}</p><a href="${escapeHTML(actionHref)}">${escapeHTML(actionLabel)}</a></div>`;
-}
-
-async function readError(response) {
-  try {
-    const body = await response.json();
-    return body.message || body.details || body.hint || body.error || `Request failed (${response.status})`;
-  } catch (_) {
-    return `Request failed (${response.status})`;
-  }
-}
-
-function formatPrice(value) {
-  if (value === null || value === undefined || value === "") return "Contact seller";
-  const amount = Number(value);
-  return Number.isFinite(amount) ? `UGX ${amount.toLocaleString("en-UG")}` : "Contact seller";
-}
-
-function renderListings(products) {
-  if (!products.length) {
-    count.textContent = "0 saved";
-    showMessage("No saved listings yet", "Tap the heart on a listing you like, and it will appear here.");
-    return;
-  }
-
-  count.textContent = `${products.length} saved ${products.length === 1 ? "listing" : "listings"}`;
-  list.innerHTML = products.map(product => {
-    const id = escapeHTML(product.id);
-    const name = escapeHTML(product.name || "BUYZA listing");
-    const imageURL = product.image_url ? escapeHTML(product.image_url) : "";
-    const image = imageURL
-      ? `<img src="${imageURL}" alt="${name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-image&quot;>📦</div>'">`
-      : `<div class="no-image">📦</div>`;
-    const sold = product.is_sold === true;
-    const condition = product.condition ? `Condition: ${escapeHTML(product.condition)}` : "";
-    const location = product.location ? `📍 ${escapeHTML(product.location)}` : "";
-
-    return `<article class="card" data-product-id="${id}">
-      <div class="image">${image}${sold ? '<span class="status sold">Sold</span>' : '<span class="status">Saved</span>'}</div>
-      <div class="body"><h2 title="${name}">${name}</h2><div class="price">${escapeHTML(formatPrice(product.price))}</div>
-      <div class="meta">${condition}${condition && location ? "<br>" : ""}${location}</div>
-      <div class="actions"><a class="view" href="product.html?id=${encodeURIComponent(String(product.id))}">View listing</a>
-      <button class="remove" type="button" data-remove-id="${id}">Remove</button></div></div>
-    </article>`;
-  }).join("");
-
-  list.querySelectorAll("[data-remove-id]").forEach(button => {
-    button.addEventListener("click", () => removeSavedListing(button.dataset.removeId, button));
-  });
-}
-
-async function loadSavedListings() {
-  const token = localStorage.getItem("buyza_access_token");
-  const rawUser = localStorage.getItem("buyza_user");
-  let user;
-
-  try { user = rawUser ? JSON.parse(rawUser) : null; } catch (_) { user = null; }
-  if (!token || !user || !user.id) {
-    showMessage("Log in to see saved listings", "Your saved listings are linked to your BUYZA account.", "Log in", "login.html");
-    return;
-  }
-
-  document.getElementById("accountLink").textContent = "Account";
-  document.getElementById("accountLink").href = "account.html";
-
-  const headers = { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${token}` };
-  try {
-    const favoritesURL = new URL(`${SUPABASE_URL}/rest/v1/favorites`);
-    favoritesURL.searchParams.set("select", "product_id");
-    favoritesURL.searchParams.set("user_id", `eq.${user.id}`);
-    const favoriteResponse = await fetch(favoritesURL, { headers });
-    if (!favoriteResponse.ok) throw new Error(await readError(favoriteResponse));
-
-    const favorites = await favoriteResponse.json();
-    const ids = [...new Set(favorites.map(row => row.product_id).filter(id => id !== null && id !== undefined))];
-    if (!ids.length) {
-      renderListings([]);
-      return;
-    }
-
-    const productsURL = new URL(`${SUPABASE_URL}/rest/v1/products`);
-    productsURL.searchParams.set("select", "id,name,price,image_url,location,condition,is_sold");
-    productsURL.searchParams.set("id", `in.(${ids.join(",")})`);
-    const productsResponse = await fetch(productsURL, { headers });
-    if (!productsResponse.ok) throw new Error(await readError(productsResponse));
-
-    const products = await productsResponse.json();
-    const byId = new Map(products.map(product => [String(product.id), product]));
-    renderListings(ids.map(id => byId.get(String(id))).filter(Boolean));
-  } catch (error) {
-    console.error("Saved listings could not be loaded:", error);
-    showMessage("Could not load saved listings", error.message || "Please refresh and try again.", "Try again", "favorites.html", true);
-  }
-}
-
-async function removeSavedListing(productId, button) {
-  const token = localStorage.getItem("buyza_access_token");
-  let user;
-  try { user = JSON.parse(localStorage.getItem("buyza_user") || "null"); } catch (_) { user = null; }
-  if (!token || !user || !user.id) {
-    showMessage("Please log in again", "Your BUYZA session has ended.", "Log in", "login.html");
-    return;
-  }
-
-  button.disabled = true;
-  button.textContent = "Removing…";
-  try {
-    const url = new URL(`${SUPABASE_URL}/rest/v1/favorites`);
-    url.searchParams.set("user_id", `eq.${user.id}`);
-    url.searchParams.set("product_id", `eq.${productId}`);
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: { "apikey": SUPABASE_KEY, "Authorization": `Bearer ${token}` }
-    });
-    if (!response.ok) throw new Error(await readError(response));
-    await loadSavedListings();
-  } catch (error) {
-    console.error("Could not remove saved listing:", error);
-    button.disabled = false;
-    button.textContent = "Remove";
-    alert("Could not remove this listing. " + (error.message || "Please try again."));
-  }
-}
-
-loadSavedListings();
+const SUPABASE_URL="https://xbjmdsdgisusnxdmlrxh.supabase.co";
+const SUPABASE_KEY="sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+const grid=document.getElementById("savedListings"),count=document.getElementById("savedCount"),select=document.getElementById("listSelect"),notice=document.getElementById("notice");
+let currentUser=null,accessToken="",lists=[],favorites=[],products=[];
+function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]))}
+function getSession(){try{return{token:localStorage.getItem("buyza_access_token"),user:JSON.parse(localStorage.getItem("buyza_user")||"null")}}catch(_){return{token:null,user:null}}}
+function headers(extra={}){return{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+accessToken,...extra}}
+async function api(path,options={}){const response=await fetch(SUPABASE_URL+"/rest/v1/"+path,{...options,headers:headers(options.headers||{})});if(!response.ok){let message="Request failed ("+response.status+")";try{const body=await response.json();message=body.message||body.details||body.hint||body.error||message}catch(_){}throw new Error(message)}if(response.status===204)return null;const text=await response.text();return text?JSON.parse(text):null}
+function showNotice(message,isError=false){notice.textContent=message;notice.className="notice"+(isError?" error":"");notice.style.display="block";window.clearTimeout(showNotice.timer);showNotice.timer=window.setTimeout(()=>{notice.style.display="none"},6000)}
+function selectedList(){return lists.find(item=>item.id===select.value)||null}
+function formatPrice(value){if(value===null||value===undefined||value==="")return"Contact seller";const amount=Number(value);return Number.isFinite(amount)?"UGX "+amount.toLocaleString("en-UG"):"Contact seller"}
+function updateControls(){const chosen=selectedList(),hasList=!!chosen;select.disabled=!hasList;document.getElementById("shareButton").disabled=!hasList;document.getElementById("renameListButton").disabled=!hasList||chosen.is_default;document.getElementById("deleteListButton").disabled=!hasList||chosen.is_default}
+async function ensureDefaultList(){let defaults=await api("favorite_lists?select=id,name,is_default&user_id=eq."+encodeURIComponent(currentUser.id)+"&is_default=eq.true&limit=1");if(defaults.length)return defaults[0];try{return(await api("favorite_lists",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({user_id:currentUser.id,name:"My Saved",is_default:true})}))[0]}catch(error){defaults=await api("favorite_lists?select=id,name,is_default&user_id=eq."+encodeURIComponent(currentUser.id)+"&is_default=eq.true&limit=1");if(defaults.length)return defaults[0];throw error}}
+async function load(){const session=getSession();accessToken=session.token||"";currentUser=session.user;if(!accessToken||!currentUser?.id){grid.innerHTML='<div class="state"><h2>Log in to see saved listings</h2><p>Your lists are linked to your BUYZA account.</p><a href="login.html">Log in</a></div>';count.textContent="";select.disabled=true;return}document.getElementById("accountLink").textContent="Account";document.getElementById("accountLink").href="account.html";try{await ensureDefaultList();const [listData,favoriteData]=await Promise.all([api("favorite_lists?select=id,name,is_default,created_at&user_id=eq."+encodeURIComponent(currentUser.id)+"&order=is_default.desc,name.asc"),api("favorites?select=id,product_id,list_id,created_at&user_id=eq."+encodeURIComponent(currentUser.id)+"&order=created_at.desc")]);lists=listData;favorites=favoriteData;const chosenId=select.value;select.innerHTML=lists.map(item=>`<option value="${escapeHTML(item.id)}">${escapeHTML(item.name)}${item.is_default?" · default":""}</option>`).join("");select.value=lists.some(item=>item.id===chosenId)?chosenId:(lists.find(item=>item.is_default)||lists[0])?.id||"";const ids=[...new Set(favorites.map(row=>row.product_id).filter(id=>id!==null&&id!==undefined))];products=[];if(ids.length){const productData=await api("products?select=id,name,price,image_url,location,condition,is_sold&id=in.("+ids.map(encodeURIComponent).join(",")+")");products=productData}updateControls();render();}catch(error){console.error("Saved lists failed to load:",error);grid.innerHTML='<div class="state error"><h2>Could not load saved lists</h2><p>'+escapeHTML(error.message)+". Run saved_lists_setup.sql in Supabase, then refresh this page.</p><a href=\"favorites.html\">Try again</a></div>";count.textContent=""}}
+function render(){const active=selectedList();if(!active){grid.innerHTML='<div class="state"><h2>No saved list selected</h2></div>';count.textContent="";return}const rows=favorites.filter(row=>String(row.list_id)===String(active.id));const byId=new Map(products.map(p=>[String(p.id),p]));const visible=rows.map(row=>({row,product:byId.get(String(row.product_id))})).filter(entry=>entry.product);count.textContent=rows.length+" saved "+(rows.length===1?"listing":"listings");if(!visible.length){grid.innerHTML='<div class="state"><h2>This list is empty</h2><p>Tap the heart on any BUYZA listing to save it to “My Saved”. You can move it here afterward.</p><a href="index.html">Browse listings</a></div>';return}grid.innerHTML=visible.map(({row,product})=>{const id=escapeHTML(product.id),name=escapeHTML(product.name||"BUYZA listing"),image=product.image_url?`<img src="${escapeHTML(product.image_url)}" alt="${name}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=&quot;no-image&quot;>📦</div>'">`:'<div class="no-image">📦</div>';const sold=product.is_sold===true,condition=product.condition?"Condition: "+escapeHTML(product.condition):"",location=product.location?"📍 "+escapeHTML(product.location):"";const options=lists.filter(l=>String(l.id)!==String(active.id)).map(l=>`<option value="${escapeHTML(l.id)}">${escapeHTML(l.name)}</option>`).join("");return `<article class="card"><div class="image">${image}${sold?'<span class="status sold">Sold</span>':'<span class="status">Saved</span>'}</div><div class="body"><h2 title="${name}">${name}</h2><div class="price">${escapeHTML(formatPrice(product.price))}</div><div class="meta">${condition}${condition&&location?"<br>":""}${location}</div><div class="actions"><a class="view" href="product.html?id=${encodeURIComponent(String(product.id))}">View listing</a><button class="remove" type="button" data-remove="${escapeHTML(row.id)}">Remove</button></div>${options?`<div class="move-row"><select aria-label="Move ${name} to another list" data-move-select="${escapeHTML(row.id)}"><option value="">Move to list…</option>${options}</select><button type="button" data-move="${escapeHTML(row.id)}">Move</button></div>`:""}</div></article>`}).join("");grid.querySelectorAll("[data-remove]").forEach(button=>button.addEventListener("click",()=>removeFavorite(button.dataset.remove,button)));grid.querySelectorAll("[data-move]").forEach(button=>button.addEventListener("click",()=>moveFavorite(button.dataset.move,button)))}
+async function removeFavorite(id,button){button.disabled=true;button.textContent="Removing…";try{await api("favorites?id=eq."+encodeURIComponent(id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"DELETE"});await load()}catch(error){button.disabled=false;button.textContent="Remove";showNotice("Could not remove listing: "+error.message,true)}}
+async function moveFavorite(id,button){const row=favorites.find(item=>String(item.id)===String(id)),targetId=grid.querySelector(`[data-move-select="${CSS.escape(String(id))}"]`)?.value;if(!row||!targetId){showNotice("Choose a destination list first.",true);return}button.disabled=true;button.textContent="Moving…";try{const duplicate=favorites.find(item=>String(item.product_id)===String(row.product_id)&&String(item.list_id)===String(targetId));if(duplicate){await api("favorites?id=eq."+encodeURIComponent(row.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"DELETE"});showNotice("That listing was already in the other list. Removed the duplicate from this list.")}else{await api("favorites?id=eq."+encodeURIComponent(row.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({list_id:targetId})});showNotice("Listing moved to the selected list.")}await load()}catch(error){button.disabled=false;button.textContent="Move";showNotice("Could not move listing: "+error.message,true)}}
+async function createList(){const input=document.getElementById("newListName"),name=input.value.trim();if(!name){showNotice("Enter a name for your list.",true);input.focus();return}try{const created=await api("favorite_lists",{method:"POST",headers:{"Content-Type":"application/json","Prefer":"return=representation"},body:JSON.stringify({user_id:currentUser.id,name,is_default:false})});input.value="";await load();select.value=created[0].id;updateControls();render();showNotice("List created.")}catch(error){showNotice(error.message.includes("favorite_lists_name_per_user")?"You already have a list with that name.":"Could not create list: "+error.message,true)}}
+async function renameList(){const item=selectedList();if(!item||item.is_default)return;const name=prompt("Enter a new name for this list:",item.name);if(name===null)return;if(!name.trim()){showNotice("List name cannot be empty.",true);return}try{await api("favorite_lists?id=eq."+encodeURIComponent(item.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({name:name.trim()})});await load();showNotice("List renamed.")}catch(error){showNotice("Could not rename list: "+error.message,true)}}
+async function deleteList(){const item=selectedList(),fallback=lists.find(l=>l.is_default);if(!item||item.is_default||!fallback)return;if(!confirm(`Delete “${item.name}”? Its saved listings will be moved to “${fallback.name}”.`))return;const button=document.getElementById("deleteListButton");button.disabled=true;try{const rows=favorites.filter(row=>String(row.list_id)===String(item.id));for(const row of rows){const duplicate=favorites.find(other=>String(other.product_id)===String(row.product_id)&&String(other.list_id)===String(fallback.id));if(duplicate)await api("favorites?id=eq."+encodeURIComponent(row.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"DELETE"});else await api("favorites?id=eq."+encodeURIComponent(row.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"PATCH",headers:{"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify({list_id:fallback.id})})}await api("favorite_lists?id=eq."+encodeURIComponent(item.id)+"&user_id=eq."+encodeURIComponent(currentUser.id),{method:"DELETE"});select.value=fallback.id;await load();showNotice("List deleted. Its saved listings are in My Saved.")}catch(error){button.disabled=false;showNotice("Could not delete list: "+error.message,true)}}
+function shareList(){const item=selectedList();if(!item)return;const byId=new Map(products.map(p=>[String(p.id),p]));const saved=favorites.filter(row=>String(row.list_id)===String(item.id)).map(row=>byId.get(String(row.product_id))).filter(Boolean);if(!saved.length){showNotice("Add listings to this list before sharing.",true);return}const lines=saved.map(p=>`• ${p.name||"BUYZA listing"}\nhttps://rodgersbatte65-cell.github.io/BUYZA/product.html?id=${encodeURIComponent(String(p.id))}`);const message=`BUYZA saved list: ${item.name}\n\n${lines.join("\n\n")}`;window.open("https://wa.me/?text="+encodeURIComponent(message),"_blank","noopener,noreferrer")}
+select.addEventListener("change",()=>{updateControls();render()});document.getElementById("createListButton").addEventListener("click",createList);document.getElementById("newListName").addEventListener("keydown",event=>{if(event.key==="Enter")createList()});document.getElementById("renameListButton").addEventListener("click",renameList);document.getElementById("deleteListButton").addEventListener("click",deleteList);document.getElementById("shareButton").addEventListener("click",shareList);load();
 </script>
 </body>
 </html>
