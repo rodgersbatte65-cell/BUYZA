@@ -34,3 +34,1331 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .hero h1{font-size:clamp(38px,6vw,68px);line-height:1;font-weight:900;letter-spacing:-2px;margin-bottom:20px}
 .hero-title-line{display:inline-block;animation:heroTitleMotion 2.4s ease-in-out infinite;will-change:transform,text-shadow}
 .hero-title-line:nth-of-type(2){animation-delay:.3s}
+@keyframes heroTitleMotion{0%,100%{transform:translateY(0);text-shadow:0 0 0 rgba(255,255,255,0)}50%{transform:translateY(-5px);text-shadow:0 8px 24px rgba(255,225,165,.55)}}
+@media(prefers-reduced-motion:reduce){.hero-title-line{animation:none;will-change:auto}}
+.hero p{font-size:19px;opacity:.95;margin-bottom:30px}
+.search-box{position:relative;max-width:850px;margin:auto;background:white;padding:8px;border-radius:16px;display:flex;box-shadow:0 15px 45px rgba(0,0,0,.18)}
+.search-box input{flex:1;border:0;outline:none;padding:17px;font-size:16px;min-width:0}
+.search-box button{border:0;background:#111;color:white;padding:0 28px;border-radius:11px;font-weight:800}
+.search-suggestions{position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:50;max-height:min(60vh,440px);overflow:auto;background:#fff;color:#202329;border:1px solid #e7e9ed;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.22);text-align:left}
+.search-suggestions[hidden]{display:none}
+.suggestion-heading{padding:12px 15px 8px;color:#777;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.search-suggestion{width:100%;display:flex;align-items:center;gap:12px;padding:10px 14px;border:0;border-top:1px solid #f0f1f2;background:white;text-align:left;color:#202329}
+.search-suggestion:hover,.search-suggestion:focus{background:#fff5ee;outline:none}
+.suggestion-image{width:48px;height:48px;flex:0 0 48px;overflow:hidden;border-radius:9px;background:#f1f2f4;display:grid;place-items:center;color:#999;font-size:20px}
+.suggestion-image img{width:100%;height:100%;object-fit:cover}
+.suggestion-info{min-width:0;flex:1}
+.suggestion-name{display:block;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.suggestion-meta{display:block;margin-top:4px;color:#777;font-size:12px}
+.suggestion-price{color:#e85f00;font-weight:800;white-space:nowrap}
+.search-suggestion.all-results{justify-content:center;color:#e85f00;font-weight:800;padding:13px}
+.ride-cta{display:block;position:relative;isolation:isolate;margin:20px auto 0;padding:16px 30px;border:0;border-radius:14px;background:linear-gradient(135deg,#11a978,#056342,#11a978);background-size:200% 200%;color:white;font-size:18px;font-weight:900;letter-spacing:.2px;box-shadow:0 7px 0 #034b32,0 12px 24px rgba(0,91,60,.3);transform-style:preserve-3d;animation:rideCtaMove 1.35s ease-in-out infinite,rideCtaGlow 1.35s ease-in-out infinite,rideCtaColor 3s linear infinite}
+.ride-cta::before{content:"";position:absolute;z-index:0;inset:-7px;border:2px solid rgba(12,151,102,.65);border-radius:18px;pointer-events:none;animation:rideCtaRing 1.6s ease-out infinite}
+.ride-cta span{position:relative;z-index:1}
+.ride-cta:hover{filter:brightness(1.1);animation-play-state:paused;transform:perspective(700px) translateY(-2px) scale(1.05)}
+.stats{max-width:1050px;margin:-30px auto 35px;position:relative;padding:0 20px}
+.stats-box{background:white;border-radius:18px;box-shadow:0 8px 30px rgba(0,0,0,.08);display:grid;grid-template-columns:repeat(3,1fr);overflow:hidden}
+.stat{padding:25px;text-align:center;border-right:1px solid #eee}
+.stat:last-child{border-right:0}
+.stat strong{display:block;font-size:25px;color:#ff6500}
+.stat span{color:#777;font-size:14px}
+.container{max-width:1250px;margin:auto;padding:0 20px 60px}
+.section{margin-top:35px}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.section-head h2{font-size:25px}
+.section-head p{color:#777;margin-top:5px}
+.view-all{color:#ff6500;font-weight:800;border:0;background:none}
+.recent-carousel-controls{display:flex;align-items:center;gap:8px}
+.recent-carousel-arrow{width:36px;height:36px;border:1px solid #e1e4e8;border-radius:50%;background:#fff;color:#333;font-size:22px;line-height:1}
+.recent-carousel-arrow:hover{border-color:#ff6500;color:#ff6500;background:#fff7f1}
+#recentlyViewedProducts.products{display:block;overflow-x:auto;overflow-y:hidden;padding:6px 4px 16px;scrollbar-width:none;overscroll-behavior-x:contain;scroll-behavior:auto}
+#recentlyViewedProducts.products::-webkit-scrollbar{display:none}
+#recentlyViewedTrack{display:flex;gap:14px;width:max-content}
+#recentlyViewedTrack>.product{flex:0 0 250px;width:250px}
+@media(prefers-reduced-motion:reduce){#recentlyViewedProducts.products{scroll-behavior:auto}}
+.listing-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sort-label{color:#777;font-size:13px;font-weight:700}
+.sort-select,.filter-input{border:1px solid #ddd;border-radius:8px;background:white;color:#333;padding:9px 10px;font-weight:700}
+.filter-input{width:125px}
+.categories{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.category{background:white;border:1px solid #eee;border-radius:16px;padding:22px 10px;text-align:center;transition:.2s;cursor:pointer}
+.category:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.08);border-color:#ff6500}
+.category-icon{width:55px;height:55px;margin:auto auto 10px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:#fff1e8;font-size:28px}
+.category strong{font-size:14px}
+.sponsored-section{margin-top:30px}
+.sponsored-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:15px}
+.sponsored-heading h2{font-size:24px}
+.sponsored-heading p{color:#777;margin-top:4px;font-size:14px}
+.sponsored-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.sponsored-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;background:#fff;border:1px solid #eee;border-radius:17px;box-shadow:0 5px 18px rgba(0,0,0,.06);transition:transform .2s,box-shadow .2s}
+.sponsored-card:hover{transform:translateY(-4px);box-shadow:0 13px 28px rgba(0,0,0,.12)}
+.sponsored-image{width:100%;aspect-ratio:16/9;object-fit:cover;background:#f0f1f3;display:block}
+.sponsored-content{display:flex;flex:1;flex-direction:column;align-items:flex-start;padding:15px}
+.sponsored-label{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff1e8;color:#b64b00;font-size:10px;font-weight:900;letter-spacing:.04em;text-transform:uppercase}
+.sponsored-title{margin:9px 0 5px;font-size:18px;line-height:1.25;font-weight:900}
+.sponsored-description{color:#69717a;font-size:13px;line-height:1.45;min-height:38px}
+.sponsored-cta{display:inline-flex;align-items:center;justify-content:center;min-height:40px;margin-top:13px;padding:0 15px;border-radius:9px;background:#ff6500;color:#fff;text-decoration:none;font-size:13px;font-weight:900}
+.sponsored-cta:hover{background:#e95700}
+.sponsored-section[hidden]{display:none}
+.products{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.product{background:white;border-radius:17px;overflow:hidden;border:1px solid #eee;transition:.25s;position:relative}
+.product:hover{transform:translateY(-5px);box-shadow:0 15px 35px rgba(0,0,0,.1)}
+.product-image{height:210px;background:#f0f1f3;position:relative;overflow:hidden}
+.product-image img{width:100%;height:100%;object-fit:cover;display:block;transition:.3s}
+.product-image-open{display:block;width:100%;height:100%;padding:0;border:0;background:transparent;text-align:inherit;cursor:pointer}
+.product:hover .product-image img{transform:scale(1.05)}
+.no-image{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:45px}
+.favorite{position:absolute;right:12px;top:12px;width:40px;height:40px;border-radius:50%;border:0;background:white;box-shadow:0 3px 12px rgba(0,0,0,.15);font-size:20px;z-index:2}
+.favorite:hover{transform:scale(1.08)}
+.category-badge{position:absolute;left:12px;bottom:12px;background:rgba(0,0,0,.75);color:white;padding:6px 10px;border-radius:7px;font-size:11px;font-weight:bold}
+.product-body{padding:16px}
+.product-name{font-weight:800;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price{color:#ff6500;font-size:20px;font-weight:900;margin:8px 0}
+.condition{color:#555;font-size:13px;font-weight:700;margin:-2px 0 9px}
+.seller-rating{color:#c85b00;font-size:12px;font-weight:700;margin:-3px 0 8px}
+.location{color:#777;font-size:13px;margin-bottom:10px}
+.description{color:#666;font-size:13px;line-height:1.4;height:37px;overflow:hidden}
+.compare-toggle{width:100%;margin-top:11px;padding:9px 10px;border:1px solid #e3e6e9;border-radius:9px;background:#fff;color:#343a40;font-weight:700;text-align:center;transition:.18s}
+.compare-toggle:hover{border-color:#ff6b00;color:#e85f00;background:#fff8f3}
+.compare-toggle.selected{border-color:#ff6b00;background:#fff1e8;color:#c84d00}
+.compare-toggle:disabled{opacity:.52;cursor:not-allowed}
+.product-actions{display:flex;gap:8px;margin-top:15px}
+.view-btn{flex:1;background:#111;color:white;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
+.contact-btn{flex:1;background:#fff1e8;color:#ff6500;border:0;border-radius:9px;padding:11px 5px;font-weight:700}
+.book-ride-card-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#11a978,#056342);color:white;text-decoration:none;text-align:center;border-radius:9px;padding:11px 5px;font-weight:800;box-shadow:0 4px 0 #034b32,0 7px 14px rgba(0,91,60,.2);animation:rideCardPulse 2s ease-in-out infinite}
+.view-btn:hover{background:#333}
+.contact-btn:hover{background:#ffe1cf}
+.compare-tray{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:1850;width:min(760px,calc(100% - 24px));display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;background:#171a1f;color:#fff;border:1px solid #3a4048;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.28)}
+.compare-tray[hidden]{display:none}
+.compare-tray-copy{font-size:14px;font-weight:800}.compare-tray-copy small{display:block;margin-top:3px;color:#c4c8ce;font-size:12px;font-weight:400}
+.compare-tray-actions{display:flex;gap:8px;flex:0 0 auto}
+.compare-tray button{border:0;border-radius:8px;padding:10px 12px;font-weight:800}
+.compare-open{background:#ff6b00;color:white}.compare-open:disabled{background:#777;cursor:not-allowed}.compare-clear{background:#343a40;color:white}
+.compare-modal{display:none;position:fixed;inset:0;z-index:2600;align-items:center;justify-content:center;padding:16px;background:rgba(10,14,20,.68)}
+.compare-modal.open{display:flex}
+.compare-dialog{width:min(1050px,100%);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;background:white;border-radius:18px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.compare-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:17px 20px;border-bottom:1px solid #eceef0}
+.compare-dialog-head h2{font-size:21px}.compare-close{width:38px;height:38px;border:0;border-radius:50%;background:#f0f1f3;font-size:22px}
+.compare-table-wrap{overflow:auto;padding:8px 16px 20px}
+.compare-table{width:100%;min-width:650px;border-collapse:collapse;text-align:left}
+.compare-table th,.compare-table td{padding:13px 14px;border-bottom:1px solid #eceef0;vertical-align:top}
+.compare-table thead th{width:28%;color:#fff;background:#23272e}
+.compare-table thead th:first-child{width:16%;border-radius:10px 0 0 0}
+.compare-table tbody th{position:sticky;left:0;background:#f7f8fa;color:#4c535c;min-width:120px}
+.compare-product-head{display:flex;flex-direction:column;gap:8px;min-width:145px}
+.compare-product-head img,.compare-product-placeholder{width:100%;height:105px;object-fit:cover;border-radius:8px;background:#f0f1f3}
+.compare-product-name{font-size:14px;line-height:1.35;font-weight:800}
+.compare-product-actions{display:flex;gap:10px;align-items:center;font-size:12px}
+.compare-product-actions a{color:#ff6500;text-decoration:none;font-weight:800}
+.compare-product-actions button{border:0;background:none;color:#a22;font-weight:700;padding:0;cursor:pointer}
+.compare-price{color:#e85f00;font-weight:900;font-size:17px}
+.book-ride-card-btn:hover{filter:brightness(1.1);animation-play-state:paused;transform:translateY(-2px)}
+.deal{margin-top:45px;background:linear-gradient(135deg,#111,#292929);color:white;border-radius:22px;padding:35px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.deal h2{font-size:30px;margin-bottom:8px}
+.deal p{color:#bbb}
+.deal button{background:#ff6500;color:white;border:0;padding:14px 24px;border-radius:10px;font-weight:800}
+.loading{grid-column:1/-1;text-align:center;padding:60px 20px;color:#777}
+.load-more-wrap{text-align:center;margin:22px 0 5px}
+.load-more-button{border:0;border-radius:10px;background:#ff6500;color:white;padding:13px 24px;font-weight:800;font-size:15px}
+.load-more-button:hover{background:#e95700}
+@keyframes rideCtaMove{0%,100%{transform:perspective(700px) translateY(0) rotateX(0deg) scale(1)}25%{transform:perspective(700px) translateY(-7px) rotateX(7deg) scale(1.045)}50%{transform:perspective(700px) translateY(0) rotateX(0deg) scale(1)}75%{transform:perspective(700px) translateY(-4px) rotateX(4deg) scale(1.025)}}
+@keyframes rideCtaGlow{0%,100%{box-shadow:0 7px 0 #034b32,0 12px 24px rgba(0,91,60,.26)}50%{box-shadow:0 8px 0 #034b32,0 18px 36px rgba(0,160,105,.5)}}
+@keyframes rideCtaColor{to{background-position:200% 50%}}
+@keyframes rideCtaRing{0%{transform:scale(.96);opacity:.8}75%,100%{transform:scale(1.13);opacity:0}}
+@keyframes rideCardPulse{0%,100%{transform:translateY(0) scale(1);box-shadow:0 4px 0 #034b32,0 7px 14px rgba(0,91,60,.18)}50%{transform:translateY(-3px) scale(1.025);box-shadow:0 6px 0 #034b32,0 11px 18px rgba(0,140,90,.35)}}
+@media(prefers-reduced-motion:reduce){.ride-cta,.ride-cta::before,.book-ride-card-btn{animation:none;transform:none;transition:none}.ride-cta{box-shadow:0 5px 0 #034b32,0 8px 15px rgba(0,91,60,.25)}}
+.load-more-button[hidden],.load-more-wrap[hidden]{display:none}
+.results-count{color:#777;font-size:13px;margin-top:10px}
+.spinner{width:38px;height:38px;border:4px solid #eee;border-top-color:#ff6500;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 15px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:2000;align-items:center;justify-content:center;padding:20px}
+.modal-box{background:white;width:100%;max-width:420px;border-radius:20px;padding:25px;position:relative}
+.close{position:absolute;right:15px;top:12px;border:0;background:#f1f1f1;width:35px;height:35px;border-radius:50%;font-size:20px}
+.modal-box h2{margin-bottom:8px}
+.modal-box p{color:#777;margin-bottom:20px}
+.modal-btn{width:100%;padding:14px;border:0;border-radius:10px;margin-top:10px;font-weight:800;font-size:15px}
+.call{background:#111;color:white}
+.whatsapp{background:#20b85a;color:white}
+footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
+.footer-inner{max-width:1250px;margin:auto;display:flex;justify-content:space-between;gap:30px}
+.footer-logo{font-size:27px;font-weight:900;color:#ff6500}
+.footer-text{color:#aaa;margin-top:8px}
+.footer-links{color:#aaa;text-align:right;font-size:14px;line-height:2}
+@media(max-width:1000px){.categories{grid-template-columns:repeat(3,1fr)}.products{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){
+.nav{height:65px}.logo{font-size:25px}.nav-links{gap:3px}.nav-btn{padding:8px;font-size:12px}.sell-btn{padding:9px 12px;font-size:12px}
+.hero{padding:45px 15px 65px}.hero h1{font-size:42px}.hero p{font-size:16px}
+.search-box{border-radius:12px}.search-box input{padding:14px 10px}.search-box button{padding:0 15px}
+.stats{margin-top:-25px}.stats-box{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid #eee;padding:15px}.stat:last-child{border-bottom:0}
+.categories{grid-template-columns:repeat(3,1fr);gap:8px}.category{padding:15px 5px}.category-icon{width:45px;height:45px;font-size:22px}
+.sponsored-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sponsored-title{font-size:15px}.sponsored-content{padding:11px}.sponsored-description{font-size:12px;min-height:0}
+.products{grid-template-columns:repeat(2,1fr);gap:10px}.product-image{height:170px}.product-body{padding:11px}.product-name{font-size:14px}.price{font-size:17px}.product-actions{flex-direction:column}
+#recentlyViewedTrack>.product{flex-basis:min(74vw,250px);width:min(74vw,250px)}
+.compare-tray{bottom:86px;padding:10px}.compare-tray-copy{font-size:12px}.compare-tray button{padding:9px 10px;font-size:12px}.compare-modal{padding:8px}.compare-dialog{max-height:92vh}.compare-dialog-head{padding:14px}.compare-table-wrap{padding:4px 8px 12px}
+.deal{flex-direction:column;align-items:flex-start;padding:25px}.footer-inner{flex-direction:column}.footer-links{text-align:left}
+}
+@media(max-width:600px){.section-head{align-items:flex-start;flex-direction:column;gap:12px}.listing-controls{width:100%;justify-content:flex-end}}
+@media(max-width:400px){.categories{grid-template-columns:repeat(2,1fr)}.sponsored-grid{grid-template-columns:1fr}.hero h1{font-size:36px}}
+</style>
+</head>
+<body>
+<header>
+<div class="nav">
+    <div class="logo">BUY<span>ZA</span></div>
+    <div class="nav-links">
+        <button class="nav-btn" onclick="location.href='index.html'">Home</button>
+        <button class="nav-btn" onclick="location.href='favorites.html'" aria-label="Saved listings" title="Saved listings">❤️</button>
+        <button class="nav-btn notification-btn" id="notificationsBtn" onclick="openNotifications()" aria-label="Notifications" title="Notifications">🔔<span class="notification-badge" id="notificationsBadge" hidden>0</span></button>
+        <button class="nav-btn" id="accountBtn" onclick="openAccount()">Account</button>
+        <button class="sell-btn" onclick="location.href='sell.html'">+ Sell</button>
+    </div>
+</div>
+</header>
+
+<section class="hero">
+<div class="hero-inner">
+    <h1><span class="hero-title-line">Buy Better.</span><br><span class="hero-title-line">Sell Smarter.</span></h1>
+    <p>Uganda's modern marketplace for buying and selling anything.</p>
+    <div class="search-box">
+        <input type="search" id="searchInput" placeholder="What are you looking for?" autocomplete="off" aria-label="Search BUYZA products" aria-autocomplete="list" aria-controls="searchSuggestions" aria-expanded="false" oninput="handleSearchInput()" onkeydown="handleSearchKeydown(event)">
+        <button type="button" onclick="submitProductSearch()">🔍 Search</button>
+        <div id="searchSuggestions" class="search-suggestions" role="listbox" aria-label="Product suggestions" hidden></div>
+    </div>
+    <button class="ride-cta" type="button" onclick="selectCategory('Services');document.getElementById('products').scrollIntoView({behavior:'smooth'});">🏍️ Book a Ride</button>
+</div>
+</section>
+
+<div class="stats">
+<div class="stats-box">
+    <div class="stat"><strong id="productCount">0</strong><span>Listings</span></div>
+    <div class="stat"><strong>🇺🇬</strong><span>Made for Uganda</span></div>
+    <div class="stat"><strong>24/7</strong><span>Buy & Sell</span></div>
+</div>
+</div>
+
+<main class="container">
+<section class="section">
+<div class="section-head">
+    <div><h2>Explore Categories</h2><p>Find what you need faster</p></div>
+</div>
+<div class="categories">
+    <div class="category" onclick="selectCategory('Phones & Tablets')"><div class="category-icon">📱</div><strong>Phones</strong></div>
+    <div class="category" onclick="selectCategory('Cars')"><div class="category-icon">🚗</div><strong>Cars</strong></div>
+    <div class="category" onclick="selectCategory('Fashion')"><div class="category-icon">👕</div><strong>Fashion</strong></div>
+    <div class="category" onclick="selectCategory('Electronics')"><div class="category-icon">💻</div><strong>Electronics</strong></div>
+    <div class="category" onclick="selectCategory('Furniture')"><div class="category-icon">🛋️</div><strong>Home</strong></div>
+    <div class="category" onclick="selectCategory('Jobs')"><div class="category-icon">💼</div><strong>Jobs</strong></div>
+    <div class="category" onclick="selectCategory('Services')"><div class="category-icon">🧹</div><strong>Services</strong></div>
+</div>
+</section>
+
+<section class="section sponsored-section" id="sponsoredSection" hidden aria-label="Sponsored promotions">
+<div class="sponsored-heading"><div><h2>✨ Promotions</h2><p>Offers and services from BUYZA advertisers</p></div><span class="sponsored-label">Sponsored</span></div>
+<div id="sponsoredAds" class="sponsored-grid"></div>
+</section>
+
+<section class="section" id="recentlyViewedSection" style="display:none">
+<div class="section-head">
+    <div><h2>🕘 Recently Viewed</h2><p>Listings you opened recently</p></div>
+    <div class="recent-carousel-controls">
+        <button class="recent-carousel-arrow" id="recentViewedPrev" type="button" aria-label="Previous recently viewed items" onclick="moveRecentlyViewed(-1)">‹</button>
+        <button class="view-all" onclick="clearRecentlyViewed()">Clear</button>
+        <button class="recent-carousel-arrow" id="recentViewedNext" type="button" aria-label="Next recently viewed items" onclick="moveRecentlyViewed(1)">›</button>
+    </div>
+</div>
+<div id="recentlyViewedProducts" class="products"></div>
+</section>
+
+<section class="section">
+<div class="section-head">
+    <div><h2>🔥 Latest Listings</h2><p>Fresh products added by sellers</p></div>
+    <div class="listing-controls">
+        <label class="sort-label" for="sortOrder">Sort by</label>
+        <select id="sortOrder" class="sort-select" onchange="filterProducts()">
+            <option value="newest">Newest</option>
+            <option value="price-low">Lowest price</option>
+            <option value="price-high">Highest price</option>
+            <option value="top-rated">Top rated</option>
+        </select>
+        <label class="sort-label" for="conditionFilter">Condition</label>
+        <select id="conditionFilter" class="sort-select" onchange="filterProducts()">
+            <option value="all">Any condition</option>
+            <option value="new">New</option>
+            <option value="used">Used</option>
+        </select>
+        <label class="sort-label" for="ratingFilter">Rating</label>
+        <select id="ratingFilter" class="sort-select" onchange="filterProducts()">
+            <option value="all">Any rating</option>
+            <option value="4">4★ and up</option>
+        </select>
+        <label class="sort-label" for="locationFilter">Location</label>
+        <input id="locationFilter" class="filter-input" type="text" placeholder="Town / district" aria-label="Filter by location" oninput="filterProducts()">
+        <label class="sort-label" for="minPriceFilter">Price (UGX)</label>
+        <input id="minPriceFilter" class="filter-input" type="number" min="0" placeholder="Min" aria-label="Minimum price" oninput="filterProducts()">
+        <input id="maxPriceFilter" class="filter-input" type="number" min="0" placeholder="Max" aria-label="Maximum price" oninput="filterProducts()">
+        <button class="view-all" onclick="showAll()">View All →</button>
+    </div>
+</div>
+
+<div id="products" class="products">
+    <div class="loading"><div class="spinner"></div>Loading BUYZA listings...</div>
+</div>
+
+<div id="loadMoreWrap" class="load-more-wrap" hidden>
+    <button id="loadMoreButton" class="load-more-button" type="button" onclick="loadMoreProducts()">
+        Load More Listings
+    </button>
+    <div id="resultsCount" class="results-count"></div>
+</div>
+</section>
+
+<section class="deal">
+    <div><h2>Have something to sell?</h2><p>Turn your unused items into cash with BUYZA.</p></div>
+    <button onclick="location.href='sell.html'">Start Selling →</button>
+</section>
+</main>
+
+<div id="contactModal" class="modal">
+<div class="modal-box">
+    <button class="close" onclick="closeContact()">×</button>
+    <h2 id="modalTitle">Contact Seller</h2>
+    <p id="modalPhone"></p>
+    <button class="modal-btn call" id="callBtn">📞 Call Seller</button>
+    <button class="modal-btn whatsapp" id="whatsappBtn">💬 WhatsApp Seller</button>
+</div>
+</div>
+
+<footer>
+<div class="footer-inner">
+    <div><div class="footer-logo">BUYZA</div><div class="footer-text">Buy. Sell. Connect. 🇺🇬</div></div>
+    <div class="footer-links"><div>Buy with confidence</div><div>Sell with ease</div><div>© 2026 BUYZA. All rights reserved.</div></div>
+</div>
+</footer>
+
+<div class="bottom-taskbar-wrap">
+  <nav class="bottom-taskbar" aria-label="BUYZA quick navigation">
+    <a class="taskbar-link" href="index.html"><span class="taskbar-icon">🏠</span><span>Home</span></a>
+    <a class="taskbar-link" href="favorites.html"><span class="taskbar-icon">❤️</span><span>Saved</span></a>
+    <a class="taskbar-link" href="messages.html"><span class="taskbar-icon">✉️</span><span>Messages</span></a>
+    <a class="taskbar-link" href="ride-requests.html"><span class="taskbar-icon">🏍️</span><span>Ride requests</span></a>
+    <a class="taskbar-link" href="sell.html"><span class="taskbar-icon">＋</span><span>Sell</span></a>
+  </nav>
+</div>
+
+<div class="compare-tray" id="compareTray" hidden>
+  <div class="compare-tray-copy"><span id="compareSelectionCount">0 selected</span><small>Select 2 or 3 listings to compare.</small></div>
+  <div class="compare-tray-actions">
+    <button class="compare-clear" type="button" id="clearCompareButton">Clear</button>
+    <button class="compare-open" type="button" id="openCompareButton" disabled>Compare</button>
+  </div>
+</div>
+
+<div class="compare-modal" id="compareModal" role="dialog" aria-modal="true" aria-labelledby="compareTitle">
+  <div class="compare-dialog">
+    <div class="compare-dialog-head"><h2 id="compareTitle">Compare listings</h2><button class="compare-close" id="closeCompareButton" type="button" aria-label="Close comparison">×</button></div>
+    <div class="compare-table-wrap" id="compareTableWrap"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
+const PAGE_SIZE = 12;
+
+let allProducts = [];
+let sellerRatingSummaries = {};
+let selectedCategory = "";
+let selectedCompareIds = [];
+let searchPlaceholderTimer = null;
+let recentlyViewedAnimationFrame = null;
+let recentlyViewedPauseUntil = 0;
+let recentlyViewedSetWidth = 0;
+let visibleProductLimit = PAGE_SIZE;
+
+function safeAdTarget(value) {
+    const raw = String(value || "").trim();
+    if (/^https?:\/\//i.test(raw)) {
+        try {
+            const parsed = new URL(raw);
+            return ["http:", "https:"].includes(parsed.protocol) ? parsed.href : "index.html";
+        } catch (_) { return "index.html"; }
+    }
+    return /^(?:\.\/)?[a-z0-9][a-z0-9._/-]*(?:\?[a-z0-9=&_%.-]*)?(?:#[a-z0-9_-]*)?$/i.test(raw) && !raw.includes("..")
+        ? raw
+        : "index.html";
+}
+
+async function loadSponsoredAds() {
+    const section = document.getElementById("sponsoredSection");
+    const container = document.getElementById("sponsoredAds");
+    const now = new Date().toISOString();
+    const query = new URLSearchParams({
+        select: "id,title,description,image_url,target_url,cta_label",
+        status: "eq.active",
+        starts_at: "lte." + now,
+        order: "sort_order.asc,created_at.desc",
+        or: "(ends_at.is.null,ends_at.gt." + now + ")"
+    });
+    try {
+        const response = await fetch(SUPABASE_URL + "/rest/v1/advertising_ads?" + query.toString(), {
+            headers: { "apikey": SUPABASE_KEY, "Authorization": "Bearer " + SUPABASE_KEY }
+        });
+        if (!response.ok) throw new Error("Sponsored ads are unavailable.");
+        const ads = await response.json();
+        if (!ads.length) return;
+        container.innerHTML = ads.map(ad => {
+            const image = /^https:\/\//i.test(String(ad.image_url || ""))
+                ? `<img class="sponsored-image" src="${escapeHTML(ad.image_url)}" alt="${escapeHTML(ad.title)}" loading="lazy">`
+                : `<div class="sponsored-image" aria-hidden="true"></div>`;
+            return `<article class="sponsored-card">
+                ${image}
+                <div class="sponsored-content">
+                    <span class="sponsored-label">Sponsored</span>
+                    <h3 class="sponsored-title">${escapeHTML(ad.title)}</h3>
+                    <p class="sponsored-description">${escapeHTML(ad.description || "")}</p>
+                    <a class="sponsored-cta" href="${escapeHTML(safeAdTarget(ad.target_url))}" target="_blank" rel="noopener noreferrer">${escapeHTML(ad.cta_label || "Learn more")}</a>
+                </div>
+            </article>`;
+        }).join("");
+        section.hidden = false;
+    } catch (error) {
+        console.warn("Sponsored ads could not be loaded:", error);
+        section.hidden = true;
+    }
+}
+
+function loadRecentlyViewed() {
+    const section = document.getElementById("recentlyViewedSection");
+    const container = document.getElementById("recentlyViewedProducts");
+
+    try {
+        const items = JSON.parse(
+            localStorage.getItem("buyza_recently_viewed") || "[]"
+        );
+
+        if (!Array.isArray(items) || items.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        const validItems = items
+            .filter(item => item && item.id)
+            .slice(0, 8);
+
+        if (validItems.length === 0) {
+            section.style.display = "none";
+            return;
+        }
+
+        section.style.display = "block";
+
+        const cardMarkup = validItems.map(item => {
+            const name = escapeHTML(item.name || "Product");
+            const location = escapeHTML(item.location || "Uganda");
+            const image = item.image_url
+                ? `<img src="${escapeHTML(item.image_url)}" alt="${name}" loading="lazy">`
+                : `<div class="no-image">📦</div>`;
+
+            return `
+                <div class="product">
+                    <div class="product-image"><button type="button" class="product-image-open recent-view-button" data-product-id="${escapeHTML(item.id)}" aria-label="Open ${name}">${image}</button></div>
+                    <div class="product-body">
+                        <div class="product-name">${name}</div>
+                        <div class="price">UGX ${formatPrice(item.price)}</div>
+                        <div class="location">📍 ${location}</div>
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+        container.innerHTML = `<div id="recentlyViewedTrack">${cardMarkup}</div>`;
+        const track = document.getElementById("recentlyViewedTrack");
+        recentlyViewedSetWidth = track.scrollWidth + 14;
+
+        if (validItems.length > 1 && recentlyViewedSetWidth > 0) {
+            const copies = Math.max(2, Math.ceil(
+                (container.clientWidth + recentlyViewedSetWidth) / recentlyViewedSetWidth
+            ));
+            const originals = [...track.children];
+            for (let copyIndex = 1; copyIndex < copies; copyIndex++) {
+                originals.forEach(card => {
+                    const duplicate = card.cloneNode(true);
+                    duplicate.setAttribute("aria-hidden", "true");
+                    duplicate.querySelectorAll("button").forEach(button => button.tabIndex = -1);
+                    track.appendChild(duplicate);
+                });
+            }
+        }
+
+        container.addEventListener("click", event => {
+            const button = event.target.closest(".recent-view-button");
+            if (button) viewProduct(button.dataset.productId);
+        });
+        startRecentlyViewedCarousel();
+        container.addEventListener("pointerdown", () => {
+            recentlyViewedPauseUntil = Date.now() + 5000;
+        });
+    } catch (error) {
+        console.error("Could not load recently viewed listings:", error);
+        section.style.display = "none";
+    }
+}
+
+function clearRecentlyViewed() {
+    localStorage.removeItem("buyza_recently_viewed");
+    document.getElementById("recentlyViewedSection").style.display = "none";
+    if (recentlyViewedAnimationFrame) cancelAnimationFrame(recentlyViewedAnimationFrame);
+    recentlyViewedAnimationFrame = null;
+}
+
+function moveRecentlyViewed(direction, automatic = false) {
+    const container = document.getElementById("recentlyViewedProducts");
+    const card = document.querySelector("#recentlyViewedTrack > .product");
+    if (!card) return;
+
+    if (!automatic) recentlyViewedPauseUntil = Date.now() + 5000;
+    const distance = card.getBoundingClientRect().width + 14;
+    const maxScroll = Math.max(0, container.scrollWidth - container.clientWidth);
+    let nextPosition = container.scrollLeft + direction * distance;
+    if (direction > 0 && container.scrollLeft >= maxScroll - 5) nextPosition = 0;
+    if (direction < 0 && container.scrollLeft <= 5) nextPosition = maxScroll;
+    container.scrollTo({left: nextPosition, behavior: "smooth"});
+}
+
+function startRecentlyViewedCarousel() {
+    const container = document.getElementById("recentlyViewedProducts");
+    const track = document.getElementById("recentlyViewedTrack");
+    if (recentlyViewedAnimationFrame) cancelAnimationFrame(recentlyViewedAnimationFrame);
+    if (!track || track.children.length < 2 || recentlyViewedSetWidth <= 0 ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    let lastFrame = 0;
+    const slide = timestamp => {
+        if (lastFrame) {
+            const elapsed = Math.min(timestamp - lastFrame, 50);
+            if (!document.hidden && Date.now() >= recentlyViewedPauseUntil) {
+                container.scrollLeft += elapsed * 0.03;
+                if (container.scrollLeft >= recentlyViewedSetWidth) {
+                    container.scrollLeft -= recentlyViewedSetWidth;
+                }
+            }
+        }
+        lastFrame = timestamp;
+        recentlyViewedAnimationFrame = requestAnimationFrame(slide);
+    };
+    recentlyViewedAnimationFrame = requestAnimationFrame(slide);
+}
+
+async function loadProducts() {
+    const container = document.getElementById("products");
+
+    try {
+        const response = await fetch(
+            SUPABASE_URL + "/rest/v1/products?is_sold=eq.false&select=*&order=created_at.desc",
+            {
+                method: "GET",
+                headers: {
+                    "apikey": SUPABASE_KEY,
+                    "Authorization": "Bearer " + SUPABASE_KEY
+                }
+            }
+        );
+
+        if (!response.ok) throw new Error("Could not load products");
+
+        allProducts = await response.json();
+        startSearchPlaceholderRotation();
+        await loadSellerRatingSummaries(allProducts);
+        document.getElementById("productCount").textContent = allProducts.length;
+        displayProducts(allProducts);
+        if (document.getElementById("searchInput").value.trim()) {
+            showProductSuggestions(document.getElementById("searchInput").value);
+        }
+    } catch (error) {
+        console.error(error);
+        container.innerHTML = `
+            <div class="loading">
+                <h3>Unable to load listings</h3>
+                <p>Please refresh the page.</p>
+            </div>
+        `;
+    }
+}
+
+async function loadSellerRatingSummaries(products) {
+    sellerRatingSummaries = {};
+
+    const sellerIds = [...new Set(
+        products.map(product => product.user_id).filter(Boolean)
+    )];
+
+    if (sellerIds.length === 0) return;
+
+    try {
+        const totals = {};
+        const batchSize = 50;
+
+        for (let index = 0; index < sellerIds.length; index += batchSize) {
+            const batch = sellerIds.slice(index, index + batchSize);
+            const query = new URLSearchParams({
+                select: "seller_id,rating",
+                seller_id: `in.(${batch.join(",")})`
+            });
+
+            const response = await fetch(
+                SUPABASE_URL + "/rest/v1/seller_reviews?" + query.toString(),
+                {
+                    headers: {
+                        "apikey": SUPABASE_KEY,
+                        "Authorization": "Bearer " + SUPABASE_KEY
+                    }
+                }
+            );
+
+            if (!response.ok) throw new Error("Could not load seller ratings");
+
+            const reviews = await response.json();
+            reviews.forEach(review => {
+                const rating = Number(review.rating);
+                if (!review.seller_id || !Number.isFinite(rating)) return;
+
+                if (!totals[review.seller_id]) {
+                    totals[review.seller_id] = {sum: 0, count: 0};
+                }
+
+                totals[review.seller_id].sum += rating;
+                totals[review.seller_id].count += 1;
+            });
+        }
+
+        Object.entries(totals).forEach(([sellerId, total]) => {
+            sellerRatingSummaries[sellerId] = {
+                average: total.sum / total.count,
+                count: total.count
+            };
+        });
+    } catch (error) {
+        console.error("Seller ratings could not be loaded:", error);
+        sellerRatingSummaries = {};
+    }
+}
+
+function getSellerRatingMarkup(product) {
+    const summary = product.user_id
+        ? sellerRatingSummaries[product.user_id]
+        : null;
+
+    if (!summary || summary.count === 0) return "";
+
+    const reviewLabel = summary.count === 1 ? "review" : "reviews";
+    const average = summary.average.toFixed(1);
+
+    return `<div class="seller-rating" aria-label="Seller rating ${average} out of 5 from ${summary.count} ${reviewLabel}">★ ${average} · ${summary.count} ${reviewLabel}</div>`;
+}
+
+function displayProducts(products) {
+    const container = document.getElementById("products");
+
+    if (products.length === 0) {
+        container.innerHTML = `
+            <div class="loading">
+                <h3>No products found</h3>
+                <p>Try another search or category.</p>
+            </div>
+        `;
+        document.getElementById("loadMoreWrap").hidden = true;
+        return;
+    }
+
+    const visibleProducts = products.slice(0, visibleProductLimit);
+
+    container.innerHTML = visibleProducts.map(product => {
+        const image = product.image_url;
+        const safeName = escapeHTML(product.name || "Product");
+        const safeDescription = escapeHTML(
+            product.description || "No description available."
+        );
+        const safeLocation = escapeHTML(product.location || "Uganda");
+        const safeCategory = escapeHTML(product.category || "Other");
+        const safeCondition = escapeHTML(
+            product.condition || "Not specified"
+        );
+        const safeProductId = escapeHTML(product.id);
+        const isBodaRide =
+            String(product.category || "").trim().toLowerCase() === "services" &&
+            /boda|ride|motorcycle|transport/i.test(String(product.name || ""));
+        const bookRideButton = isBodaRide
+            ? `<a class="book-ride-card-btn" href="book-ride.html?id=${encodeURIComponent(String(product.id))}">🏍️ Book</a>`
+            : "";
+
+        return `
+            <div class="product">
+                <div class="product-image">
+                    <button type="button" class="product-image-open"
+                        onclick="viewProduct(${product.id})"
+                        aria-label="Open ${safeName}">
+                        ${
+                            image
+                                ? `<img src="${image}" alt="${safeName}" loading="lazy">`
+                                : `<div class="no-image">📦</div>`
+                        }
+                    </button>
+                    <button class="favorite"
+                        onclick="toggleFavorite(event, ${product.id})"
+                        title="Save product">❤️</button>
+                    <div class="category-badge">${safeCategory}</div>
+                </div>
+                <div class="product-body">
+                    <div class="product-name">${safeName}</div>
+                    <div class="price">UGX ${formatPrice(product.price)}</div>
+                    <div class="condition" ${String(product.category || "").trim().toLowerCase() === "services" ? "hidden" : ""}>Condition: ${safeCondition}</div>
+                    ${getSellerRatingMarkup(product)}
+                    <div class="location">📍 ${safeLocation}</div>
+                    <div class="description">${safeDescription}</div>
+                    <button class="compare-toggle" type="button" data-compare-id="${safeProductId}" aria-pressed="false">＋ Compare</button>
+                    <div class="product-actions">
+                        <button class="contact-btn"
+                            onclick='openContact(
+                                ${JSON.stringify(product.name || "Product")},
+                                ${JSON.stringify(product.phone || "")}
+                            )'>Contact</button>
+                        ${bookRideButton}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join("");
+
+    const loadMoreWrap = document.getElementById("loadMoreWrap");
+    const loadMoreButton = document.getElementById("loadMoreButton");
+    const resultsCount = document.getElementById("resultsCount");
+
+    loadMoreWrap.hidden = false;
+    loadMoreButton.hidden = visibleProducts.length >= products.length;
+    resultsCount.textContent =
+        "Showing " + visibleProducts.length + " of " + products.length + " listings";
+    updateCompareButtons();
+}
+
+function toggleCompare(productId) {
+    const id = String(productId);
+    if (selectedCompareIds.includes(id)) {
+        selectedCompareIds = selectedCompareIds.filter(selectedId => selectedId !== id);
+    } else {
+        if (selectedCompareIds.length >= 3) {
+            alert("You can compare up to 3 listings at a time. Remove one to add another.");
+            return;
+        }
+        selectedCompareIds.push(id);
+    }
+    updateCompareButtons();
+    updateCompareTray();
+}
+
+function updateCompareButtons() {
+    document.querySelectorAll("[data-compare-id]").forEach(button => {
+        const selected = selectedCompareIds.includes(String(button.dataset.compareId));
+        button.classList.toggle("selected", selected);
+        button.setAttribute("aria-pressed", String(selected));
+        button.textContent = selected ? "✓ Added to compare" : "＋ Compare";
+        button.disabled = !selected && selectedCompareIds.length >= 3;
+        button.title = button.disabled ? "Remove a listing from comparison first" : "";
+    });
+}
+
+function updateCompareTray() {
+    const tray = document.getElementById("compareTray");
+    const count = selectedCompareIds.length;
+    tray.hidden = count === 0;
+    document.getElementById("compareSelectionCount").textContent = count + " selected";
+    const openButton = document.getElementById("openCompareButton");
+    openButton.disabled = count < 2;
+    openButton.textContent = count < 2 ? "Select one more" : "Compare " + count;
+}
+
+function renderComparison() {
+    const products = selectedCompareIds
+        .map(id => allProducts.find(product => String(product.id) === id))
+        .filter(Boolean);
+    if (products.length < 2) {
+        closeComparison();
+        return;
+    }
+
+    const headCells = products.map(product => {
+        const name = escapeHTML(product.name || "Product");
+        const image = product.image_url
+            ? `<img src="${escapeHTML(product.image_url)}" alt="${name}" loading="lazy">`
+            : `<div class="compare-product-placeholder">📦</div>`;
+        return `<th><div class="compare-product-head">${image}<span class="compare-product-name">${name}</span><div class="compare-product-actions"><a href="product.html?id=${encodeURIComponent(String(product.id))}">Open listing</a><button type="button" data-remove-compare="${escapeHTML(product.id)}">Remove</button></div></div></th>`;
+    }).join("");
+
+    const rows = [
+        ["Price", product => product.price === null || product.price === undefined || product.price === "" ? "Contact seller" : "UGX " + formatPrice(product.price), "compare-price"],
+        ["Category", product => product.category || "Other"],
+        ["Condition", product => product.condition || "Not specified"],
+        ["Location", product => product.location || "Not specified"],
+        ["Seller rating", product => {
+            const summary = product.user_id ? sellerRatingSummaries[product.user_id] : null;
+            return summary && summary.count ? "★ " + summary.average.toFixed(1) + " · " + summary.count + (summary.count === 1 ? " review" : " reviews") : "No ratings yet";
+        }],
+        ["Description", product => product.description || "No description provided"]
+    ];
+
+    const bodyRows = rows.map(([label, getValue, className]) =>
+        `<tr><th scope="row">${escapeHTML(label)}</th>${products.map(product => `<td${className ? ` class="${className}"` : ""}>${escapeHTML(getValue(product))}</td>`).join("")}</tr>`
+    ).join("");
+
+    document.getElementById("compareTableWrap").innerHTML =
+        `<table class="compare-table"><thead><tr><th>Compare</th>${headCells}</tr></thead><tbody>${bodyRows}</tbody></table>`;
+    document.getElementById("compareModal").classList.add("open");
+    document.getElementById("closeCompareButton").focus();
+}
+
+function closeComparison() {
+    document.getElementById("compareModal").classList.remove("open");
+}
+
+document.getElementById("products").addEventListener("click", event => {
+    const button = event.target.closest("button[data-compare-id]");
+    if (button) toggleCompare(button.dataset.compareId);
+});
+document.getElementById("openCompareButton").addEventListener("click", renderComparison);
+document.getElementById("clearCompareButton").addEventListener("click", () => {
+    selectedCompareIds = [];
+    updateCompareButtons();
+    updateCompareTray();
+    closeComparison();
+});
+document.getElementById("closeCompareButton").addEventListener("click", closeComparison);
+document.getElementById("compareModal").addEventListener("click", event => {
+    if (event.target.id === "compareModal") closeComparison();
+    const removeButton = event.target.closest("[data-remove-compare]");
+    if (removeButton) {
+        toggleCompare(removeButton.dataset.removeCompare);
+        if (selectedCompareIds.length >= 2) renderComparison();
+        else closeComparison();
+    }
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeComparison();
+});
+
+function handleSearchInput() {
+    const input = document.getElementById("searchInput");
+    filterProducts();
+    showProductSuggestions(input.value);
+}
+
+function startSearchPlaceholderRotation() {
+    const input = document.getElementById("searchInput");
+    if (!input) return;
+    if (searchPlaceholderTimer) clearInterval(searchPlaceholderTimer);
+
+    const names = [...new Set(allProducts
+        .map(product => String(product.name || "").trim().replace(/\s+/g, " "))
+        .filter(Boolean))].slice(0, 8);
+
+    if (names.length === 0) {
+        input.placeholder = "What are you looking for?";
+        return;
+    }
+
+    let index = 0;
+    const rotate = () => {
+        if (input.value || document.activeElement === input) return;
+        input.placeholder = "Try: " + names[index];
+        index = (index + 1) % names.length;
+    };
+
+    rotate();
+    searchPlaceholderTimer = setInterval(rotate, 2500);
+}
+
+function showProductSuggestions(query) {
+    const box = document.getElementById("searchSuggestions");
+    const normalized = String(query || "").trim().toLowerCase();
+
+    if (normalized.length < 2 || allProducts.length === 0) {
+        hideProductSuggestions();
+        return;
+    }
+
+    const matches = allProducts
+        .filter(product => String(product.name || "").toLowerCase().includes(normalized))
+        .sort((a, b) => {
+            const aStarts = String(a.name || "").toLowerCase().startsWith(normalized);
+            const bStarts = String(b.name || "").toLowerCase().startsWith(normalized);
+            return Number(bStarts) - Number(aStarts);
+        })
+        .slice(0, 6);
+
+    const rows = matches.map(product => {
+        const name = escapeHTML(product.name || "Product");
+        const category = escapeHTML(product.category || "Other");
+        const price = product.price === null || product.price === undefined || product.price === ""
+            ? "Contact seller"
+            : "UGX " + formatPrice(product.price);
+        const image = product.image_url
+            ? `<img src="${escapeHTML(product.image_url)}" alt="" loading="lazy">`
+            : "📦";
+        return `<button type="button" class="search-suggestion" role="option" data-suggestion-id="${escapeHTML(product.id)}">
+            <span class="suggestion-image">${image}</span>
+            <span class="suggestion-info"><span class="suggestion-name">${name}</span><span class="suggestion-meta">${category}</span></span>
+            <span class="suggestion-price">${escapeHTML(price)}</span>
+        </button>`;
+    }).join("");
+
+    const noMatches = `<div class="search-suggestion"><span class="suggestion-info">No matching product names yet.</span></div>`;
+    const viewAll = `<button type="button" class="search-suggestion all-results" data-all-results="true">See all results for “${escapeHTML(query.trim())}”</button>`;
+    box.innerHTML = `<div class="suggestion-heading">Product suggestions</div>${rows || noMatches}${viewAll}`;
+    box.hidden = false;
+    document.getElementById("searchInput").setAttribute("aria-expanded", "true");
+}
+
+function hideProductSuggestions() {
+    const box = document.getElementById("searchSuggestions");
+    if (!box) return;
+    box.hidden = true;
+    document.getElementById("searchInput").setAttribute("aria-expanded", "false");
+}
+
+function submitProductSearch() {
+    filterProducts();
+    hideProductSuggestions();
+    document.getElementById("products").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+function handleSearchKeydown(event) {
+    if (event.key === "Escape") {
+        hideProductSuggestions();
+    } else if (event.key === "Enter") {
+        event.preventDefault();
+        submitProductSearch();
+    } else if (event.key === "ArrowDown") {
+        const first = document.querySelector("#searchSuggestions [data-suggestion-id]");
+        if (first) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+}
+
+document.getElementById("searchSuggestions").addEventListener("click", event => {
+    const suggestion = event.target.closest("[data-suggestion-id]");
+    if (suggestion) {
+        hideProductSuggestions();
+        viewProduct(suggestion.dataset.suggestionId);
+        return;
+    }
+    if (event.target.closest("[data-all-results]")) {
+        submitProductSearch();
+    }
+});
+
+document.addEventListener("click", event => {
+    if (!event.target.closest(".search-box")) hideProductSuggestions();
+});
+
+function filterProducts(resetVisibleCount = true) {
+    if (resetVisibleCount) {
+        visibleProductLimit = PAGE_SIZE;
+    }
+
+    const search = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const selectedCondition = document
+        .getElementById("conditionFilter")
+        .value
+        .toLowerCase();
+
+    const minValue = document.getElementById("minPriceFilter").value;
+    const maxValue = document.getElementById("maxPriceFilter").value;
+    const locationFilter = document
+        .getElementById("locationFilter")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const minPrice = minValue === "" ? null : Number(minValue);
+    const maxPrice = maxValue === "" ? null : Number(maxValue);
+
+    const filtered = allProducts.filter(product => {
+        const text = (
+            (product.name || "") + " " +
+            (product.description || "") + " " +
+            (product.category || "") + " " +
+            (product.location || "")
+        ).toLowerCase();
+
+        const matchesSearch = text.includes(search);
+        const matchesCategory =
+            !selectedCategory ||
+            (product.category || "")
+                .toLowerCase()
+                .includes(selectedCategory.toLowerCase());
+
+        const matchesLocation =
+            !locationFilter ||
+            String(product.location || "")
+                .toLowerCase()
+                .includes(locationFilter);
+
+        const matchesCondition =
+            selectedCondition === "all" ||
+            String(product.condition || "")
+                .trim()
+                .toLowerCase() === selectedCondition;
+
+        const price = Number(product.price);
+        const matchesMinPrice =
+            minPrice === null ||
+            (Number.isFinite(price) && price >= minPrice);
+        const matchesMaxPrice =
+            maxPrice === null ||
+            (Number.isFinite(price) && price <= maxPrice);
+
+        return matchesSearch &&
+            matchesCategory &&
+            matchesLocation &&
+            matchesCondition &&
+            matchesMinPrice &&
+            matchesMaxPrice;
+    });
+
+    const ratingThreshold = Number(
+        document.getElementById("ratingFilter").value
+    );
+
+    const ratingFiltered = filtered.filter(product => {
+        if (!ratingThreshold) return true;
+
+        const summary = product.user_id
+            ? sellerRatingSummaries[product.user_id]
+            : null;
+
+        return Boolean(
+            summary &&
+            summary.count > 0 &&
+            summary.average >= ratingThreshold
+        );
+    });
+
+    displayProducts(sortProducts(ratingFiltered));
+}
+
+function loadMoreProducts() {
+    visibleProductLimit += PAGE_SIZE;
+    filterProducts(false);
+}
+
+function sortProducts(products) {
+    const sortOrder = document.getElementById("sortOrder").value;
+
+    if (sortOrder === "price-low" || sortOrder === "price-high") {
+        const direction = sortOrder === "price-low" ? 1 : -1;
+
+        return [...products].sort((productA, productB) => {
+            const priceA = Number(productA.price);
+            const priceB = Number(productB.price);
+            const hasPriceA = Number.isFinite(priceA);
+            const hasPriceB = Number.isFinite(priceB);
+
+            if (hasPriceA && !hasPriceB) return -1;
+            if (!hasPriceA && hasPriceB) return 1;
+            if (!hasPriceA && !hasPriceB) return 0;
+
+            return (priceA - priceB) * direction;
+        });
+    }
+
+    if (sortOrder !== "top-rated") return products;
+
+    return [...products].sort((productA, productB) => {
+        const ratingA = productA.user_id
+            ? sellerRatingSummaries[productA.user_id]
+            : null;
+        const ratingB = productB.user_id
+            ? sellerRatingSummaries[productB.user_id]
+            : null;
+
+        const hasRatingA = Boolean(ratingA && ratingA.count > 0);
+        const hasRatingB = Boolean(ratingB && ratingB.count > 0);
+
+        if (hasRatingA && !hasRatingB) return -1;
+        if (!hasRatingA && hasRatingB) return 1;
+        if (!hasRatingA && !hasRatingB) return 0;
+
+        return (ratingB.average - ratingA.average) ||
+            (ratingB.count - ratingA.count);
+    });
+}
+
+function selectCategory(category) {
+    selectedCategory = category;
+    document.getElementById("searchInput").value = "";
+    hideProductSuggestions();
+    filterProducts();
+
+    window.scrollTo({
+        top: 650,
+        behavior: "smooth"
+    });
+}
+
+function showAll() {
+    selectedCategory = "";
+    document.getElementById("searchInput").value = "";
+    hideProductSuggestions();
+    document.getElementById("locationFilter").value = "";
+    document.getElementById("minPriceFilter").value = "";
+    document.getElementById("maxPriceFilter").value = "";
+    document.getElementById("conditionFilter").value = "all";
+    document.getElementById("ratingFilter").value = "all";
+    document.getElementById("sortOrder").value = "newest";
+    filterProducts();
+}
+
+function viewProduct(id) {
+    if (!id) {
+        alert("Product ID is missing.");
+        return;
+    }
+
+    window.location.assign(
+        "./product.html?id=" + encodeURIComponent(String(id))
+    );
+}
+
+async function toggleFavorite(event, productId) {
+    event.stopPropagation();
+
+    const token = localStorage.getItem("buyza_access_token");
+    const userData = localStorage.getItem("buyza_user");
+
+    if (!token || !userData) {
+        alert("Please log in to save products to Favorites.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    let user;
+    try {
+        user = JSON.parse(userData);
+    } catch (error) {
+        alert("Please log in again.");
+        return;
+    }
+
+    try {
+        const headers = {
+            "apikey": SUPABASE_KEY,
+            "Authorization": "Bearer " + token
+        };
+        const url = SUPABASE_URL +
+            "/rest/v1/favorites?user_id=eq." +
+            encodeURIComponent(user.id) +
+            "&product_id=eq." +
+            encodeURIComponent(productId);
+
+        const checkResponse = await fetch(url, { headers });
+        if (!checkResponse.ok) throw new Error("Could not check saved listings.");
+        const existing = await checkResponse.json();
+
+        if (existing.length > 0) {
+            const removeResponse = await fetch(url, { method: "DELETE", headers });
+            if (!removeResponse.ok) throw new Error("Could not remove this saved listing.");
+            alert("Removed from Saved Listings ❤️");
+        } else {
+            const listResponse = await fetch(
+                SUPABASE_URL + "/rest/v1/favorite_lists?user_id=eq." +
+                encodeURIComponent(user.id) + "&is_default=eq.true&select=id&limit=1",
+                { headers }
+            );
+            if (!listResponse.ok) throw new Error("Could not find your default saved list. Run the saved lists SQL setup first.");
+            let defaultLists = await listResponse.json();
+            if (!defaultLists.length) {
+                const createListResponse = await fetch(SUPABASE_URL + "/rest/v1/favorite_lists", {
+                    method: "POST",
+                    headers: { ...headers, "Content-Type": "application/json", "Prefer": "return=representation" },
+                    body: JSON.stringify({ user_id: user.id, name: "My Saved", is_default: true })
+                });
+                if (!createListResponse.ok) throw new Error("Could not create your default saved list.");
+                defaultLists = await createListResponse.json();
+            }
+
+            const saveResponse = await fetch(SUPABASE_URL + "/rest/v1/favorites", {
+                method: "POST",
+                headers: {
+                    ...headers,
+                    "Content-Type": "application/json",
+                    "Prefer": "return=minimal"
+                },
+                body: JSON.stringify({
+                    user_id: user.id,
+                    product_id: productId,
+                    list_id: defaultLists[0].id
+                })
+            });
+            if (!saveResponse.ok) throw new Error("Could not save this listing. Please try again.");
+            alert("Saved to My Saved ❤️");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Could not update Favorites. Please try again.");
+    }
+}
+
+function openContact(name, phone) {
+    if (!phone) {
+        alert("This seller has not provided a phone number.");
+        return;
+    }
+
+    document.getElementById("modalTitle").textContent = "Contact Seller";
+    document.getElementById("modalPhone").textContent = name + " • " + phone;
+
+    document.getElementById("callBtn").onclick = function() {
+        window.location.href = "tel:" + phone;
+    };
+
+    document.getElementById("whatsappBtn").onclick = function() {
+        const cleanPhone = phone.replace(/[^0-9+]/g, "");
+        let whatsappPhone = cleanPhone;
+
+        if (whatsappPhone.startsWith("0")) {
+            whatsappPhone = "256" + whatsappPhone.substring(1);
+        }
+
+        if (whatsappPhone.startsWith("+")) {
+            whatsappPhone = whatsappPhone.substring(1);
+        }
+
+        window.open(
+            "https://wa.me/" + whatsappPhone + "?text=" +
+            encodeURIComponent("Hello, I saw your product on BUYZA."),
+            "_blank"
+        );
+    };
+
+    document.getElementById("contactModal").style.display = "flex";
+}
+
+function closeContact() {
+    document.getElementById("contactModal").style.display = "none";
+}
+
+window.onclick = function(event) {
+    const modal = document.getElementById("contactModal");
+    if (event.target === modal) closeContact();
+};
+
+function openAccount() {
+    const token = localStorage.getItem("buyza_access_token");
+    const user = localStorage.getItem("buyza_user");
+
+    window.location.href =
+        token && user ? "account.html" : "login.html";
+}
+
+function openNotifications() {
+    const token = localStorage.getItem("buyza_access_token");
+    const user = localStorage.getItem("buyza_user");
+    window.location.href = token && user ? "notifications.html" : "login.html";
+}
+
+async function loadNotificationBadge() {
+    const token = localStorage.getItem("buyza_access_token");
+    const badge = document.getElementById("notificationsBadge");
+    let user;
+    try {
+        user = JSON.parse(localStorage.getItem("buyza_user") || "null");
+    } catch (error) {
+        user = null;
+    }
+    if (!token || !user || !user.id) return;
+
+    const headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": "Bearer " + token,
+        "Prefer": "count=exact",
+        "Range": "0-0"
+    };
+    const messageQuery = new URLSearchParams({
+        select: "id",
+        recipient_id: "eq." + user.id,
+        read_at: "is.null"
+    });
+    const rideQuery = new URLSearchParams({
+        select: "id",
+        driver_id: "eq." + user.id,
+        status: "eq.pending"
+    });
+
+    try {
+        const [messagesResponse, ridesResponse] = await Promise.all([
+            fetch(SUPABASE_URL + "/rest/v1/buyer_messages?" + messageQuery.toString(), {
+                method: "HEAD", headers
+            }),
+            fetch(SUPABASE_URL + "/rest/v1/ride_requests?" + rideQuery.toString(), {
+                method: "HEAD", headers
+            })
+        ]);
+        if (!messagesResponse.ok || !ridesResponse.ok) {
+            console.error("Could not load notification count.");
+            return;
+        }
+
+        const countFrom = response => {
+            const contentRange = response.headers.get("content-range") || "";
+            return Number(contentRange.split("/").pop()) || 0;
+        };
+        const total = countFrom(messagesResponse) + countFrom(ridesResponse);
+        badge.textContent = total > 99 ? "99+" : String(total);
+        badge.hidden = total === 0;
+    } catch (error) {
+        console.error("Notification badge could not be loaded:", error);
+    }
+}
+
+function updateAccountButton() {
+    const token = localStorage.getItem("buyza_access_token");
+    const button = document.getElementById("accountBtn");
+    button.textContent = token ? "Account" : "Login";
+}
+
+function formatPrice(price) {
+    if (price === null || price === undefined || price === "") {
+        return "Contact Seller";
+    }
+    return Number(price).toLocaleString("en-US");
+}
+
+function escapeHTML(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+loadRecentlyViewed();
+updateAccountButton();
+loadNotificationBadge();
+setInterval(loadNotificationBadge, 30000);
+loadSponsoredAds();
+loadProducts();
+</script>
+
+</body>
+</html>
+
+
+
+
