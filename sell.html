@@ -117,6 +117,22 @@
             color: #111;
             text-decoration: none;
         }
+
+        .guide { background:#fff7ed; border:1px solid #ffd7b5; border-radius:12px; padding:16px; margin:16px 0 20px; line-height:1.5; }
+        .guide h3 { margin:0 0 7px; color:#a84600; }
+        .guide p { margin:0 0 10px; color:#484848; }
+        .guide ol { margin:0 0 12px 20px; padding:0; color:#484848; }
+        .guide a { color:#a84600; font-weight:700; }
+        .post-choice { border:1px solid #e4e5e7; border-radius:11px; padding:14px; margin:16px 0; }
+        .post-choice-title { font-weight:800; margin-bottom:9px; }
+        .choice-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .choice-row button { margin:0; min-height:58px; background:#f2f3f5; color:#222; font-weight:800; }
+        .choice-row button.active { background:#ff6500; color:white; outline:3px solid #ff650033; }
+        .plan-status { margin-top:10px; border-radius:9px; padding:11px; background:#f3f4f6; font-size:14px; }
+        .plan-status.good { background:#e9f7ec; color:#246332; }
+        .plan-status.needs-plan { background:#fff0e8; color:#873900; }
+        .photo-help { display:block; color:#626a72; line-height:1.5; margin-top:7px; }
+        @media(max-width:520px) { .box{padding:20px}.choice-row{grid-template-columns:1fr} }
     </style>
 </head>
 
@@ -133,26 +149,47 @@
 
 <div class="container">
     <div class="box">
-        <h2>📦 Sell Your Product</h2>
+        <h2>Post on BUYZA</h2>
 
         <div id="loginStatus">
             Checking your login...
         </div>
 
-        <form id="sellForm" onsubmit="event.preventDefault(); document.getElementById('message').textContent = 'Submitting your listing...'; return false;">
-            <label for="name">Listing Title</label>
+        <section class="guide" aria-label="How Boda operators post a ride">
+            <h3>🏍️ Boda operator? Post your ride service</h3>
+            <p>Follow these steps. Your ride listing will appear with other BUYZA services.</p>
+            <ol>
+                <li>Finish your Boda operator registration and have an active Standard or Premium ride plan.</li>
+                <li>Choose <strong>Boda Boda ride service</strong> below.</li>
+                <li>Add your service area, phone number, starting fare, and a short description.</li>
+                <li>Tap <strong>Post my Boda service</strong>. Passengers can then book from your listing.</li>
+            </ol>
+            <a href="subscription.html">Check or activate my ride plan</a>
+            <div id="bodaPlanStatus" class="plan-status">Your ride plan will be checked when you choose the Boda option.</div>
+        </section>
+
+        <div class="post-choice">
+            <div class="post-choice-title">What are you posting?</div>
+            <div class="choice-row">
+                <button type="button" id="bodaModeButton">🏍️ Boda Boda ride service</button>
+                <button type="button" id="generalModeButton">📦 Product or other service</button>
+            </div>
+        </div>
+
+        <form id="sellForm">
+            <label for="name" id="nameLabel">Listing title</label>
             <input
                 type="text"
                 id="name"
-                placeholder="e.g. Home Cleaning, Manicure, Pedicure or Plumbing"
+                placeholder="Choose a listing type above"
                 required
             >
 
-            <label for="price">Price (UGX)</label>
+            <label for="price" id="priceLabel">Price (UGX)</label>
             <input
                 type="number"
                 id="price"
-                placeholder="e.g. 1500000"
+                placeholder="Enter the price in UGX"
                 required
             >
 
@@ -164,6 +201,7 @@
                 <option value="Not applicable">Not applicable (service)</option>
             </select>
 
+            <div id="categoryGroup">
             <label for="category">Category</label>
             <select id="category" required>
                 <option value="">Select Category</option>
@@ -176,7 +214,8 @@
                 <option value="Services">Services</option>
                 <option value="Other">Other</option>
             </select>
-            <small id="serviceCategoryHelp" style="display:none;color:#666;line-height:1.5">Choose Services for any service you offer. Put its name in Listing Title, for example home cleaning, manicure, pedicure, plumbing, or another service.</small>
+            <small id="serviceCategoryHelp" style="display:none;color:#666;line-height:1.5">For a service, choose Services. For a Boda ride, use the Boda option above.</small>
+            </div>
 
             <label for="location">Location</label>
             <input
@@ -197,7 +236,7 @@
             <label for="description">Description</label>
             <textarea
                 id="description"
-                placeholder="Describe your product..."
+                placeholder="Describe your product or service..."
                 required
             ></textarea>
 
@@ -207,13 +246,12 @@
                 id="image"
                 accept="image/*"
                 multiple
-                required
             >
-            <small class="photo-help">Choose 1 to 5 photos of your product or examples of your service. The first photo will be the main listing image. Each photo must be 5 MB or smaller.</small>
+            <small class="photo-help">Photos are optional for services. For products, choose 1 to 5 photos. The first photo is the main listing image. Each photo must be 5 MB or smaller.</small>
             <div id="imageSelectionMessage" class="photo-help" aria-live="polite"></div>
 
             <button type="submit" id="submitButton">
-                🚀 Post Product
+                🚀 Post listing
             </button>
         </form>
 
@@ -228,17 +266,105 @@
 <script src="auth.js"></script>
 
 <script>
+const SUPABASE_URL =
+    "https://xbjmdsdgisusnxdmlrxh.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_FiaziwSklP22XFb1vfazZw_AudR-1-J";
+
 let currentUser = null;
+let postingMode = "general";
+let bodaPlanActive = null;
 
 function syncServiceCategory(){
     const isService = document.getElementById("category").value === "Services";
     const condition = document.getElementById("condition");
     condition.value = isService ? "Not applicable" : "";
     condition.disabled = isService;
+    document.getElementById("image").required = !isService;
     document.getElementById("serviceCategoryHelp").style.display =
         isService ? "block" : "none";
 }
 document.getElementById("category").addEventListener("change", syncServiceCategory);
+
+async function checkBodaPlan(){
+    const status = document.getElementById("bodaPlanStatus");
+    const token = localStorage.getItem("buyza_access_token");
+    if(!currentUser || !token){
+        bodaPlanActive = false;
+        status.className = "plan-status needs-plan";
+        status.innerHTML = 'Log in first, then check that your Boda operator plan is active. <a href="login.html">Log in</a>.';
+        return false;
+    }
+    status.className = "plan-status";
+    status.textContent = "Checking your Boda operator plan…";
+    try{
+        const query = new URLSearchParams({
+            select:"user_id,plan,status,current_period_end",
+            user_id:"eq."+currentUser.id,
+            plan:"in.(standard,premium)",
+            status:"eq.active",
+            current_period_end:"gt."+new Date().toISOString(),
+            limit:"1"
+        });
+        const response = await fetch(SUPABASE_URL+"/rest/v1/boda_driver_subscriptions?"+query.toString(),{
+            headers:{"apikey":SUPABASE_KEY,"Authorization":"Bearer "+token}
+        });
+        if(!response.ok) throw new Error("Could not check plan status.");
+        const plans = await response.json();
+        bodaPlanActive = plans.length > 0;
+        if(bodaPlanActive){
+            status.className = "plan-status good";
+            status.textContent = "✅ Your Boda operator plan is active. You can post this ride service.";
+        }else{
+            status.className = "plan-status needs-plan";
+            status.innerHTML = 'An active Standard or Premium Boda ride plan is needed to post and receive bookings. <a href="subscription.html">View ride plans</a>.';
+        }
+        updateBodaSubmitState();
+        return bodaPlanActive;
+    }catch(error){
+        bodaPlanActive = null;
+        status.className = "plan-status needs-plan";
+        status.innerHTML = 'BUYZA could not check the plan right now. You can still submit; the server will confirm eligibility. <a href="subscription.html">View ride plans</a>.';
+        updateBodaSubmitState();
+        return null;
+    }
+}
+
+function updateBodaSubmitState(){
+    const button = document.getElementById("submitButton");
+    if(button) button.disabled = postingMode === "boda" && bodaPlanActive === false;
+}
+
+function setPostingMode(mode){
+    const previousMode = postingMode;
+    postingMode = mode;
+    const bodaMode = mode === "boda";
+    document.getElementById("bodaModeButton").classList.toggle("active", bodaMode);
+    document.getElementById("generalModeButton").classList.toggle("active", !bodaMode);
+    document.getElementById("categoryGroup").hidden = bodaMode;
+    const category = document.getElementById("category");
+    if(bodaMode) category.value = "Services";
+    else if(previousMode === "boda") category.value = "";
+    if(!bodaMode && document.getElementById("name").value.trim() === "Boda Boda Ride -") document.getElementById("name").value = "";
+    syncServiceCategory();
+    document.getElementById("nameLabel").textContent = bodaMode ? "Boda service title" : "Listing title";
+    document.getElementById("name").placeholder = bodaMode ? "e.g. Boda Boda Ride - Wandegeya" : "e.g. Home Cleaning, Manicure, Pedicure or Plumbing";
+    if(bodaMode && !document.getElementById("name").value.trim()) document.getElementById("name").value = "Boda Boda Ride - ";
+    document.getElementById("priceLabel").textContent = bodaMode ? "Starting fare (UGX)" : "Price (UGX)";
+    document.getElementById("price").placeholder = bodaMode ? "e.g. 5000 starting fare" : "e.g. 1500000";
+    document.querySelector('label[for="location"]').textContent = bodaMode ? "Service area" : "Location";
+    document.getElementById("location").placeholder = bodaMode ? "e.g. Wandegeya, Kampala" : "e.g. Kampala";
+    document.getElementById("description").placeholder = bodaMode
+        ? "Tell passengers your service area, working hours, usual fare, and how to contact you. Fares can vary by trip."
+        : "Describe your product or service...";
+    document.getElementById("submitButton").textContent = bodaMode ? "🏍️ Post my Boda service" : "🚀 Post listing";
+    updateBodaSubmitState();
+    if(bodaMode) checkBodaPlan();
+}
+
+document.getElementById("bodaModeButton").addEventListener("click",()=>setPostingMode("boda"));
+document.getElementById("generalModeButton").addEventListener("click",()=>setPostingMode("general"));
 
 async function startSellPage() {
     const loginStatus =
@@ -268,6 +394,8 @@ async function startSellPage() {
 
     currentUser = JSON.parse(userData);
 
+    checkBodaPlan();
+
     loginStatus.innerHTML =
         "✅ Logged in as: <strong>" +
         escapeHtml(currentUser.email || "User") +
@@ -285,29 +413,13 @@ document.getElementById("sellForm").addEventListener(
         const submitButton =
             document.getElementById("submitButton");
 
-        submitButton.disabled = true;
-        submitButton.textContent = "Checking login...";
-        message.style.color = "#333";
-        message.textContent = "Checking your BUYZA login...";
-
-        let sessionOK = false;
-        try {
-            sessionOK = await Promise.race([
-                checkBuyzaSession(),
-                new Promise(function(resolve) {
-                    setTimeout(function() { resolve(false); }, 15000);
-                })
-            ]);
-        } catch (error) {
-            sessionOK = false;
-        }
+        const sessionOK =
+            await checkBuyzaSession();
 
         if (!sessionOK) {
-            submitButton.disabled = false;
-            submitButton.textContent = "🚀 Post Product";
             message.style.color = "#d32f2f";
             message.textContent =
-                "❌ BUYZA could not confirm your login. Refresh the page, sign in again if asked, then retry.";
+                "❌ Your login session expired. Please login again.";
             return;
         }
 
@@ -318,16 +430,13 @@ document.getElementById("sellForm").addEventListener(
             localStorage.getItem("buyza_user");
 
         if (!userData || !accessToken) {
-            submitButton.disabled = false;
-            submitButton.textContent = "🚀 Post Product";
-            message.style.color = "#d32f2f";
-            message.textContent = "❌ Your login has expired. Please sign in again.";
             window.location.href = "login.html";
             return;
         }
 
         currentUser = JSON.parse(userData);
 
+        submitButton.disabled = true;
         submitButton.textContent = "Uploading...";
 
         message.style.color = "#333";
@@ -335,8 +444,15 @@ document.getElementById("sellForm").addEventListener(
             "Please wait while BUYZA uploads your product...";
 
         try {
-            const name =
+            if (postingMode === "boda" && await checkBodaPlan() === false) {
+                throw new Error("Activate your Boda operator Standard or Premium ride plan before posting.");
+            }
+
+            const enteredName =
                 document.getElementById("name").value.trim();
+            const name = postingMode === "boda" && !/boda|ride|motorcycle|transport/i.test(enteredName)
+                ? "Boda Boda Ride - " + enteredName
+                : enteredName;
 
             const price =
                 document.getElementById("price").value;
@@ -344,8 +460,9 @@ document.getElementById("sellForm").addEventListener(
             const condition =
                 document.getElementById("condition").value;
 
-            const category =
-                document.getElementById("category").value;
+            const category = postingMode === "boda"
+                ? "Services"
+                : document.getElementById("category").value;
 
             const location =
                 document.getElementById("location").value.trim();
@@ -359,8 +476,10 @@ document.getElementById("sellForm").addEventListener(
             const imageInput = document.getElementById("image");
             const imageFiles = Array.from(imageInput.files || []);
 
-            if (imageFiles.length < 1 || imageFiles.length > 5) {
-                throw new Error("Please choose between 1 and 5 photos.");
+            if ((category !== "Services" && imageFiles.length < 1) || imageFiles.length > 5) {
+                throw new Error(category === "Services"
+                    ? "Choose up to 5 photos, or leave photos empty for a service."
+                    : "Please choose between 1 and 5 photos for a product.");
             }
             if (imageFiles.some(file => !file.type.startsWith("image/"))) {
                 throw new Error("Please choose image files only.");
@@ -419,7 +538,7 @@ document.getElementById("sellForm").addEventListener(
                         location: location,
                         phone: phone,
                         description: description,
-                        image_url: imageUrls[0],
+                        image_url: imageUrls[0] || null,
                         image_urls: imageUrls,
                         user_id: currentUser.id
                     })
@@ -445,10 +564,15 @@ document.getElementById("sellForm").addEventListener(
             console.error(error);
 
             message.style.color = "#d32f2f";
-            message.textContent = "❌ " + error.message;
+            const detail = String(error.message || "Could not post this listing.");
+            message.textContent = detail.includes("Complete Boda operator registration")
+                ? "❌ Boda ride listings need an active Standard or Premium ride plan. Open the Subscription page, activate your plan, then return here."
+                : "❌ " + detail;
 
-            submitButton.disabled = false;
-            submitButton.textContent = "🚀 Post Product";
+            submitButton.disabled = postingMode === "boda" && bodaPlanActive === false;
+            submitButton.textContent = postingMode === "boda"
+                ? "🏍️ Post my Boda service"
+                : "🚀 Post listing";
         }
     }
 );
