@@ -85,6 +85,10 @@ header{position:sticky;top:0;z-index:1000;background:white;border-bottom:1px sol
 .category:hover{transform:translateY(-4px);box-shadow:0 10px 25px rgba(0,0,0,.08);border-color:#ff6500}
 .category-icon{width:55px;height:55px;margin:auto auto 10px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:#fff1e8;font-size:28px}
 .category strong{font-size:14px}
+.promote-card{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:22px;margin-top:24px;padding:24px 28px;border:1px solid #ffd5bd;border-radius:18px;background:linear-gradient(115deg,#fff4ec 0%,#fff 62%,#fff0e5 100%);box-shadow:0 8px 24px rgba(151,73,24,.08)}
+.promote-card::after{content:"📣";position:absolute;right:180px;top:50%;transform:translateY(-50%) rotate(-12deg);font-size:62px;opacity:.12;pointer-events:none}
+.promote-copy{position:relative;z-index:1}.promote-kicker{display:inline-block;margin-bottom:7px;color:#d95300;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.promote-copy h2{margin:0 0 6px;font-size:22px;color:#23272e}.promote-copy p{max-width:560px;margin:0;color:#69717a;font-size:14px;line-height:1.5}
+.promote-link{position:relative;z-index:1;flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:0 18px;border-radius:10px;background:#ff6500;color:#fff;text-decoration:none;font-size:14px;font-weight:900;box-shadow:0 5px 0 #d54e00,0 8px 16px rgba(255,101,0,.2);transition:transform .18s,background .18s}.promote-link:hover{transform:translateY(-2px);background:#e95700}
 .sponsored-section{margin-top:30px}
 .sponsored-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:15px}
 .sponsored-heading h2{font-size:24px}
@@ -191,6 +195,7 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
 .search-box{border-radius:12px}.search-box input{padding:14px 10px}.search-box button{padding:0 15px}
 .stats{margin-top:-25px}.stats-box{grid-template-columns:1fr}.stat{border-right:0;border-bottom:1px solid #eee;padding:15px}.stat:last-child{border-bottom:0}
 .categories{grid-template-columns:repeat(3,1fr);gap:8px}.category{padding:15px 5px}.category-icon{width:45px;height:45px;font-size:22px}
+.promote-card{align-items:flex-start;flex-direction:column;padding:20px}.promote-card::after{right:18px;top:30px;transform:none;font-size:48px}.promote-link{width:100%}
 .sponsored-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.sponsored-title{font-size:15px}.sponsored-content{padding:11px}.sponsored-description{font-size:12px;min-height:0}
 .products{grid-template-columns:repeat(2,1fr);gap:10px}.product-image{height:170px}.product-body{padding:11px}.product-name{font-size:14px}.price{font-size:17px}.product-actions{flex-direction:column}
 #recentlyViewedTrack>.product{flex-basis:min(74vw,250px);width:min(74vw,250px)}
@@ -250,6 +255,13 @@ footer{background:#111;color:white;margin-top:40px;padding:45px 20px}
     <div class="category" onclick="selectCategory('Jobs')"><div class="category-icon">💼</div><strong>Jobs</strong></div>
     <div class="category" onclick="selectCategory('Services')"><div class="category-icon">🧹</div><strong>Services</strong></div>
 </div>
+</section>
+
+<section class="section" aria-label="Promote your business">
+  <div class="promote-card">
+    <div class="promote-copy"><span class="promote-kicker">Reach BUYZA customers</span><h2>Promote your business</h2><p>Showcase your products or services in a sponsored card on the BUYZA home page. Choose 7 or 30 days and submit your ad for review.</p></div>
+    <a class="promote-link" href="advertise.html">Create a sponsored ad <span aria-hidden="true">→</span></a>
+  </div>
 </section>
 
 <section class="section sponsored-section" id="sponsoredSection" hidden aria-label="Sponsored promotions">
